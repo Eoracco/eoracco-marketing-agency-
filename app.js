@@ -12,7 +12,7 @@ const SERVICES = [
   { n: '01', icon: 'target', title: 'Paid Advertising',        zh: '付费广告投放',     desc: 'Google Ads & Meta Ads management and continuous optimization.', placeholder: 'Ads dashboard / 广告后台' },
   { n: '02', icon: 'share',  title: 'Social Media Management', zh: '社交媒体管理',     desc: 'Content creation, scheduling, and community engagement done daily.', placeholder: 'Social feed / 社媒画面' },
   { n: '03', icon: 'image',  title: 'Ad Creative',             zh: '广告素材制作',     desc: 'High-converting static image creatives for every platform.', placeholder: 'Creative grid / 素材网格' },
-  { n: '04', icon: 'film',   title: 'Video Creative',          zh: '视频制作',         desc: 'Short-form video content for ads, reels, and organic social.', placeholder: 'Reels still / 视频截帧' },
+  { n: '04', icon: 'film',   title: 'Video Creative',          zh: '视频制作',         desc: 'Short-form video editing for ads, reels, and organic social — from $100 per video.', placeholder: 'Short-form edit / 短视频剪辑', video: 'video/short-video-demo.mp4' },
   { n: '05', icon: 'mail',   title: 'Email & SMS Marketing',   zh: '邮件与短信营销',   desc: 'Campaigns, automations, and performance reporting that compounds.', placeholder: 'Email mockup / 邮件样张' },
   { n: '06', icon: 'phone',  title: 'Call Tracking',           zh: '电话来源追踪',     desc: 'Know exactly which ads — and keywords — drive every phone call.', placeholder: 'Call report / 来电报表' },
   { n: '07', icon: 'mic',    title: 'AI Voice Agent',          zh: 'AI 智能电话接待',  desc: '24/7 inbound call answering and lead qualification, auto-handled.', placeholder: 'Voice waveform / 语音波形' },
@@ -45,6 +45,7 @@ const PRICING_MONTHLY = [
 ];
 
 const PRICING_SETUP = [
+  { id: 'short-video',   name: 'Short-Form Video Edit', tier: 'per video', price: 100,  group: 'Setup' },
   { id: 'su-email',      name: 'Email Marketing Setup', tier: null,        price: 300,  group: 'Setup' },
   { id: 'su-call',       name: 'Call Tracking Setup',   tier: null,        price: 200,  group: 'Setup' },
   { id: 'su-voice',      name: 'AI Voice Agent Setup',  tier: null,        price: 1200, group: 'Setup' },
@@ -134,7 +135,9 @@ function renderServices() {
   grid.innerHTML = SERVICES.map((s) => `
     <div class="svc-card">
       <div class="svc-media">
-        <img class="svc-img" src="images/svc-${s.n}.webp" alt="${s.title}" loading="lazy" />
+        ${s.video
+          ? `<video class="svc-video" src="${s.video}" autoplay muted loop playsinline preload="metadata" poster="images/svc-${s.n}.webp"></video>`
+          : `<img class="svc-img" src="images/svc-${s.n}.webp" alt="${s.title}" loading="lazy" />`}
         <span class="svc-media-tag">/ ${s.n} · ${s.placeholder}</span>
       </div>
       <div class="svc-body">

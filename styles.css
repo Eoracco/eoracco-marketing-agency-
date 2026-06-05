@@ -793,6 +793,18 @@ section.sec.compact { padding: 100px 0; }
   filter: grayscale(0) contrast(1.05);
   transform: scale(1.03);
 }
+.svc-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(0.6) contrast(1.05);
+  transition: filter 0.4s var(--ease);
+  z-index: 0;
+}
+.svc-card:hover .svc-video { filter: grayscale(0) contrast(1.05); }
 /* Subtle stripe behind empty image slot */
 .svc-media::before {
   content: "";
