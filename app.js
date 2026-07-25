@@ -416,102 +416,159 @@ function wireServicesHScroll() {
   layout();
 }
 
-// ===== HERO DIGITAL CLOUD =====
-function wireHeroCloud() {
-  const canvas = document.getElementById('heroCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let raf, w = 0, h = 0, particles = [];
-  let mx = 0, my = 0;
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// ===== FX PACK — editorial flashy animations =====
+const FX_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FX_FINE = window.matchMedia('(pointer: fine)').matches;
 
-  const seed = () => {
-    const area = w * h;
-    const count = Math.min(160, Math.max(60, Math.floor(area / 9500)));
-    particles = Array.from({ length: count }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      z: Math.random() * 0.8 + 0.3,
-      vx: (Math.random() - 0.5) * 0.18,
-      vy: (Math.random() - 0.5) * 0.12 - 0.04,
-      twk: Math.random() * Math.PI * 2,
-      twkSpeed: 0.005 + Math.random() * 0.015,
-      amber: Math.random() < 0.07,
-    }));
+// Custom cursor: instant dot + lerped ring
+function wireCursor() {
+  if (!FX_FINE || FX_REDUCED) return;
+  document.body.classList.add('fx-cursor');
+  const dot = document.createElement('div'); dot.className = 'cursor-dot';
+  const ring = document.createElement('div'); ring.className = 'cursor-ring';
+  document.body.append(ring, dot);
+  let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+  addEventListener('mousemove', (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
+  }, { passive: true });
+  (function loop() {
+    rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+    ring.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)';
+    requestAnimationFrame(loop);
+  })();
+  const sel = 'a, button, .price-item, .svc-card, .why-card, select, label';
+  document.addEventListener('mouseover', (e) => { if (e.target.closest(sel)) ring.classList.add('on'); });
+  document.addEventListener('mouseout', (e) => { if (e.target.closest(sel)) ring.classList.remove('on'); });
+}
+
+// Magnetic buttons
+function wireMagnetic() {
+  if (!FX_FINE || FX_REDUCED) return;
+  document.querySelectorAll('.btn, .cta-mini, .pb-checkout, .contact-submit').forEach((el) => {
+    const strength = 0.3;
+    el.addEventListener('mousemove', (e) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width / 2) * strength;
+      const y = (e.clientY - r.top - r.height / 2) * strength;
+      el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
+      el.style.transform = '';
+      setTimeout(() => { el.style.transition = ''; }, 500);
+    });
+  });
+}
+
+// Hero headline: split words into chars for 3D rise
+function splitHeroChars() {
+  if (FX_REDUCED) return;
+  document.querySelectorAll('.hero-display .word').forEach((w) => {
+    const base = parseFloat(w.style.animationDelay || '0');
+    const text = w.textContent;
+    w.style.animation = 'none';
+    w.style.opacity = '1';
+    w.style.transform = 'none';
+    w.innerHTML = [...text].map((ch, i) =>
+      ch.trim() === ''
+        ? ch
+        : '<span class="char" style="animation-delay:' + (base + i * 0.045).toFixed(3) + 's">' + ch + '</span>'
+    ).join('');
+  });
+}
+
+// Count-up hero stats, then live ticks on the calls row
+function wireCountUps() {
+  const vals = [...document.querySelectorAll('.hero-stat-value')];
+  vals.forEach((el) => {
+    const m = el.textContent.trim().match(/^([\d,]+)$/);
+    if (!m) return;
+    const target = +m[1].replace(/,/g, '');
+    if (FX_REDUCED) return;
+    const start = performance.now(), dur = 1800;
+    const step = (t) => {
+      const p = Math.min(1, (t - start) / dur);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * e).toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+  // live tick: increment the calls-answered stat every few seconds
+  const calls = vals.find((el) => el.textContent.replace(/,/g, '').trim() === '3902');
+  if (calls && !FX_REDUCED) {
+    let n = 3902;
+    setInterval(() => {
+      n += 1 + Math.floor(Math.random() * 2);
+      calls.textContent = n.toLocaleString();
+      calls.classList.add('tick');
+      setTimeout(() => calls.classList.remove('tick'), 600);
+    }, 4000);
+  }
+}
+
+// Amber glare position on cards (pairs with ::after radial gradient)
+function wireGlare() {
+  if (!FX_FINE) return;
+  document.addEventListener('mousemove', (e) => {
+    const card = e.target.closest('.why-card, .svc-card');
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 100) + '%');
+    card.style.setProperty('--gy', ((e.clientY - r.top) / r.height * 100) + '%');
+  }, { passive: true });
+}
+
+// Top scroll progress bar + paper grain
+function wireChrome() {
+  const prog = document.createElement('div');
+  prog.className = 'scroll-progress';
+  prog.innerHTML = '<div class="bar"></div>';
+  document.body.append(prog);
+  const bar = prog.firstChild;
+  const upd = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = 'scaleX(' + (max ? scrollY / max : 0) + ')';
   };
+  addEventListener('scroll', () => requestAnimationFrame(upd), { passive: true });
+  upd();
+  if (!FX_REDUCED) {
+    const grain = document.createElement('div');
+    grain.className = 'grain';
+    document.body.append(grain);
+  }
+}
 
-  const resize = () => {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    w = rect.width; h = rect.height;
-    canvas.width = w * DPR; canvas.height = h * DPR;
-    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    seed();
-  };
+// Click ripple on solid buttons
+function wireRipple() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-primary, .pb-checkout, .contact-submit, .cta-mini');
+    if (!btn || FX_REDUCED) return;
+    const r = btn.getBoundingClientRect();
+    const rip = document.createElement('span');
+    rip.className = 'ripple';
+    const size = Math.max(r.width, r.height);
+    rip.style.width = rip.style.height = size + 'px';
+    rip.style.left = (e.clientX - r.left - size / 2) + 'px';
+    rip.style.top = (e.clientY - r.top - size / 2) + 'px';
+    btn.append(rip);
+    setTimeout(() => rip.remove(), 650);
+  });
+}
 
-  const onMouse = (e) => {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    mx = (e.clientX - rect.left - w / 2) / w;
-    my = (e.clientY - rect.top - h / 2) / h;
-  };
-
-  const tick = () => {
-    ctx.clearRect(0, 0, w, h);
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      p.x += p.vx * p.z + mx * 0.4 * p.z;
-      p.y += p.vy * p.z + my * 0.3 * p.z;
-      p.twk += p.twkSpeed;
-      if (p.x < -20) p.x = w + 10;
-      if (p.x > w + 20) p.x = -10;
-      if (p.y < -20) p.y = h + 10;
-      if (p.y > h + 20) p.y = -10;
-    }
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const a = particles[i], b = particles[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const d2 = dx * dx + dy * dy;
-        const MAX = 16000;
-        if (d2 < MAX) {
-          const t = 1 - d2 / MAX;
-          const op = t * 0.10 * Math.min(a.z, b.z);
-          ctx.strokeStyle = (a.amber || b.amber)
-            ? `rgba(251,191,36,${op * 1.4})`
-            : `rgba(255,255,255,${op})`;
-          ctx.lineWidth = 0.6;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
-      }
-    }
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      const alpha = (0.35 + 0.45 * (Math.sin(p.twk) * 0.5 + 0.5)) * p.z;
-      const r = p.z * 1.3;
-      if (p.amber) {
-        ctx.fillStyle = `rgba(251,191,36,${alpha})`;
-        ctx.shadowColor = 'rgba(251,191,36,0.8)';
-        ctx.shadowBlur = 14;
-      } else {
-        ctx.fillStyle = `rgba(255,255,255,${alpha * 0.7})`;
-        ctx.shadowBlur = 0;
-      }
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.shadowBlur = 0;
-    if (!isReduced) raf = requestAnimationFrame(tick);
-  };
-
-  resize();
-  window.addEventListener('resize', resize);
-  window.addEventListener('mousemove', onMouse);
-  raf = requestAnimationFrame(tick);
+// Ghost italic index numbers behind section heads
+function wireGhosts() {
+  const map = { why: '01', pricing: '03', process: '04', contact: '05' };
+  Object.entries(map).forEach(([id, num]) => {
+    const sec = document.getElementById(id);
+    if (!sec) return;
+    const g = document.createElement('span');
+    g.className = 'sec-ghost';
+    g.textContent = num;
+    g.setAttribute('aria-hidden', 'true');
+    sec.append(g);
+  });
 }
 
 // ===== INIT =====
@@ -527,5 +584,12 @@ document.addEventListener('DOMContentLoaded', () => {
   wireNav();
   wireReveals();
   wireServicesHScroll();
-  wireHeroCloud();
+  splitHeroChars();
+  wireCursor();
+  wireMagnetic();
+  wireCountUps();
+  wireGlare();
+  wireChrome();
+  wireRipple();
+  wireGhosts();
 });
