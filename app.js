@@ -372,6 +372,50 @@ function wireReveals() {
   stepsIO.observe(stepsWrap);
 }
 
+// ===== SERVICES — horizontal scroll-driven strip (desktop) =====
+function wireServicesHScroll() {
+  const wrap = document.getElementById('svcHwrap');
+  const track = document.getElementById('svcGrid');
+  const bar = document.getElementById('svcBar');
+  const hint = document.querySelector('.svc-hint');
+  if (!wrap || !track) return;
+
+  const mq = window.matchMedia('(min-width: 1025px)');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let travel = 0;
+
+  const layout = () => {
+    if (!mq.matches || reduced) {
+      wrap.style.height = 'auto';
+      track.style.transform = '';
+      return;
+    }
+    travel = track.scrollWidth - window.innerWidth;
+    // Vertical scroll distance maps 1:1 to horizontal travel while pinned.
+    wrap.style.height = (window.innerHeight + travel) + 'px';
+    update();
+  };
+
+  const update = () => {
+    if (!mq.matches || reduced) return;
+    const y = Math.min(Math.max(-wrap.getBoundingClientRect().top, 0), travel);
+    const p = travel ? y / travel : 0;
+    track.style.transform = 'translate3d(' + (-y) + 'px, 0, 0)';
+    if (bar) bar.style.transform = 'scaleX(' + p + ')';
+    if (hint) hint.classList.toggle('hide', p > 0.03);
+  };
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { update(); ticking = false; });
+  }, { passive: true });
+  window.addEventListener('resize', layout);
+  mq.addEventListener('change', layout);
+  layout();
+}
+
 // ===== HERO DIGITAL CLOUD =====
 function wireHeroCloud() {
   const canvas = document.getElementById('heroCanvas');
@@ -482,5 +526,6 @@ document.addEventListener('DOMContentLoaded', () => {
   wireContact();
   wireNav();
   wireReveals();
+  wireServicesHScroll();
   wireHeroCloud();
 });

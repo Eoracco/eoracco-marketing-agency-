@@ -733,6 +733,68 @@ section.sec.compact { padding: 100px 0; }
 @media (max-width: 1024px) { .svc-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .svc-grid { grid-template-columns: 1fr; } }
 
+/* Services — horizontal scroll-driven strip (desktop only).
+   The wrapper's JS-set height converts vertical scroll into horizontal travel;
+   below 1025px none of this applies and the grid layout above takes over. */
+@media (min-width: 1025px) {
+  .svc-hwrap { position: relative; }
+  .svc-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .svc-hwrap .svc-grid {
+    display: flex;
+    width: max-content;
+    border: none;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    will-change: transform;
+  }
+  .svc-hwrap .svc-card {
+    flex: 0 0 420px;
+    width: 420px;
+    border-bottom: none;
+  }
+  .svc-hwrap .svc-card:first-child { border-left: 1px solid var(--border); }
+  .svc-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 32px 18px;
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    transition: opacity 0.5s var(--ease);
+  }
+  .svc-hint.hide { opacity: 0; }
+  .svc-hbar {
+    height: 1px;
+    background: var(--border);
+    margin: 28px auto 0;
+    width: min(1216px, calc(100% - 64px));
+  }
+  .svc-hbar .bar {
+    height: 100%;
+    background: var(--amber);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+}
+@media (max-width: 1024px) {
+  .svc-hint, .svc-hbar { display: none; }
+  .svc-hwrap { padding: 0 32px; max-width: 1280px; margin: 0 auto; }
+}
+@media (max-width: 640px) {
+  .svc-hwrap { padding: 0 20px; }
+}
+
 .svc-card {
   padding: 0;
   border-right: 1px solid var(--border);
