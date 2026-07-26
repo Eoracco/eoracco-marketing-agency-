@@ -30,6 +30,11 @@
           <a href="#pricing" class="nav-link">Pricing</a>
           <a href="#process" class="nav-link">Process</a>
           <a href="#contact" class="nav-link">Contact</a>
+          <div class="lang-toggle" id="langToggle" role="group" aria-label="Language">
+            <button type="button" data-lang="en">EN</button>
+            <button type="button" data-lang="bi" class="active">双语</button>
+            <button type="button" data-lang="zh">中文</button>
+          </div>
           <a href="#contact" class="nav-link cta-mini">Book a Call →</a>
         </div>
       </div>
@@ -57,7 +62,7 @@
             <span class="hero-meta-label">/ 04 — Status</span>
             <span class="hero-meta-value">
               <span class="status-dot"></span>
-              Booking Q3 — Q4 2025
+              <span class="t-en">Accepting new clients</span><span class="zh">现接新客户</span>
             </span>
           </div>
         </div>
@@ -79,46 +84,20 @@
                 南加州的<span class="accent">中英双语</span>数字营销工作室。
               </div>
               <p class="hero-support-new">
-                From paid ads to AI voice agents — every part of your marketing, handled in English and 中文 by one bilingual team in Southern California.
-                <span class="zh-line zh">从广告投放到 AI 语音客服 — 您营销体系的每个环节，都由南加州的一支双语团队完成。</span>
+                <span class="t-en">From paid ads to AI voice agents — every part of your marketing, handled in English and 中文 by one bilingual team in Southern California.</span>
+                <span class="zh-line zh">从广告投放到 AI 语音客服，您营销体系的每个环节，都由南加州的一支双语团队完成。</span>
               </p>
               <div class="hero-ctas-new">
                 <a href="#contact" class="btn btn-primary">
-                  Book a Free Strategy Call
+                  <span class="btn-label">Book a Free Strategy Call</span>
                   <span class="btn-arrow">→</span>
                 </a>
                 <a href="#services" class="btn btn-secondary">
-                  View Our Work
+                  <span class="btn-label">View Our Work</span>
                 </a>
               </div>
             </div>
 
-            <div class="hero-foot-right">
-              <div class="hero-stat-card">
-                <div class="hero-stat-card-head">
-                  <span>/ The Studio · 工作室</span>
-                  <span class="live">LIVE</span>
-                </div>
-                <div class="hero-stat-rows">
-                  <div class="hero-stat-row">
-                    <span class="hero-stat-label">Active campaigns <span class="zh">活跃广告</span></span>
-                    <span class="hero-stat-value">47</span>
-                  </div>
-                  <div class="hero-stat-row">
-                    <span class="hero-stat-label">Markets we ship in <span class="zh">服务市场</span></span>
-                    <span class="hero-stat-value amber">EN · 中文</span>
-                  </div>
-                  <div class="hero-stat-row">
-                    <span class="hero-stat-label">Calls answered, 30 d <span class="zh">月度来电</span></span>
-                    <span class="hero-stat-value">3,902</span>
-                  </div>
-                  <div class="hero-stat-row">
-                    <span class="hero-stat-label">Onboarding window <span class="zh">启动周期</span></span>
-                    <span class="hero-stat-value">~2 wks</span>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -137,10 +116,6 @@
             <h2 style="margin-top: 18px;">How we work different.<span class="zh">我们的不同 · One studio, two languages, the full stack.</span></h2>
             <p>Most agencies speak one language and ship one channel. We do both — fluently, locally, and end-to-end.</p>
           </div>
-          <div class="sec-head-right">
-            <span class="num">/ 01</span>
-            <span>of 05</span>
-          </div>
         </div>
         <div class="reveal-stagger why-grid" id="whyGrid"></div>
       </div>
@@ -154,10 +129,6 @@
             <span class="eyebrow">Services / 我们的服务</span>
             <h2 style="margin-top: 18px;">Eight services.<span class="zh">一个团队 · One team that handles every layer of your marketing.</span></h2>
             <p>A full marketing stack — from the first impression in the feed, to the call that closes the deal.</p>
-          </div>
-          <div class="sec-head-right">
-            <span class="num">/ 02</span>
-            <span>of 05</span>
           </div>
         </div>
       </div>
@@ -178,10 +149,6 @@
             <span class="eyebrow">Plan Builder / 自助配置</span>
             <h2 style="margin-top: 18px;">Pick what you need.<span class="zh">挑选所需服务 · Build your plan, see the price, check out.</span></h2>
             <p>Toggle the services you want — the total updates live. Continue to secure Stripe checkout when you're ready.</p>
-          </div>
-          <div class="sec-head-right">
-            <span class="num">/ 03</span>
-            <span>of 05</span>
           </div>
         </div>
 
@@ -259,10 +226,6 @@
             <h2 style="margin-top: 18px;">Three steps.<span class="zh">合作流程 · From first call to ongoing collaboration.</span></h2>
             <p>No long onboarding, no big up-front commitments. Most clients are live within two weeks.</p>
           </div>
-          <div class="sec-head-right">
-            <span class="num">/ 04</span>
-            <span>of 05</span>
-          </div>
         </div>
         <div class="steps-wrap" id="stepsWrap">
           <div class="steps">
@@ -282,19 +245,15 @@
             <h2 style="margin-top: 18px;">Hand off your marketing.<span class="zh">把营销交给我们 · Let's talk shop.</span></h2>
             <p>Tell us a little about your business. We'll respond within one business day with next steps — or a polite 'we're not the right fit.'</p>
           </div>
-          <div class="sec-head-right">
-            <span class="num">/ 05</span>
-            <span>of 05</span>
-          </div>
         </div>
 
         <div class="reveal contact-grid">
           <div class="contact-left">
-            <h2>Book a free<br/>30-min call.</h2>
+            <h2 id="contactH2">Book a free<br/>30-min call.</h2>
             <div class="contact-zh-tag zh">预约 30 分钟<span class="amber">免费通话</span>。</div>
             <p>
-              No pitch deck, no pressure — just a conversation about your business. We'll either be a good fit, or we won't.
-              <span class="zh-line zh">不卖方案，无压力 — 聊聊您的生意，看是否合适。</span>
+              <span class="t-en">No pitch deck, no pressure — just a conversation about your business. We'll either be a good fit, or we won't.</span>
+              <span class="zh-line zh">不卖方案，无压力，聊聊您的生意，看是否合适。</span>
             </p>
             <div class="contact-meta">
               <div class="contact-meta-item">
@@ -323,30 +282,32 @@
                 <span class="req-note">* required · 必填</span>
               </div>
 
+              <div id="planAttach"></div>
+
               <div class="field-row">
                 <div class="field">
-                  <label>Name <span class="zh">姓名</span><span class="req">*</span></label>
+                  <label><span class="t-en">Name </span><span class="zh">姓名</span><span class="req">*</span></label>
                   <input type="text" name="name" required placeholder="Jane Liu"/>
                 </div>
                 <div class="field">
-                  <label>Email <span class="zh">邮箱</span><span class="req">*</span></label>
+                  <label><span class="t-en">Email </span><span class="zh">邮箱</span><span class="req">*</span></label>
                   <input type="email" name="email" required placeholder="jane@business.com"/>
                 </div>
               </div>
 
               <div class="field-row">
                 <div class="field">
-                  <label>Business <span class="zh">公司</span></label>
+                  <label><span class="t-en">Business </span><span class="zh">公司</span></label>
                   <input type="text" name="business" placeholder="Acme Co."/>
                 </div>
                 <div class="field">
-                  <label>Phone <span class="zh">电话</span></label>
+                  <label><span class="t-en">Phone </span><span class="zh">电话</span></label>
                   <input type="tel" name="phone" placeholder="(626) 555-1234"/>
                 </div>
               </div>
 
               <div class="field">
-                <label>What do you need? <span class="zh">需要哪类服务？</span></label>
+                <label><span class="t-en">What do you need? </span><span class="zh">需要哪类服务？</span></label>
                 <select name="need">
                   <option value="">Select a service… / 请选择</option>
                   <option value="paid-ads">Paid Advertising / 付费广告</option>
@@ -361,14 +322,14 @@
               </div>
 
               <div class="field">
-                <label>Anything else? <span class="zh">备注</span></label>
+                <label><span class="t-en">Anything else? </span><span class="zh">备注</span></label>
                 <textarea name="message" placeholder="A sentence or two about your business is plenty."></textarea>
               </div>
 
               <div class="checkbox-row">
                 <input id="agree" name="agreed" type="checkbox"/>
                 <label for="agree">
-                  I agree to the <a href="#privacy">privacy policy</a> and consent to EORACCO contacting me about this inquiry.
+                  <span class="t-en">I agree to the <a href="#privacy">privacy policy</a> and consent to EORACCO contacting me about this inquiry.</span>
                   <span class="zh-line zh">我同意 <a href="#privacy">隐私政策</a>，并允许 EORACCO 就此咨询与我联系。</span>
                 </label>
               </div>
@@ -379,7 +340,7 @@
               </button>
 
               <div class="privacy-note">
-                Your info stays with us. We never share, sell, or add you to outside lists. You can request deletion at any time.
+                <span class="t-en">Your info stays with us. We never share, sell, or add you to outside lists. You can request deletion at any time.</span>
                 <span class="zh-line zh">您的信息仅用于本次咨询，绝不分享或转售。您可随时要求删除。</span>
               </div>
             </form>
