@@ -48,6 +48,19 @@ const SERVICES = [
     desc_zh: '合规、追踪配置与持续 SEO 优化。' },
 ];
 
+
+// Chapter presentation for each service (Editions-style giant words)
+const CHAPTER_META = {
+  '01': { word: 'Ads',      zhWord: '广告', tag: 'Google · Meta · TikTok',      from: 800 },
+  '02': { word: 'Social',   zhWord: '社媒', tag: 'IG · 小红书 · TikTok',        from: 500 },
+  '03': { word: 'Creative', zhWord: '素材', tag: 'Statics · 8–16 / mo',         from: 400 },
+  '04': { word: 'Video',    zhWord: '视频', tag: 'Reels · Shorts · Ads',        from: 100 },
+  '05': { word: 'Email',    zhWord: '邮件', tag: 'Campaigns · Automations',     from: 600 },
+  '06': { word: 'Tracking', zhWord: '追踪', tag: 'Numbers · Attribution',       from: 200 },
+  '07': { word: 'Voice',    zhWord: '语音', tag: '24/7 AI Reception',           from: 200 },
+  '08': { word: 'Web',      zhWord: '网站', tag: 'GTM · GA4 · SEO',             from: 400 },
+};
+
 const PRICING_MONTHLY = [
   { id: 'ads-single',       name: 'Paid Ads',                  zh: '付费广告',       tier: 'Single Platform', price: 800,  cat: 'ads',      group: 'Paid Advertising' },
   { id: 'ads-dual',         name: 'Paid Ads',                  zh: '付费广告',       tier: 'Dual Platform',   price: 1300, cat: 'ads',      group: 'Paid Advertising' },
@@ -119,10 +132,17 @@ const I18N = {
     zh: ['预约免费策略通话', '查看我们的服务'],
   },
   heroWords: {
-    en: [[{ t: 'Full-Service' }], [{ t: 'Digital ' }, { t: 'Marketing.', ital: true }]],
-    bi: [[{ t: 'Full-Service' }], [{ t: 'Digital ' }, { t: 'Marketing.', ital: true }]],
-    zh: [[{ t: '一站式' }], [{ t: '数字' }, { t: '营销。', ital: true }]],
+    en: [[{ t: 'The Marketing' }], [{ t: 'Ren' }, { t: 'ai', ai: true }, { t: 'ssance.' }]],
+    bi: [[{ t: 'The Marketing' }], [{ t: 'Ren' }, { t: 'ai', ai: true }, { t: 'ssance.' }]],
+    zh: [[{ t: '营销的' }], [{ t: '文艺复兴。' }]],
   },
+  heroSub: {
+    en: 'A new world of bilingual marketing. Eight services, one studio, two languages.',
+    bi: 'A new world of bilingual marketing — 双语营销的新世界。八项服务，一个团队。',
+    zh: '双语营销的新世界。八项服务，一个团队，两种语言。',
+  },
+  chLink: { en: 'Add to plan', bi: 'Add to plan · 加入方案', zh: '加入方案' },
+  chFrom: { en: 'from', bi: 'from', zh: '起' },
   secs: {
     why: {
       eyebrow: { en: 'Why EORACCO', bi: 'Why EORACCO / 选择我们', zh: '选择我们' },
@@ -131,14 +151,6 @@ const I18N = {
       desc: { en: 'Most agencies speak one language and ship one channel. We do both — fluently, locally, and end-to-end.',
               bi: 'Most agencies speak one language and ship one channel. We do both — fluently, locally, and end-to-end.',
               zh: '大多数机构只说一种语言、只做一个渠道。我们两者兼顾：流利、本地、端到端。' },
-    },
-    services: {
-      eyebrow: { en: 'Services', bi: 'Services / 我们的服务', zh: '我们的服务' },
-      title: { en: 'Eight services.', bi: 'Eight services.', zh: '八项服务。' },
-      sub: { en: 'One team that handles every layer of your marketing.', bi: '一个团队 · One team that handles every layer of your marketing.', zh: '一个团队，承包您营销的每一层。' },
-      desc: { en: 'A full marketing stack — from the first impression in the feed, to the call that closes the deal.',
-              bi: 'A full marketing stack — from the first impression in the feed, to the call that closes the deal.',
-              zh: '完整的营销体系：从信息流里的第一印象，到成交的那通电话。' },
     },
     pricing: {
       eyebrow: { en: 'Plan Builder', bi: 'Plan Builder / 自助配置', zh: '自助配置' },
@@ -169,9 +181,6 @@ const I18N = {
     en: 'Book a free<br/>30-min call.',
     bi: 'Book a free<br/>30-min call.',
     zh: '预约 30 分钟<br/>免费通话。',
-  },
-  svcHint: {
-    en: 'SCROLL →', bi: 'SCROLL · 横向滑动 →', zh: '继续滚动 · 横向浏览 →',
   },
   footerHeads: {
     en: ['Navigate', 'Contact', 'Legal'],
@@ -210,15 +219,17 @@ const FX_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const FX_FINE = window.matchMedia('(pointer: fine)').matches;
 
 // ===== RENDER =====
-function renderMarquee() {
-  const track = document.getElementById('heroMarquee');
-  let html = '';
-  for (let rep = 0; rep < 2; rep++) {
-    html += MARQUEE_LABELS.map(
-      (l) => `<span class="hero-marquee-item"><span class="dot"></span>${l}</span>`
-    ).join('');
+function renderHeroExtras() {
+  const sub = document.getElementById('heroSub');
+  if (sub) sub.textContent = t(I18N.heroSub);
+  const idx = document.getElementById('heroIndex');
+  if (idx) {
+    idx.innerHTML = SERVICES.map((s) => {
+      const m = CHAPTER_META[s.n];
+      const w = LANG === 'zh' ? m.zhWord : m.word;
+      return `<a class="hero-index-item" href="#ch-${s.n}"><span class="n mono">${s.n}</span><span class="w">${w}</span></a>`;
+    }).join('');
   }
-  track.innerHTML = html;
 }
 
 function renderWhy() {
@@ -238,28 +249,44 @@ function renderWhy() {
   }).join('');
 }
 
-function renderServices() {
-  const grid = document.getElementById('svcGrid');
-  grid.innerHTML = SERVICES.map((s) => {
+function renderChapters() {
+  const box = document.getElementById('chapters');
+  if (!box) return;
+  box.innerHTML = SERVICES.map((s, i) => {
+    const m = CHAPTER_META[s.n];
+    const word = LANG === 'zh' ? m.zhWord : m.word;
+    const sub = LANG === 'zh' ? s.title : (LANG === 'en' ? '' : '');
     const title = LANG === 'zh' ? s.zh : s.title;
-    const sub = LANG === 'zh' ? s.title : s.zh;
+    const alt = LANG === 'zh' ? s.title : s.zh;
     const desc = LANG === 'zh' ? s.desc_zh : s.desc;
+    const media = s.video
+      ? `<video class="ch-video" src="${s.video}" autoplay muted loop playsinline preload="metadata" poster="images/svc-${s.n}.webp"></video>`
+      : `<img class="ch-img" src="images/svc-${s.n}.webp" alt="${s.title}" loading="lazy" />`;
     return `
-    <div class="svc-card">
-      <div class="svc-media">
-        ${s.video
-          ? `<video class="svc-video" src="${s.video}" autoplay muted loop playsinline preload="metadata" poster="images/svc-${s.n}.webp"></video>`
-          : `<img class="svc-img" src="images/svc-${s.n}.webp" alt="${s.title}" loading="lazy" />`}
+    <section class="chapter ${i % 2 ? 'flip' : ''}" id="ch-${s.n}">
+      <div class="container">
+        <header class="ch-head reveal">
+          <span class="ch-num mono">${s.n} / 08</span>
+          <h2 class="ch-word">${word}</h2>
+        </header>
+        <div class="ch-body reveal">
+          <div class="ch-media">${media}</div>
+          <div class="ch-info">
+            <span class="ch-tag mono">${m.tag}</span>
+            <h3 class="ch-title">${title}${LANG === 'en' ? '' : ` <span class="ch-alt ${LANG === 'zh' ? '' : 'zh'}">${alt}</span>`}</h3>
+            <p class="ch-desc">${desc}</p>
+            <div class="ch-foot">
+              <span class="ch-price mono">${(() => {
+                const unit = s.n === '04' ? (LANG === 'zh' ? '/条' : '/video') : '/mo';
+                const amt = '$' + m.from.toLocaleString() + unit;
+                return LANG === 'zh' ? amt + ' 起' : 'from ' + amt;
+              })()}</span>
+              <a class="ch-link" href="#pricing">${t(I18N.chLink)} →</a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="svc-body">
-        <span class="svc-arrow">${icon('arrow-up-right', 16)}</span>
-        <span class="svc-num">/ ${s.n}</span>
-        <div class="svc-icon-wrap">${icon(s.icon, 20)}</div>
-        <div class="svc-title">${title}</div>
-        ${LANG === 'en' ? '' : `<div class="svc-title-zh ${LANG === 'zh' ? '' : 'zh'}">${sub}</div>`}
-        <div class="svc-desc">${desc}</div>
-      </div>
-    </div>`;
+    </section>`;
   }).join('');
 }
 
@@ -542,10 +569,6 @@ function applyStatic() {
   const ch2 = document.getElementById('contactH2');
   if (ch2) ch2.innerHTML = t(I18N.contactH2);
 
-  // services scroll hint
-  const hint = document.querySelector('.svc-hint');
-  if (hint) hint.textContent = t(I18N.svcHint);
-
   // footer column heads
   const heads = document.querySelectorAll('.footer h4');
   const fh = t(I18N.footerHeads);
@@ -558,14 +581,15 @@ function splitHeroChars() {
   const h1 = document.querySelector('.hero-display');
   if (!h1) return;
   const rows = t(I18N.heroWords);
-  const delays = [0.15, 0.3];
+  const delays = [0.15, 0.32];
   h1.innerHTML = rows.map((row, ri) =>
-    `<span class="row">${row.map((w, wi) => {
-      const cls = 'word' + (w.ital ? ' ital' : '');
-      const base = delays[ri] + wi * 0.12;
-      if (FX_REDUCED) return `<span class="${cls}" style="animation:none;opacity:1;transform:none">${w.t}</span>`;
-      const chars = [...w.t].map((ch, i) =>
-        ch.trim() === '' ? ch : `<span class="char" style="animation-delay:${(base + i * 0.045).toFixed(3)}s">${ch}</span>`
+    `<span class="row">${row.map((seg, si) => {
+      const cls = 'word' + (seg.ai ? ' ai' : '');
+      const prior = row.slice(0, si).reduce((n, p) => n + p.t.length, 0);
+      const base = delays[ri] + prior * 0.04;
+      if (FX_REDUCED) return `<span class="${cls}" style="animation:none;opacity:1;transform:none">${seg.t}</span>`;
+      const chars = [...seg.t].map((ch, i) =>
+        ch.trim() === '' ? ch : `<span class="char" style="animation-delay:${(base + i * 0.04).toFixed(3)}s">${ch}</span>`
       ).join('');
       return `<span class="${cls}" style="animation:none;opacity:1;transform:none">${chars}</span>`;
     }).join('')}</span>`
@@ -583,12 +607,13 @@ function setLang(lang) {
   applyStatic();
   splitHeroChars();
   renderWhy();
-  renderServices();
+  renderChapters();
   renderSteps();
+  renderHeroExtras();
   renderPricingPickers();
   renderSummary();
   renderPlanAttach();
-  window.dispatchEvent(new Event('resize')); // re-measure the horizontal track
+  observeNewReveals();
 }
 
 function wireLangToggle() {
@@ -599,17 +624,23 @@ function wireLangToggle() {
 }
 
 // ===== REVEALS =====
+let revealIO = null;
+function observeNewReveals() {
+  if (!revealIO) return;
+  document.querySelectorAll('.reveal:not(.in):not(.step), .reveal-stagger:not(.in)').forEach((el) => revealIO.observe(el));
+}
+
 function wireReveals() {
-  const io = new IntersectionObserver((entries) => {
+  revealIO = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (e.isIntersecting) {
         e.target.classList.add('in');
-        io.unobserve(e.target);
+        revealIO.unobserve(e.target);
       }
     });
   }, { threshold: 0, rootMargin: '0px 0px -60px 0px' });
 
-  document.querySelectorAll('.reveal:not(.step), .reveal-stagger').forEach((el) => io.observe(el));
+  document.querySelectorAll('.reveal:not(.step), .reveal-stagger').forEach((el) => revealIO.observe(el));
 
   document.querySelectorAll('.reveal-stagger').forEach((container) => {
     const step = container.classList.contains('svc-grid') ? 70 : 90;
@@ -632,48 +663,6 @@ function wireReveals() {
     });
   }, { threshold: 0, rootMargin: '0px 0px -60px 0px' });
   stepsIO.observe(stepsWrap);
-}
-
-// ===== SERVICES — horizontal scroll-driven strip (desktop) =====
-function wireServicesHScroll() {
-  const wrap = document.getElementById('svcHwrap');
-  const track = document.getElementById('svcGrid');
-  const bar = document.getElementById('svcBar');
-  const hint = document.querySelector('.svc-hint');
-  if (!wrap || !track) return;
-
-  const mq = window.matchMedia('(min-width: 1025px)');
-  let travel = 0;
-
-  const layout = () => {
-    if (!mq.matches || FX_REDUCED) {
-      wrap.style.height = 'auto';
-      track.style.transform = '';
-      return;
-    }
-    travel = track.scrollWidth - window.innerWidth;
-    wrap.style.height = (window.innerHeight + travel) + 'px';
-    update();
-  };
-
-  const update = () => {
-    if (!mq.matches || FX_REDUCED) return;
-    const y = Math.min(Math.max(-wrap.getBoundingClientRect().top, 0), travel);
-    const p = travel ? y / travel : 0;
-    track.style.transform = 'translate3d(' + (-y) + 'px, 0, 0)';
-    if (bar) bar.style.transform = 'scaleX(' + p + ')';
-    if (hint) hint.classList.toggle('hide', p > 0.03);
-  };
-
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => { update(); ticking = false; });
-  }, { passive: true });
-  window.addEventListener('resize', layout);
-  mq.addEventListener('change', layout);
-  layout();
 }
 
 // ===== FX PACK =====
@@ -762,33 +751,17 @@ function wireRipple() {
   });
 }
 
-function wireGhosts() {
-  const map = { why: '01', pricing: '03', process: '04', contact: '05' };
-  Object.entries(map).forEach(([id, num]) => {
-    const sec = document.getElementById(id);
-    if (!sec) return;
-    const g = document.createElement('span');
-    g.className = 'sec-ghost';
-    g.textContent = num;
-    g.setAttribute('aria-hidden', 'true');
-    sec.append(g);
-  });
-}
-
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
-  renderMarquee();
   wirePricing();
   wireContact();
   wireNav();
   wireLangToggle();
   setLang(LANG);          // renders why/services/steps/pricing + statics + hero chars
   wireReveals();
-  wireServicesHScroll();
   wireCursor();
   wireMagnetic();
   wireGlare();
   wireChrome();
   wireRipple();
-  wireGhosts();
 });

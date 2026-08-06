@@ -42,68 +42,56 @@
 
     <!-- ===== HERO ===== -->
     <section class="hero" id="top">
+      <svg class="hero-blueprint" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <g class="bp">
+          <!-- golden-ratio construction -->
+          <rect x="70" y="80" width="520" height="322"/>
+          <rect x="70" y="80" width="322" height="322"/>
+          <rect x="392" y="80" width="198" height="198"/>
+          <rect x="392" y="278" width="124" height="124"/>
+          <rect x="516" y="278" width="74" height="78"/>
+          <path d="M 70 402 A 322 322 0 0 1 392 80" />
+          <path d="M 392 80 A 198 198 0 0 1 590 278" />
+          <path d="M 590 278 A 124 124 0 0 1 466 402" />
+          <!-- radiating perspective -->
+          <line x1="1180" y1="620" x2="0" y2="0"/>
+          <line x1="1180" y1="620" x2="400" y2="0"/>
+          <line x1="1180" y1="620" x2="800" y2="0"/>
+          <line x1="1180" y1="620" x2="1200" y2="0"/>
+          <line x1="1180" y1="620" x2="1600" y2="60"/>
+          <line x1="1180" y1="620" x2="1600" y2="400"/>
+          <line x1="1180" y1="620" x2="1600" y2="880"/>
+          <line x1="1180" y1="620" x2="700" y2="900"/>
+          <line x1="1180" y1="620" x2="200" y2="900"/>
+          <circle cx="1180" cy="620" r="180"/>
+          <circle cx="1180" cy="620" r="340"/>
+          <line x1="0" y1="620" x2="1600" y2="620" class="strong"/>
+        </g>
+      </svg>
+
       <div class="hero-scroll"><span>SCROLL · 向下浏览</span></div>
 
-      <div class="container" style="position: relative; z-index: 1;">
-        <div class="hero-meta">
-          <div class="hero-meta-item">
-            <span class="hero-meta-label">/ 01 — Studio</span>
-            <span class="hero-meta-value">EORACCO · <span class="zh">尔利奥</span></span>
-          </div>
-          <div class="hero-meta-item">
-            <span class="hero-meta-label">/ 02 — Based</span>
-            <span class="hero-meta-value">SGV · Los Angeles, CA</span>
-          </div>
-          <div class="hero-meta-item">
-            <span class="hero-meta-label">/ 03 — Languages</span>
-            <span class="hero-meta-value">English · <span class="zh">中文</span></span>
-          </div>
-          <div class="hero-meta-item">
-            <span class="hero-meta-label">/ 04 — Status</span>
-            <span class="hero-meta-value">
-              <span class="status-dot"></span>
-              <span class="t-en">Accepting new clients</span><span class="zh">现接新客户</span>
-            </span>
+      <div class="container hero-inner">
+        <div class="hero-topline">
+          <span class="hero-eyebrow mono">EORACCO — SGV · LOS ANGELES, CA</span>
+          <span class="hero-status"><span class="status-dot"></span><span class="t-en">Accepting new clients</span><span class="zh">现接新客户</span></span>
+        </div>
+
+        <div class="hero-main">
+          <h1 class="hero-display" aria-label="The marketing renaissance."></h1>
+          <p class="hero-sub" id="heroSub"></p>
+          <div class="hero-ctas-new">
+            <a href="#contact" class="btn btn-primary">
+              <span class="btn-label">Book a Free Strategy Call</span>
+              <span class="btn-arrow">→</span>
+            </a>
+            <a href="#services" class="btn btn-secondary">
+              <span class="btn-label">View Our Work</span>
+            </a>
           </div>
         </div>
 
-        <div class="hero-body">
-          <h1 class="hero-display" aria-label="Full-service digital marketing.">
-            <span class="row">
-              <span class="word" style="animation-delay: 0.55s">Full-Service</span>
-            </span>
-            <span class="row">
-              <span class="word" style="animation-delay: 0.70s">Digital&nbsp;</span>
-              <span class="word ital" style="animation-delay: 0.82s">Marketing.</span>
-            </span>
-          </h1>
-
-          <div class="hero-foot">
-            <div class="hero-foot-left">
-              <div class="hero-zh-tag zh">
-                南加州的<span class="accent">中英双语</span>数字营销工作室。
-              </div>
-              <p class="hero-support-new">
-                <span class="t-en">From paid ads to AI voice agents — every part of your marketing, handled in English and 中文 by one bilingual team in Southern California.</span>
-                <span class="zh-line zh">从广告投放到 AI 语音客服，您营销体系的每个环节，都由南加州的一支双语团队完成。</span>
-              </p>
-              <div class="hero-ctas-new">
-                <a href="#contact" class="btn btn-primary">
-                  <span class="btn-label">Book a Free Strategy Call</span>
-                  <span class="btn-arrow">→</span>
-                </a>
-                <a href="#services" class="btn btn-secondary">
-                  <span class="btn-label">View Our Work</span>
-                </a>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="hero-marquee">
-          <div class="hero-marquee-track" id="heroMarquee"></div>
-        </div>
+        <div class="hero-index" id="heroIndex"></div>
       </div>
     </section>
 
@@ -121,24 +109,9 @@
       </div>
     </section>
 
-    <!-- ===== SERVICES ===== -->
-    <section class="sec" id="services">
-      <div class="container">
-        <div class="sec-head reveal">
-          <div class="sec-head-left">
-            <span class="eyebrow">Services / 我们的服务</span>
-            <h2 style="margin-top: 18px;">Eight services.<span class="zh">一个团队 · One team that handles every layer of your marketing.</span></h2>
-            <p>A full marketing stack — from the first impression in the feed, to the call that closes the deal.</p>
-          </div>
-        </div>
-      </div>
-      <div class="svc-hwrap" id="svcHwrap">
-        <div class="svc-sticky">
-          <div class="svc-hint mono" aria-hidden="true">SCROLL · 横向滑动 →</div>
-          <div class="reveal-stagger svc-grid" id="svcGrid"></div>
-          <div class="svc-hbar"><div class="bar" id="svcBar"></div></div>
-        </div>
-      </div>
+    <!-- ===== SERVICES — chapters ===== -->
+    <section class="sec-chapters" id="services">
+      <div id="chapters"></div>
     </section>
 
     <!-- ===== PRICING ===== -->
