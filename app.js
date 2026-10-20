@@ -2,7 +2,8 @@
 
 // ===== LANGUAGE STATE =====
 // 'en' = English only · 'bi' = bilingual (default) · 'zh' = Chinese primary
-let LANG = localStorage.getItem('eoracco-lang') || 'bi';
+let LANG = 'bi';
+try { LANG = localStorage.getItem('eoracco-lang') || 'bi'; } catch (e) { /* storage unavailable */ }
 
 // ===== DATA =====
 const WHY = [
@@ -114,22 +115,19 @@ const STEPS = [
     desc_zh: '我们执行、优化并报告，您专注于经营业务。' },
 ];
 
-const MARQUEE_LABELS = [
-  'Google Ads', 'Meta Ads', 'TikTok Ads', 'AI Voice Agents', 'Email & SMS',
-  'SEO & Web', 'Call Tracking', 'Bilingual EN / 中文', 'Ad Creative', 'Short-Form Video',
-];
+
 
 // ===== I18N — static strings =====
 const I18N = {
   nav: {
-    en: ['Services', 'Pricing', 'Process', 'Contact', 'Book a Call →'],
-    bi: ['Services', 'Pricing', 'Process', 'Contact', 'Book a Call →'],
-    zh: ['服务', '定价', '流程', '联系', '预约通话 →'],
+    en: ['Services', 'Pricing', 'Process', 'Contact', 'Book a call'],
+    bi: ['Services', 'Pricing', 'Process', 'Contact', 'Book a call'],
+    zh: ['服务', '定价', '流程', '联系', '预约通话'],
   },
   heroBtns: {
-    en: ['Book a Free Strategy Call', 'View Our Work'],
-    bi: ['Book a Free Strategy Call', 'View Our Work'],
-    zh: ['预约免费策略通话', '查看我们的服务'],
+    en: ['Book a free strategy call', 'See all services'],
+    bi: ['Book a free strategy call', 'See all services'],
+    zh: ['预约免费策略通话', '查看全部服务'],
   },
   heroWords: {
     en: [[{ t: 'The Marketing' }], [{ t: 'Ren' }, { t: 'ai', ai: true }, { t: 'ssance.' }]],
@@ -137,49 +135,46 @@ const I18N = {
     zh: [[{ t: '营销的' }], [{ t: '文艺复兴。' }]],
   },
   heroSub: {
-    en: 'A new world of bilingual marketing. Eight services, one studio, two languages.',
-    bi: 'A new world of bilingual marketing — 双语营销的新世界。八项服务，一个团队。',
-    zh: '双语营销的新世界。八项服务，一个团队，两种语言。',
+    en: 'Bilingual marketing for Los Angeles businesses. Eight services, one studio, two languages.',
+    bi: 'Bilingual marketing for Los Angeles businesses. Eight services, one studio, two languages.',
+    zh: '为洛杉矶商家打造的双语营销。八项服务，一个团队，两种语言。',
   },
-  chLink: { en: 'Add to plan', bi: 'Add to plan · 加入方案', zh: '加入方案' },
-  chFrom: { en: 'from', bi: 'from', zh: '起' },
+  heroSubZh: '双语营销的新世界 · 八项服务，一个团队。',
+  chLink: { en: 'Add to plan', bi: 'Add to plan', zh: '加入方案' },
+  // Each head: title (bold) + sub (grey, Apple-style continuation) + zh line in bilingual mode
   secs: {
     why: {
-      eyebrow: { en: 'Why EORACCO', bi: 'Why EORACCO / 选择我们', zh: '选择我们' },
-      title: { en: 'How we work different.', bi: 'How we work different.', zh: '我们的不同。' },
-      sub: { en: 'One studio, two languages, the full stack.', bi: '我们的不同 · One studio, two languages, the full stack.', zh: '一个团队，两种语言，全套体系。' },
-      desc: { en: 'Most agencies speak one language and ship one channel. We do both — fluently, locally, and end-to-end.',
-              bi: 'Most agencies speak one language and ship one channel. We do both — fluently, locally, and end-to-end.',
-              zh: '大多数机构只说一种语言、只做一个渠道。我们两者兼顾：流利、本地、端到端。' },
+      title: { en: 'Why EORACCO.', zh: '为什么选择我们。' },
+      sub: { en: 'One studio, two languages, the full stack.', zh: '一个团队，两种语言，全套体系。' },
+      desc: { en: 'Most agencies speak one language and run one channel. We do both — fluently, locally, end to end.',
+              zh: '大多数机构只说一种语言、只做一个渠道。我们两者兼顾：流利、本地、从头到尾。' },
+    },
+    services: {
+      title: { en: 'Eight services.', zh: '八项服务。' },
+      sub: { en: 'One team behind all of them.', zh: '全部由同一个团队负责。' },
     },
     pricing: {
-      eyebrow: { en: 'Plan Builder', bi: 'Plan Builder / 自助配置', zh: '自助配置' },
-      title: { en: 'Pick what you need.', bi: 'Pick what you need.', zh: '按需选择。' },
-      sub: { en: 'Build your plan and send it with your inquiry.', bi: '挑选所需服务 · Build your plan, send it with your inquiry.', zh: '配置方案，随咨询一起发送。' },
-      desc: { en: 'Toggle the services you want — the total updates live. Attach the plan to your inquiry and we confirm everything on a quick call.',
-              bi: 'Toggle the services you want — the total updates live. Attach the plan to your inquiry and we confirm everything on a quick call.',
-              zh: '勾选所需服务，总价实时更新。方案将附在咨询里，通话确认后再开始。' },
+      title: { en: 'Build your plan.', zh: '自助配置方案。' },
+      sub: { en: 'See the price before we talk.', zh: '通话前就能看到价格。' },
+      desc: { en: 'Pick the services you want and the total updates as you go. Send the plan with your inquiry and we confirm the details on a quick call.',
+              zh: '勾选所需服务，总价实时更新。方案会随咨询一起发送，通话确认细节后再开始。' },
     },
     process: {
-      eyebrow: { en: 'Process', bi: 'Process / 合作流程', zh: '合作流程' },
-      title: { en: 'Three steps.', bi: 'Three steps.', zh: '三个步骤。' },
-      sub: { en: 'From first call to ongoing collaboration.', bi: '合作流程 · From first call to ongoing collaboration.', zh: '从第一通电话到长期协作。' },
-      desc: { en: 'No long onboarding, no big up-front commitments. Most clients are live within two weeks.',
-              bi: 'No long onboarding, no big up-front commitments. Most clients are live within two weeks.',
-              zh: '没有冗长的启动流程，无需大额预付。多数客户两周内上线。' },
+      title: { en: 'Three steps.', zh: '三个步骤。' },
+      sub: { en: 'From first call to launch in about two weeks.', zh: '从第一通电话到上线，大约两周。' },
+      desc: { en: 'No long onboarding and no large up-front commitment.',
+              zh: '没有冗长的启动流程，也无需大额预付。' },
     },
     contact: {
-      eyebrow: { en: 'Get In Touch', bi: 'Get In Touch / 联系我们', zh: '联系我们' },
-      title: { en: 'Hand off your marketing.', bi: 'Hand off your marketing.', zh: '把营销交给我们。' },
-      sub: { en: "Let's talk shop.", bi: '把营销交给我们 · Let’s talk shop.', zh: '聊聊您的生意。' },
-      desc: { en: "Tell us a little about your business. We'll respond within one business day with next steps — or a polite 'we're not the right fit.'",
-              bi: "Tell us a little about your business. We'll respond within one business day with next steps — or a polite 'we're not the right fit.'",
-              zh: '简单介绍您的业务，我们将在一个工作日内回复下一步安排。' },
+      title: { en: 'Hand off your marketing.', zh: '把营销交给我们。' },
+      sub: { en: "Let's talk.", zh: '聊聊您的生意。' },
+      desc: { en: 'Tell us a little about your business. We reply within one business day with next steps — or an honest "we\'re not the right fit."',
+              zh: '简单介绍您的业务，我们会在一个工作日内回复下一步安排，不合适也会直说。' },
     },
   },
   contactH2: {
-    en: 'Book a free<br/>30-min call.',
-    bi: 'Book a free<br/>30-min call.',
+    en: 'Book a free<br/>30-minute call.',
+    bi: 'Book a free<br/>30-minute call.',
     zh: '预约 30 分钟<br/>免费通话。',
   },
   footerHeads: {
@@ -189,7 +184,7 @@ const I18N = {
   },
 };
 
-const t = (obj) => obj[LANG] || obj.bi;
+const t = (obj) => obj[LANG] || obj.bi || obj.en;
 
 // ===== ICONS =====
 const ICON_PATHS = {
@@ -211,42 +206,70 @@ const ICON_PATHS = {
 function icon(name, size = 20) {
   const p = ICON_PATHS[name];
   if (!p) return '';
-  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 }
 
 const fmt = (n) => '$' + n.toLocaleString();
-const FX_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const FX_FINE = window.matchMedia('(pointer: fine)').matches;
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isBi = () => LANG === 'bi';
+const isZh = () => LANG === 'zh';
+
+// Service tile → the plan item "Add to plan" selects
+const SERVICE_PLAN_ID = {
+  '01': 'ads-single', '02': 'social-mgmt', '03': 'creative-starter', '04': 'short-video',
+  '05': 'email-starter', '06': 'call-tracking', '07': 'ai-voice', '08': 'web-seo',
+};
 
 // ===== RENDER =====
-function renderHeroExtras() {
+function renderHero() {
+  const h1 = document.querySelector('.hero-display');
+  if (h1) {
+    h1.innerHTML = t(I18N.heroWords).map((row) =>
+      `<span class="row">${row.map((seg) => seg.ai ? `<span class="ai">${seg.t}</span>` : seg.t).join('')}</span>`
+    ).join('');
+  }
   const sub = document.getElementById('heroSub');
-  if (sub) sub.textContent = t(I18N.heroSub);
+  if (sub) {
+    sub.innerHTML = t(I18N.heroSub) + (isBi() ? `<span class="zh-line">${I18N.heroSubZh}</span>` : '');
+  }
   const idx = document.getElementById('heroIndex');
   if (idx) {
-    idx.innerHTML = SERVICES.map((s) => {
+    idx.innerHTML = `<div class="chiclets-track">${SERVICES.map((s) => {
       const m = CHAPTER_META[s.n];
-      const w = LANG === 'zh' ? m.zhWord : m.word;
-      return `<a class="hero-index-item" href="#ch-${s.n}"><span class="n mono">${s.n}</span><span class="w">${w}</span></a>`;
-    }).join('');
+      const label = isZh() ? m.zhWord : m.word;
+      const zh = isBi() ? `<span class="chiclet-zh">${m.zhWord}</span>` : '';
+      return `<a class="chiclet" href="#ch-${s.n}"><span class="chiclet-icon">${icon(s.icon, 30)}</span><span class="chiclet-label">${label}</span>${zh}</a>`;
+    }).join('')}</div>`;
   }
+}
+
+function secHeadHTML(s) {
+  const title = isZh() ? s.title.zh : s.title.en;
+  const sub = isZh() ? s.sub.zh : s.sub.en;
+  const zhLine = isBi() ? `<span class="h2-zh">${s.title.zh}${s.sub.zh}</span>` : '';
+  return `${title}<span class="h2-sub"> ${sub}</span>${zhLine}`;
 }
 
 function renderWhy() {
   const grid = document.getElementById('whyGrid');
-  grid.innerHTML = WHY.map((w, i) => {
-    const title = LANG === 'zh' ? w.zh : w.title;
-    const sub = LANG === 'zh' ? w.title : w.zh;
-    const desc = LANG === 'zh' ? w.desc_zh : w.desc;
+  grid.innerHTML = WHY.map((w) => {
+    const title = isZh() ? w.zh : w.title;
+    const desc = isZh() ? w.desc_zh : w.desc;
     return `
-    <div class="why-card">
-      <span class="why-num">/ 0${i + 1}</span>
-      <div class="why-icon">${icon(w.icon, 28)}</div>
-      <div class="why-title">${title}</div>
-      ${LANG === 'en' ? '' : `<div class="why-title-zh ${LANG === 'zh' ? '' : 'zh'}">${sub}</div>`}
-      <div class="why-desc">${desc}</div>
+    <div class="why-card reveal">
+      <div class="why-icon">${icon(w.icon, 30)}</div>
+      <h3 class="why-title">${title}</h3>
+      ${isBi() ? `<p class="why-title-zh">${w.zh}</p>` : ''}
+      <p class="why-desc">${desc}${isBi() ? `<span class="zh-line">${w.desc_zh}</span>` : ''}</p>
     </div>`;
   }).join('');
+}
+
+function priceLabel(s) {
+  const m = CHAPTER_META[s.n];
+  const unit = s.n === '04' ? (isZh() ? '/条' : ' per video') : (isZh() ? '/月' : '/mo');
+  const amt = fmt(m.from) + unit;
+  return isZh() ? `${amt} 起` : `From ${amt}`;
 }
 
 function renderChapters() {
@@ -254,57 +277,43 @@ function renderChapters() {
   if (!box) return;
   box.innerHTML = SERVICES.map((s, i) => {
     const m = CHAPTER_META[s.n];
-    const word = LANG === 'zh' ? m.zhWord : m.word;
-    const sub = LANG === 'zh' ? s.title : (LANG === 'en' ? '' : '');
-    const title = LANG === 'zh' ? s.zh : s.title;
-    const alt = LANG === 'zh' ? s.title : s.zh;
-    const desc = LANG === 'zh' ? s.desc_zh : s.desc;
+    const dark = (Math.floor(i / 2) + i) % 2 === 0;
+    const title = isZh() ? s.zh : s.title;
+    const desc = isZh() ? s.desc_zh : s.desc;
     const media = s.video
-      ? `<video class="ch-video" src="${s.video}" autoplay muted loop playsinline preload="metadata" poster="images/svc-${s.n}.webp"></video>`
-      : `<img class="ch-img" src="images/svc-${s.n}.webp" alt="${s.title}" loading="lazy" />`;
+      ? `<video class="tile-img" src="${s.video}" autoplay muted loop playsinline preload="metadata" poster="images/svc-${s.n}.webp" aria-label="${s.title} example"></video>`
+      : `<img class="tile-img" src="images/svc-${s.n}.webp" alt="" loading="lazy" width="452" height="606" />`;
+    const added = selected.has(SERVICE_PLAN_ID[s.n]);
+    const addTxt = added ? (isZh() ? '已加入方案' : 'In your plan') : t(I18N.chLink);
     return `
-    <section class="chapter ${i % 2 ? 'flip' : ''}" id="ch-${s.n}">
-      <div class="container">
-        <header class="ch-head reveal">
-          <span class="ch-num mono">${s.n} / 08</span>
-          <h2 class="ch-word">${word}</h2>
-        </header>
-        <div class="ch-body reveal">
-          <div class="ch-media">${media}</div>
-          <div class="ch-info">
-            <span class="ch-tag mono">${m.tag}</span>
-            <h3 class="ch-title">${title}${LANG === 'en' ? '' : ` <span class="ch-alt ${LANG === 'zh' ? '' : 'zh'}">${alt}</span>`}</h3>
-            <p class="ch-desc">${desc}</p>
-            <div class="ch-foot">
-              <span class="ch-price mono">${(() => {
-                const unit = s.n === '04' ? (LANG === 'zh' ? '/条' : '/video') : '/mo';
-                const amt = '$' + m.from.toLocaleString() + unit;
-                return LANG === 'zh' ? amt + ' 起' : 'from ' + amt;
-              })()}</span>
-              <a class="ch-link" href="#pricing">${t(I18N.chLink)} →</a>
-            </div>
-          </div>
+    <article class="tile ${dark ? 'tile-dark' : ''} reveal" id="ch-${s.n}">
+      <div class="tile-copy">
+        <p class="tile-tag">${m.tag}</p>
+        <h3 class="tile-title">${title}</h3>
+        ${isBi() ? `<p class="tile-title-zh">${s.zh}</p>` : ''}
+        <p class="tile-desc">${desc}${isBi() ? `<span class="zh-line">${s.desc_zh}</span>` : ''}</p>
+        <div class="tile-actions">
+          <button type="button" class="btn btn-small ${added ? 'is-added' : ''}" data-add="${SERVICE_PLAN_ID[s.n]}">${addTxt}</button>
+          <span class="tile-price">${priceLabel(s)}</span>
         </div>
       </div>
-    </section>`;
+      <div class="tile-media">${media}</div>
+    </article>`;
   }).join('');
 }
 
 function renderSteps() {
   const c = document.getElementById('stepsContainer');
   c.innerHTML = STEPS.map((s) => {
-    const title = LANG === 'zh' ? s.zh : s.title;
-    const sub = LANG === 'zh' ? s.title : s.zh;
-    const desc = LANG === 'zh' ? s.desc_zh
-      : LANG === 'en' ? s.desc_en
-      : `${s.desc_en}<span class="zh-line zh">${s.desc_zh}</span>`;
+    const title = isZh() ? s.zh : s.title;
+    const desc = isZh() ? s.desc_zh : s.desc_en;
     return `
-    <div class="step reveal">
-      <div class="step-num">${s.n}</div>
-      <div class="step-title">${title}</div>
-      ${LANG === 'en' ? '' : `<div class="step-title-zh ${LANG === 'zh' ? '' : 'zh'}">${sub}</div>`}
-      <div class="step-desc">${desc}</div>
-    </div>`;
+    <li class="step">
+      <span class="step-num">${Number(s.n)}</span>
+      <h3 class="step-title">${title}</h3>
+      ${isBi() ? `<p class="step-title-zh">${s.zh}</p>` : ''}
+      <p class="step-desc">${desc}${isBi() ? `<span class="zh-line">${s.desc_zh}</span>` : ''}</p>
+    </li>`;
   }).join('');
 }
 
@@ -312,30 +321,38 @@ function renderSteps() {
 const selected = new Set();
 const ALL_ITEMS = {};
 [...PRICING_MONTHLY, ...PRICING_SETUP].forEach((i) => { ALL_ITEMS[i.id] = i; });
+const isMonthly = (id) => PRICING_MONTHLY.some((p) => p.id === id);
 
 // Plan attached to the inquiry form (set from the summary card)
 let PLAN = null;
 
-const itemName = (item) => (LANG === 'zh' ? item.zh : item.name);
+const itemName = (item) => (isZh() ? item.zh : item.name);
+const TIER_ZH = {
+  'Single Platform': '单平台', 'Dual Platform': '双平台', 'Creation Only': '仅内容创作',
+  '8 images': '每月 8 张', '16 images': '每月 16 张', 'Starter': '入门版', 'Growth': '进阶版',
+  'per video': '每条',
+};
+const tierText = (item) => (isZh() ? (TIER_ZH[item.tier] || item.tier) : item.tier);
 
 function priceItemHTML(item, kind) {
   const isSel = selected.has(item.id);
-  const tier = item.tier ? `<span class="tier">— ${item.tier}</span>` : '';
-  const unit = kind === 'monthly' ? '<span class="unit">/mo</span>' : '';
+  const tier = item.tier ? `<span class="tier">${tierText(item)}</span>` : '';
+  const zh = isBi() ? `<span class="price-item-zh">${item.zh}</span>` : '';
+  const unit = kind === 'monthly' ? `<span class="unit">${isZh() ? '/月' : '/mo'}</span>` : '';
   return `
     <button type="button" class="price-item ${isSel ? 'is-selected' : ''}" data-id="${item.id}" aria-pressed="${isSel}">
-      <span class="price-item-check" aria-hidden="true">${isSel ? icon('check', 12) : ''}</span>
+      <span class="price-item-check" aria-hidden="true">${icon('check', 14)}</span>
       <span class="price-item-body">
-        <span class="price-item-name">${itemName(item)}${tier}</span>
+        <span class="price-item-name">${itemName(item)}</span>${tier}${zh}
       </span>
       <span class="price-item-amt">${fmt(item.price)}${unit}</span>
     </button>`;
 }
 
 function priceGroupHTML(title, zh, items, kind) {
-  const gTitle = LANG === 'zh' ? (GROUP_ZH[title] || title) : title;
-  const gSub = LANG === 'bi' && zh ? `<span class="price-group-zh zh">${zh}</span>` : '';
-  return `<div class="price-group"><div class="price-group-head"><span class="price-group-title">${gTitle}</span>${gSub}</div><div class="price-group-items">${items.map((i) => priceItemHTML(i, kind)).join('')}</div></div>`;
+  const gTitle = isZh() ? (GROUP_ZH[title] || title) : title;
+  const gSub = isBi() && zh ? `<span class="price-group-zh"> ${zh}</span>` : '';
+  return `<div class="price-group"><h4 class="price-group-head">${gTitle}${gSub}</h4><div class="price-group-items">${items.map((i) => priceItemHTML(i, kind)).join('')}</div></div>`;
 }
 
 function renderPricingPickers() {
@@ -344,21 +361,28 @@ function renderPricingPickers() {
   document.getElementById('pbMonthly').innerHTML =
     Object.entries(groups).map(([g, items]) => priceGroupHTML(g, GROUP_ZH[g], items, 'monthly')).join('');
   document.getElementById('pbSetup').innerHTML =
-    priceGroupHTML('Setup Fees', '一次性配置', PRICING_SETUP, 'setup');
+    `<div class="price-group"><div class="price-group-items">${PRICING_SETUP.map((i) => priceItemHTML(i, 'setup')).join('')}</div></div>`;
+}
+
+function selectItem(id, on) {
+  if (!on) { selected.delete(id); return; }
+  const monthly = PRICING_MONTHLY.find((i) => i.id === id);
+  if (monthly && MUTEX_GROUPS[monthly.cat]) {
+    MUTEX_GROUPS[monthly.cat].forEach((sid) => { if (sid !== id) selected.delete(sid); });
+  }
+  selected.add(id);
+}
+
+function refreshPlan() {
+  renderPricingPickers();
+  renderSummary();
+  renderChapters();
+  observeNewReveals(true);
 }
 
 function toggleItem(id) {
-  if (selected.has(id)) {
-    selected.delete(id);
-  } else {
-    const monthly = PRICING_MONTHLY.find((i) => i.id === id);
-    if (monthly && MUTEX_GROUPS[monthly.cat]) {
-      MUTEX_GROUPS[monthly.cat].forEach((sid) => { if (sid !== id) selected.delete(sid); });
-    }
-    selected.add(id);
-  }
-  renderPricingPickers();
-  renderSummary();
+  selectItem(id, !selected.has(id));
+  refreshPlan();
 }
 
 function computeTotals() {
@@ -368,7 +392,7 @@ function computeTotals() {
     const it = ALL_ITEMS[id];
     if (!it) return;
     items.push(it);
-    if (PRICING_MONTHLY.some((p) => p.id === id)) monthly += it.price;
+    if (isMonthly(id)) monthly += it.price;
     else setup += it.price;
   });
   return { items, monthly, setup };
@@ -380,67 +404,71 @@ function renderSummary() {
   const count = items.length;
 
   document.getElementById('pbCount').textContent =
-    LANG === 'zh' ? `${count} 项` : `${count} item${count === 1 ? '' : 's'}`;
+    isZh() ? `${count} 项` : `${count} item${count === 1 ? '' : 's'}`;
 
   const cartArea = document.getElementById('pbCartArea');
   if (count === 0) {
     cartArea.innerHTML = `
       <div class="pb-empty">
-        <div class="pb-empty-icon">+</div>
-        ${LANG === 'zh'
-          ? '<p>在左侧选择服务开始配置方案。</p>'
-          : LANG === 'en'
-            ? '<p>Pick services on the left to build your plan.</p>'
-            : '<p>Pick services on the left to build your plan.</p><p class="zh-line zh">在左侧选择服务开始配置方案。</p>'}
+        <p>${isZh() ? '选择左侧的服务，方案和价格会显示在这里。' : 'Choose services and your plan and price appear here.'}</p>
+        ${isBi() ? '<p class="zh-line">选择服务后，方案和价格会显示在这里。</p>' : ''}
       </div>`;
   } else {
     cartArea.innerHTML = `<ul class="pb-cart">${items.map((it) => {
-      const tier = it.tier ? `<span class="tier">— ${it.tier}</span>` : '';
-      const unit = PRICING_MONTHLY.some((p) => p.id === it.id) ? '<span class="unit">/mo</span>' : '';
+      const tier = it.tier ? `<span class="tier">${tierText(it)}</span>` : '';
+      const unit = isMonthly(it.id) ? `<span class="unit">${isZh() ? '/月' : '/mo'}</span>` : '';
       return `
         <li class="pb-cart-item">
           <div class="pb-cart-name">${itemName(it)}${tier}</div>
           <div class="pb-cart-right">
             <span class="pb-cart-price">${fmt(it.price)}${unit}</span>
-            <button type="button" class="pb-cart-remove" data-remove="${it.id}" aria-label="Remove ${it.name}">×</button>
+            <button type="button" class="pb-cart-remove" data-remove="${it.id}" aria-label="Remove ${it.name}">${isZh() ? '移除' : 'Remove'}</button>
           </div>
         </li>`;
     }).join('')}</ul>`;
   }
 
   const L = {
-    monthly: { en: 'Monthly recurring', bi: 'Monthly recurring <span class="zh">月费</span>', zh: '每月费用' },
-    setup: { en: 'Setup, one-time', bi: 'Setup, one-time <span class="zh">一次性设置费</span>', zh: '一次性配置费' },
+    monthly: { en: 'Monthly', bi: 'Monthly <span class="zh">月费</span>', zh: '每月费用' },
+    setup: { en: 'One-time setup', bi: 'One-time setup <span class="zh">一次性设置费</span>', zh: '一次性设置费' },
     grand: { en: 'First-year estimate', bi: 'First-year estimate <span class="zh">首年预估</span>', zh: '首年预估' },
   };
-  document.querySelector('#pbMonthlyTotal').innerHTML = `${fmt(monthly)}<span class="unit">/mo</span>`;
+  document.querySelector('#pbMonthlyTotal').innerHTML = `${fmt(monthly)}<span class="unit">${isZh() ? '/月' : '/mo'}</span>`;
   document.querySelector('#pbSetupTotal').textContent = fmt(setup);
   document.querySelector('#pbFirstYear').textContent = fmt(firstYear);
-  document.querySelectorAll('.pb-total-row .pb-total-label')[0].innerHTML = t(L.monthly);
-  document.querySelectorAll('.pb-total-row .pb-total-label')[1].innerHTML = t(L.setup);
-  document.querySelectorAll('.pb-total-row .pb-total-label')[2].innerHTML = t(L.grand);
+  const labels = document.querySelectorAll('.pb-total-row .pb-total-label');
+  labels[0].innerHTML = t(L.monthly);
+  labels[1].innerHTML = t(L.setup);
+  labels[2].innerHTML = t(L.grand);
+
+  const bar = document.getElementById('pbBar');
+  if (bar) {
+    bar.classList.toggle('has-items', count > 0);
+    document.getElementById('pbBarTotal').innerHTML = count === 0
+      ? (isZh() ? '尚未选择服务' : 'No services yet')
+      : `${fmt(monthly)}<span class="unit">${isZh() ? '/月' : '/mo'}</span>${setup ? ` <span class="pb-bar-setup">+ ${fmt(setup)} ${isZh() ? '一次性' : 'setup'}</span>` : ''}`;
+    document.getElementById('pbBarCount').textContent = isZh() ? `${count} 项服务` : `${count} service${count === 1 ? '' : 's'}`;
+    document.getElementById('pbBarBtn').textContent = isZh() ? '查看方案' : 'Review plan';
+  }
 
   const checkout = document.getElementById('pbCheckout');
   checkout.disabled = count === 0;
-  checkout.innerHTML = count === 0
-    ? (LANG === 'zh' ? '请先选择服务' : 'Select services to continue')
-    : (LANG === 'zh' ? '预约咨询此方案 <span class="arrow">→</span>'
-      : LANG === 'en' ? 'Request This Plan <span class="arrow">→</span>'
-      : 'Request This Plan · 预约咨询 <span class="arrow">→</span>');
+  checkout.textContent = count === 0
+    ? (isZh() ? '请先选择服务' : 'Choose a service to continue')
+    : (isZh() ? '发送此方案并预约通话' : 'Send this plan with my inquiry');
 
-  document.getElementById('pbReset').disabled = count === 0;
-  document.getElementById('pbReset').textContent = LANG === 'zh' ? '重置' : LANG === 'en' ? 'Reset' : 'Reset · 重置';
-  document.getElementById('pbSecure').innerHTML = `${icon('check', 12)} ` +
-    (LANG === 'zh' ? '现在无需付款，通话确认后开始'
-      : LANG === 'en' ? 'No payment now — confirmed on a quick call'
-      : 'No payment now · 通话确认后开始');
+  const reset = document.getElementById('pbReset');
+  reset.disabled = count === 0;
+  reset.textContent = isZh() ? '清空' : 'Clear';
+  document.getElementById('pbSecure').innerHTML = `${icon('check', 14)}<span>` +
+    (isZh() ? '现在无需付款，通话确认后开始'
+      : 'No payment now. We confirm on a quick call.') + '</span>';
 
   document.querySelector('.pb-disclaimer').innerHTML =
-    LANG === 'zh'
-      ? '报价为估算，通话确认后开具正式发票。月费服务可随时取消，提前 30 天通知。'
-      : LANG === 'en'
-        ? 'Estimate only — final invoice confirmed after a brief strategy call. Cancel monthly services any time, 30-day notice.'
-        : 'Estimate only — final invoice confirmed after a brief strategy call. Cancel monthly services any time, 30-day notice.<span class="zh-line zh">报价为估算，通话确认后开具正式发票。月费服务可随时取消，提前 30 天通知。</span>';
+    isZh()
+      ? '以上为估算价格，通话确认后开具正式发票。月度服务可随时取消，需提前 30 天通知。'
+      : 'This is an estimate. We send the final invoice after a short strategy call. Monthly services can be cancelled any time with 30 days’ notice.' +
+        (isBi() ? '<span class="zh-line">以上为估算价格，通话确认后开具正式发票。月度服务可随时取消，需提前 30 天通知。</span>' : '');
 }
 
 // Attach the built plan to the inquiry form and scroll there.
@@ -449,7 +477,7 @@ function requestPlan() {
   if (items.length === 0) return;
   PLAN = { ids: items.map((i) => i.id), monthly, setup };
   renderPlanAttach();
-  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('contactFormWrap').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
 }
 
 function renderPlanAttach() {
@@ -457,14 +485,15 @@ function renderPlanAttach() {
   if (!box) return;
   if (!PLAN) { box.innerHTML = ''; return; }
   const items = PLAN.ids.map((id) => ALL_ITEMS[id]).filter(Boolean);
-  const head = LANG === 'zh' ? '已选方案' : LANG === 'en' ? 'Selected plan' : 'Selected plan · 已选方案';
-  const totals = `${fmt(PLAN.monthly)}/mo · ${fmt(PLAN.setup)} ${LANG === 'zh' ? '一次性' : 'setup'}`;
-  const removeTxt = LANG === 'zh' ? '移除' : 'Remove';
+  const head = isZh() ? '随咨询发送的方案' : 'Plan included with this inquiry';
+  const totals = isZh()
+    ? `${fmt(PLAN.monthly)}/月 · 一次性 ${fmt(PLAN.setup)}`
+    : `${fmt(PLAN.monthly)}/mo, plus ${fmt(PLAN.setup)} one-time`;
   box.innerHTML = `
     <div class="plan-attach">
       <div class="plan-attach-head">
-        <span>/ ${head}</span>
-        <button type="button" class="plan-attach-remove" id="planRemove">× ${removeTxt}</button>
+        <span>${head}</span>
+        <button type="button" class="plan-attach-remove" id="planRemove">${isZh() ? '移除' : 'Remove'}</button>
       </div>
       <div class="plan-attach-items">${items.map((i) => `<span class="plan-chip">${itemName(i)}</span>`).join('')}</div>
       <div class="plan-attach-total">${totals}</div>
@@ -487,10 +516,36 @@ function wirePricing() {
     if (btn) toggleItem(btn.getAttribute('data-remove'));
   });
   document.getElementById('pbCheckout').addEventListener('click', requestPlan);
+  document.getElementById('pbBarBtn').addEventListener('click', () => {
+    document.querySelector('.pb-summary').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
+  });
+  // Show the bar only while the service list is on screen and the summary card is not
+  const bar = document.getElementById('pbBar');
+  if ('IntersectionObserver' in window) {
+    let pickerVisible = false, summaryVisible = false;
+    const sync = () => bar.classList.toggle('show', pickerVisible && !summaryVisible);
+    new IntersectionObserver(([e]) => { pickerVisible = e.isIntersecting; sync(); })
+      .observe(document.querySelector('.pb-picker'));
+    new IntersectionObserver(([e]) => { summaryVisible = e.isIntersecting; sync(); }, { threshold: 0.15 })
+      .observe(document.querySelector('.pb-summary-card'));
+  }
   document.getElementById('pbReset').addEventListener('click', () => {
     selected.clear();
-    renderPricingPickers();
-    renderSummary();
+    refreshPlan();
+  });
+  // "Add to plan" on a service tile selects it and shows the plan builder
+  document.getElementById('chapters').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-add]');
+    if (!btn) return;
+    const id = btn.getAttribute('data-add');
+    if (selected.has(id)) {
+      selectItem(id, false);
+      refreshPlan();
+      return;
+    }
+    selectItem(id, true);
+    refreshPlan();
+    document.getElementById('pricing').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth' });
   });
 }
 
@@ -512,22 +567,20 @@ function wireContact() {
     const firstName = form.name.value.trim().split(' ')[0];
     const hadPlan = PLAN && PLAN.ids.length;
     submitBtn.disabled = true;
-    submitBtn.innerHTML = LANG === 'zh' ? '发送中…' : 'Sending…';
+    submitBtn.textContent = isZh() ? '正在发送…' : 'Sending…';
     // Stand-in: a real integration would POST the form + PLAN somewhere.
     setTimeout(() => {
       const planLine = hadPlan
-        ? (LANG === 'zh'
-            ? `已附上您选择的 ${PLAN.ids.length} 项服务方案。`
-            : `Your ${PLAN.ids.length}-service plan is attached.`)
+        ? (isZh() ? `已附上您选择的 ${PLAN.ids.length} 项服务。` : `Your ${PLAN.ids.length}-service plan came with it.`)
         : '';
       wrap.innerHTML = `
         <div class="contact-success">
           <div class="check">${icon('check', 26)}</div>
-          <h3>${LANG === 'zh' ? '已收到您的咨询。' : 'Inquiry received.'}</h3>
-          <p>${LANG === 'zh'
-            ? `谢谢，${firstName}。${planLine}我们将在一个工作日内回复您。`
-            : `Thanks, ${firstName}. ${planLine} We'll be in touch within one business day.`}
-            ${LANG === 'bi' ? '<span class="zh-line zh">已收到，我们将在一个工作日内回复您。</span>' : ''}
+          <h3>${isZh() ? '咨询已发送。' : 'Inquiry sent.'}</h3>
+          <p>${isZh()
+            ? `谢谢，${firstName}。${planLine}我们会在一个工作日内回复您。`
+            : `Thanks, ${firstName}. ${planLine} We'll reply within one business day.`}
+            ${isBi() ? '<span class="zh-line">咨询已发送，我们会在一个工作日内回复您。</span>' : ''}
           </p>
         </div>`;
     }, 700);
@@ -537,83 +590,60 @@ function wireContact() {
 // ===== NAV =====
 function wireNav() {
   const nav = document.getElementById('nav');
-  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 20);
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 }
 
-// ===== LANGUAGE TOGGLE =====
+// ===== LANGUAGE =====
 function applyStatic() {
-  // nav links
   const links = document.querySelectorAll('.nav-links .nav-link');
   const navT = t(I18N.nav);
   links.forEach((a, i) => { a.textContent = navT[i] || a.textContent; });
 
-  // hero buttons
   const btnT = t(I18N.heroBtns);
   document.querySelectorAll('.hero-ctas-new .btn-label').forEach((el, i) => { el.textContent = btnT[i]; });
 
-  // section heads
   Object.entries(I18N.secs).forEach(([id, s]) => {
     const sec = document.getElementById(id);
     if (!sec) return;
-    const eyebrow = sec.querySelector('.eyebrow');
     const h2 = sec.querySelector('.sec-head h2');
     const p = sec.querySelector('.sec-head p');
-    if (eyebrow) eyebrow.textContent = t(s.eyebrow);
-    if (h2) h2.innerHTML = `${t(s.title)}<span class="zh-sub">${t(s.sub)}</span>`;
-    if (p) p.textContent = t(s.desc);
+    if (h2) h2.innerHTML = secHeadHTML(s);
+    if (p && s.desc) {
+      p.innerHTML = (isZh() ? s.desc.zh : s.desc.en) + (isBi() ? `<span class="zh-line">${s.desc.zh}</span>` : '');
+    }
   });
 
-  // contact display h2
   const ch2 = document.getElementById('contactH2');
   if (ch2) ch2.innerHTML = t(I18N.contactH2);
 
-  // footer column heads
   const heads = document.querySelectorAll('.footer h4');
   const fh = t(I18N.footerHeads);
   heads.forEach((h, i) => { h.textContent = fh[i] || h.textContent; });
 
-  document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : 'en';
-}
-
-function splitHeroChars() {
-  const h1 = document.querySelector('.hero-display');
-  if (!h1) return;
-  const rows = t(I18N.heroWords);
-  const delays = [0.15, 0.32];
-  h1.innerHTML = rows.map((row, ri) =>
-    `<span class="row">${row.map((seg, si) => {
-      const cls = 'word' + (seg.ai ? ' ai' : '');
-      const prior = row.slice(0, si).reduce((n, p) => n + p.t.length, 0);
-      const base = delays[ri] + prior * 0.04;
-      if (FX_REDUCED) return `<span class="${cls}" style="animation:none;opacity:1;transform:none">${seg.t}</span>`;
-      const chars = [...seg.t].map((ch, i) =>
-        ch.trim() === '' ? ch : `<span class="char" style="animation-delay:${(base + i * 0.04).toFixed(3)}s">${ch}</span>`
-      ).join('');
-      return `<span class="${cls}" style="animation:none;opacity:1;transform:none">${chars}</span>`;
-    }).join('')}</span>`
-  ).join('');
+  document.documentElement.lang = isZh() ? 'zh-CN' : 'en';
 }
 
 function setLang(lang) {
   LANG = lang;
-  localStorage.setItem('eoracco-lang', lang);
-  document.body.classList.remove('lang-en', 'lang-zh');
-  if (lang === 'en') document.body.classList.add('lang-en');
-  if (lang === 'zh') document.body.classList.add('lang-zh');
-  document.querySelectorAll('#langToggle button').forEach((b) =>
-    b.classList.toggle('active', b.dataset.lang === lang));
+  try { localStorage.setItem('eoracco-lang', lang); } catch (e) { /* storage unavailable */ }
+  document.body.classList.remove('lang-en', 'lang-zh', 'lang-bi');
+  document.body.classList.add('lang-' + lang);
+  document.querySelectorAll('#langToggle button').forEach((b) => {
+    const on = b.dataset.lang === lang;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on);
+  });
   applyStatic();
-  splitHeroChars();
+  renderHero();
   renderWhy();
   renderChapters();
   renderSteps();
-  renderHeroExtras();
   renderPricingPickers();
   renderSummary();
   renderPlanAttach();
-  observeNewReveals();
+  observeNewReveals(true);
 }
 
 function wireLangToggle() {
@@ -623,14 +653,21 @@ function wireLangToggle() {
   });
 }
 
-// ===== REVEALS =====
+// ===== REVEALS (tiles + section heads fade up once) =====
 let revealIO = null;
-function observeNewReveals() {
+function observeNewReveals(instantIfVisible) {
   if (!revealIO) return;
-  document.querySelectorAll('.reveal:not(.in):not(.step), .reveal-stagger:not(.in)').forEach((el) => revealIO.observe(el));
+  document.querySelectorAll('.reveal:not(.in)').forEach((el) => {
+    if (instantIfVisible && el.getBoundingClientRect().top < innerHeight) { el.classList.add('in'); return; }
+    revealIO.observe(el);
+  });
 }
 
 function wireReveals() {
+  if (REDUCED || !('IntersectionObserver' in window)) {
+    document.body.classList.add('no-reveal');
+    return;
+  }
   revealIO = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (e.isIntersecting) {
@@ -638,117 +675,8 @@ function wireReveals() {
         revealIO.unobserve(e.target);
       }
     });
-  }, { threshold: 0, rootMargin: '0px 0px -60px 0px' });
-
-  document.querySelectorAll('.reveal:not(.step), .reveal-stagger').forEach((el) => revealIO.observe(el));
-
-  document.querySelectorAll('.reveal-stagger').forEach((container) => {
-    const step = container.classList.contains('svc-grid') ? 70 : 90;
-    Array.from(container.children).forEach((child, i) => {
-      child.style.transitionDelay = `${i * step}ms`;
-    });
-  });
-
-  const stepsWrap = document.getElementById('stepsWrap');
-  const stepsIO = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) {
-        stepsWrap.classList.add('in');
-        stepsWrap.querySelectorAll('.step').forEach((step, i) => {
-          step.style.transitionDelay = `${300 + i * 200}ms`;
-          step.classList.add('in');
-        });
-        stepsIO.unobserve(stepsWrap);
-      }
-    });
-  }, { threshold: 0, rootMargin: '0px 0px -60px 0px' });
-  stepsIO.observe(stepsWrap);
-}
-
-// ===== FX PACK =====
-function wireCursor() {
-  if (!FX_FINE || FX_REDUCED) return;
-  document.body.classList.add('fx-cursor');
-  const dot = document.createElement('div'); dot.className = 'cursor-dot';
-  const ring = document.createElement('div'); ring.className = 'cursor-ring';
-  document.body.append(ring, dot);
-  let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
-  addEventListener('mousemove', (e) => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
-  }, { passive: true });
-  (function loop() {
-    rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
-    ring.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)';
-    requestAnimationFrame(loop);
-  })();
-  const sel = 'a, button, .price-item, .svc-card, .why-card, select, label';
-  document.addEventListener('mouseover', (e) => { if (e.target.closest(sel)) ring.classList.add('on'); });
-  document.addEventListener('mouseout', (e) => { if (e.target.closest(sel)) ring.classList.remove('on'); });
-}
-
-function wireMagnetic() {
-  if (!FX_FINE || FX_REDUCED) return;
-  document.querySelectorAll('.btn, .cta-mini, .pb-checkout, .contact-submit').forEach((el) => {
-    const strength = 0.3;
-    el.addEventListener('mousemove', (e) => {
-      const r = el.getBoundingClientRect();
-      const x = (e.clientX - r.left - r.width / 2) * strength;
-      const y = (e.clientY - r.top - r.height / 2) * strength;
-      el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
-    });
-    el.addEventListener('mouseleave', () => {
-      el.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
-      el.style.transform = '';
-      setTimeout(() => { el.style.transition = ''; }, 500);
-    });
-  });
-}
-
-function wireGlare() {
-  if (!FX_FINE) return;
-  document.addEventListener('mousemove', (e) => {
-    const card = e.target.closest('.why-card, .svc-card');
-    if (!card) return;
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 100) + '%');
-    card.style.setProperty('--gy', ((e.clientY - r.top) / r.height * 100) + '%');
-  }, { passive: true });
-}
-
-function wireChrome() {
-  const prog = document.createElement('div');
-  prog.className = 'scroll-progress';
-  prog.innerHTML = '<div class="bar"></div>';
-  document.body.append(prog);
-  const bar = prog.firstChild;
-  const upd = () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    bar.style.transform = 'scaleX(' + (max ? scrollY / max : 0) + ')';
-  };
-  addEventListener('scroll', () => requestAnimationFrame(upd), { passive: true });
-  upd();
-  if (!FX_REDUCED) {
-    const grain = document.createElement('div');
-    grain.className = 'grain';
-    document.body.append(grain);
-  }
-}
-
-function wireRipple() {
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn-primary, .pb-checkout, .contact-submit, .cta-mini');
-    if (!btn || FX_REDUCED) return;
-    const r = btn.getBoundingClientRect();
-    const rip = document.createElement('span');
-    rip.className = 'ripple';
-    const size = Math.max(r.width, r.height);
-    rip.style.width = rip.style.height = size + 'px';
-    rip.style.left = (e.clientX - r.left - size / 2) + 'px';
-    rip.style.top = (e.clientY - r.top - size / 2) + 'px';
-    btn.append(rip);
-    setTimeout(() => rip.remove(), 650);
-  });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  observeNewReveals(false);
 }
 
 // ===== INIT =====
@@ -757,11 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
   wireContact();
   wireNav();
   wireLangToggle();
-  setLang(LANG);          // renders why/services/steps/pricing + statics + hero chars
+  setLang(LANG);
   wireReveals();
-  wireCursor();
-  wireMagnetic();
-  wireGlare();
-  wireChrome();
-  wireRipple();
+  requestAnimationFrame(() => document.body.classList.add('loaded'));
 });
