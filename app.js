@@ -146,8 +146,6 @@ const I18N = {
     why: {
       title: { en: 'Why EORACCO.', zh: '为什么选择我们。' },
       sub: { en: 'One studio, two languages, the full stack.', zh: '一个团队，两种语言，全套体系。' },
-      desc: { en: 'Most agencies speak one language and run one channel. We do both — fluently, locally, end to end.',
-              zh: '大多数机构只说一种语言、只做一个渠道。我们两者兼顾：流利、本地、从头到尾。' },
     },
     services: {
       title: { en: 'Eight services.', zh: '八项服务。' },
@@ -172,6 +170,33 @@ const I18N = {
               zh: '简单介绍您的业务，我们会在一个工作日内回复下一步安排，不合适也会直说。' },
     },
   },
+  statement: {
+    en: 'Most agencies speak one language and run one channel. We do both — fluently, locally, end to end.',
+    zh: '大多数机构只说一种语言、只做一个渠道。我们两者兼顾：流利、本地、从头到尾。',
+  },
+  servicesHint: {
+    en: 'Browse all eight, and add any of them to your plan.',
+    bi: 'Browse all eight, and add any of them to your plan.',
+    zh: '浏览全部八项服务，可直接加入方案。',
+  },
+  zoom: {
+    kicker: { en: 'Video Creative', zh: '视频制作' },
+    h: { en: 'Short-form video.<br/>From $100.', zh: '短视频剪辑。<br/>每条 $100 起。' },
+    p: { en: 'Editing for Reels, Shorts and paid ads, built for vertical screens.',
+         zh: '适用于 Reels、Shorts 和广告投放的竖屏短视频剪辑。' },
+  },
+  film: {
+    kicker: { en: 'Made in-house', zh: '自家出品' },
+    h: { en: 'Motion design,<br/>by us.', zh: '动态设计，<br/>我们自己做。' },
+    p: { en: 'We animated this short in After Effects. Your ads and reels get the same hands.',
+         zh: '这支短片由我们在 After Effects 中制作。您的广告和短视频，也由同一双手完成。' },
+  },
+  stats: [
+    { n: 8,  suffix: '',   en: 'services, one team',        zh: '项服务，一个团队' },
+    { n: 2,  suffix: '',   en: 'languages, native in both', zh: '种语言，双母语' },
+    { n: 24, suffix: '/7', en: 'AI call answering',         zh: 'AI 电话接待' },
+    { n: 14, suffix: '',   en: 'days to launch, typically', zh: '天左右上线' },
+  ],
   contactH2: {
     en: 'Book a free<br/>30-minute call.',
     bi: 'Book a free<br/>30-minute call.',
@@ -213,6 +238,26 @@ const fmt = (n) => '$' + n.toLocaleString();
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isBi = () => LANG === 'bi';
 const isZh = () => LANG === 'zh';
+const scrollToEl = (el, offset = 0) => {
+  if (!el) return;
+  if (window.EO_MOTION && window.EO_MOTION.scrollTo) { window.EO_MOTION.scrollTo(el, offset); return; }
+  el.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
+};
+
+// Count a figure up/down to its new value (money totals in the plan card)
+function tweenFigure(el, to, render) {
+  const from = Number(el.dataset.v || 0);
+  el.dataset.v = to;
+  if (REDUCED || from === to) { el.innerHTML = render(to); return; }
+  const start = performance.now(), dur = 650;
+  const step = (now) => {
+    const p = Math.min(1, (now - start) / dur);
+    const e = 1 - Math.pow(1 - p, 4);
+    el.innerHTML = render(Math.round(from + (to - from) * e));
+    if (p < 1 && Number(el.dataset.v) === to) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
 
 // Service tile → the plan item "Add to plan" selects
 const SERVICE_PLAN_ID = {
@@ -252,17 +297,68 @@ function secHeadHTML(s) {
 
 function renderWhy() {
   const grid = document.getElementById('whyGrid');
-  grid.innerHTML = WHY.map((w) => {
+  grid.innerHTML = WHY.map((w, i) => {
     const title = isZh() ? w.zh : w.title;
     const desc = isZh() ? w.desc_zh : w.desc;
+    const art = i === 0
+      ? `<div class="bento-swap" aria-hidden="true"><span>EN</span><span>中</span></div>`
+      : `<div class="bento-icon">${icon(w.icon, 34)}</div>`;
     return `
-    <div class="why-card reveal">
-      <div class="why-icon">${icon(w.icon, 30)}</div>
-      <h3 class="why-title">${title}</h3>
-      ${isBi() ? `<p class="why-title-zh">${w.zh}</p>` : ''}
-      <p class="why-desc">${desc}${isBi() ? `<span class="zh-line">${w.desc_zh}</span>` : ''}</p>
+    <div class="bento-card glow-card bento-${i + 1}">
+      ${art}
+      <div class="bento-copy">
+        <h3 class="bento-title">${title}</h3>
+        ${isBi() ? `<p class="bento-zh">${w.zh}</p>` : ''}
+        <p class="bento-desc">${desc}${isBi() ? `<span class="zh-line">${w.desc_zh}</span>` : ''}</p>
+      </div>
     </div>`;
   }).join('');
+}
+
+function renderStatement() {
+  const el = document.getElementById('statement');
+  const zhEl = document.getElementById('statementZh');
+  const text = isZh() ? I18N.statement.zh : I18N.statement.en;
+  // one span per word (per character for Chinese) so motion.js can light them up in order
+  const parts = isZh() ? [...text] : text.split(' ');
+  el.innerHTML = parts.map((w) => `<span class="w">${w}</span>`).join(isZh() ? '' : ' ');
+  el.setAttribute('aria-label', text);
+  zhEl.textContent = isBi() ? I18N.statement.zh : '';
+}
+
+function renderZoom() {
+  const z = I18N.zoom;
+  document.getElementById('zoomKicker').textContent = isZh() ? z.kicker.zh : z.kicker.en;
+  document.getElementById('zoomH').innerHTML = isZh() ? z.h.zh : z.h.en;
+  document.getElementById('zoomP').innerHTML = (isZh() ? z.p.zh : z.p.en) + (isBi() ? `<span class="zh-line">${z.p.zh}</span>` : '');
+}
+
+function renderFilm() {
+  const f = I18N.film;
+  document.getElementById('filmKicker').textContent = isZh() ? f.kicker.zh : f.kicker.en;
+  document.getElementById('filmH').innerHTML = isZh() ? f.h.zh : f.h.en;
+  document.getElementById('filmP').innerHTML = (isZh() ? f.p.zh : f.p.en) + (isBi() ? `<span class="zh-line">${f.p.zh}</span>` : '');
+}
+
+function renderStats() {
+  document.getElementById('statsGrid').innerHTML = I18N.stats.map((st) => `
+    <div class="stat">
+      <p class="stat-num"><span class="count" data-count="${st.n}">${st.n}</span>${st.suffix}</p>
+      <p class="stat-label">${isZh() ? st.zh : st.en}${isBi() ? `<span class="zh-line">${st.zh}</span>` : ''}</p>
+    </div>`).join('');
+}
+
+function addLabel(id) {
+  return selected.has(id) ? (isZh() ? '已加入方案' : 'In your plan') : t(I18N.chLink);
+}
+
+// Update every "Add to plan" button without re-rendering the gallery
+function updateAddButtons() {
+  document.querySelectorAll('[data-add]').forEach((b) => {
+    const id = b.getAttribute('data-add');
+    b.classList.toggle('is-added', selected.has(id));
+    b.textContent = addLabel(id);
+  });
 }
 
 function priceLabel(s) {
@@ -275,29 +371,26 @@ function priceLabel(s) {
 function renderChapters() {
   const box = document.getElementById('chapters');
   if (!box) return;
-  box.innerHTML = SERVICES.map((s, i) => {
+  document.getElementById('servicesHint').textContent = t(I18N.servicesHint);
+  box.innerHTML = SERVICES.map((s) => {
     const m = CHAPTER_META[s.n];
-    const dark = (Math.floor(i / 2) + i) % 2 === 0;
     const title = isZh() ? s.zh : s.title;
     const desc = isZh() ? s.desc_zh : s.desc;
-    const media = s.video
-      ? `<video class="tile-img" src="${s.video}" autoplay muted loop playsinline preload="metadata" poster="images/svc-${s.n}.webp" aria-label="${s.title} example"></video>`
-      : `<img class="tile-img" src="images/svc-${s.n}.webp" alt="" loading="lazy" width="452" height="606" />`;
-    const added = selected.has(SERVICE_PLAN_ID[s.n]);
-    const addTxt = added ? (isZh() ? '已加入方案' : 'In your plan') : t(I18N.chLink);
+    const id = SERVICE_PLAN_ID[s.n];
     return `
-    <article class="tile ${dark ? 'tile-dark' : ''} reveal" id="ch-${s.n}">
-      <div class="tile-copy">
-        <p class="tile-tag">${m.tag}</p>
-        <h3 class="tile-title">${title}</h3>
-        ${isBi() ? `<p class="tile-title-zh">${s.zh}</p>` : ''}
-        <p class="tile-desc">${desc}${isBi() ? `<span class="zh-line">${s.desc_zh}</span>` : ''}</p>
-        <div class="tile-actions">
-          <button type="button" class="btn btn-small ${added ? 'is-added' : ''}" data-add="${SERVICE_PLAN_ID[s.n]}">${addTxt}</button>
-          <span class="tile-price">${priceLabel(s)}</span>
+    <article class="card" id="ch-${s.n}">
+      <div class="card-media"><img class="card-img" src="images/svc-${s.n}.webp" alt="" loading="lazy" width="452" height="606" /></div>
+      <div class="card-shade" aria-hidden="true"></div>
+      <div class="card-body">
+        <p class="card-tag">${m.tag}</p>
+        <h3 class="card-title">${title}</h3>
+        ${isBi() ? `<p class="card-zh">${s.zh}</p>` : ''}
+        <p class="card-desc">${desc}</p>
+        <div class="card-actions">
+          <button type="button" class="btn btn-small ${selected.has(id) ? 'is-added' : ''}" data-add="${id}">${addLabel(id)}</button>
+          <span class="card-price">${priceLabel(s)}</span>
         </div>
       </div>
-      <div class="tile-media">${media}</div>
     </article>`;
   }).join('');
 }
@@ -376,8 +469,7 @@ function selectItem(id, on) {
 function refreshPlan() {
   renderPricingPickers();
   renderSummary();
-  renderChapters();
-  observeNewReveals(true);
+  updateAddButtons();
 }
 
 function toggleItem(id) {
@@ -433,9 +525,10 @@ function renderSummary() {
     setup: { en: 'One-time setup', bi: 'One-time setup <span class="zh">一次性设置费</span>', zh: '一次性设置费' },
     grand: { en: 'First-year estimate', bi: 'First-year estimate <span class="zh">首年预估</span>', zh: '首年预估' },
   };
-  document.querySelector('#pbMonthlyTotal').innerHTML = `${fmt(monthly)}<span class="unit">${isZh() ? '/月' : '/mo'}</span>`;
-  document.querySelector('#pbSetupTotal').textContent = fmt(setup);
-  document.querySelector('#pbFirstYear').textContent = fmt(firstYear);
+  const per = `<span class="unit">${isZh() ? '/月' : '/mo'}</span>`;
+  tweenFigure(document.querySelector('#pbMonthlyTotal'), monthly, (v) => fmt(v) + per);
+  tweenFigure(document.querySelector('#pbSetupTotal'), setup, fmt);
+  tweenFigure(document.querySelector('#pbFirstYear'), firstYear, fmt);
   const labels = document.querySelectorAll('.pb-total-row .pb-total-label');
   labels[0].innerHTML = t(L.monthly);
   labels[1].innerHTML = t(L.setup);
@@ -477,7 +570,7 @@ function requestPlan() {
   if (items.length === 0) return;
   PLAN = { ids: items.map((i) => i.id), monthly, setup };
   renderPlanAttach();
-  document.getElementById('contactFormWrap').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
+  document.getElementById('contact').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth' });
 }
 
 function renderPlanAttach() {
@@ -516,9 +609,7 @@ function wirePricing() {
     if (btn) toggleItem(btn.getAttribute('data-remove'));
   });
   document.getElementById('pbCheckout').addEventListener('click', requestPlan);
-  document.getElementById('pbBarBtn').addEventListener('click', () => {
-    document.querySelector('.pb-summary').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
-  });
+  document.getElementById('pbBarBtn').addEventListener('click', () => scrollToEl(document.querySelector('.pb-summary'), -80));
   // Show the bar only while the service list is on screen and the summary card is not
   const bar = document.getElementById('pbBar');
   if ('IntersectionObserver' in window) {
@@ -533,19 +624,18 @@ function wirePricing() {
     selected.clear();
     refreshPlan();
   });
-  // "Add to plan" on a service tile selects it and shows the plan builder
-  document.getElementById('chapters').addEventListener('click', (e) => {
+  // "Add to plan" anywhere on the page (gallery cards, video section) selects the item
+  document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-add]');
     if (!btn) return;
     const id = btn.getAttribute('data-add');
-    if (selected.has(id)) {
-      selectItem(id, false);
-      refreshPlan();
-      return;
-    }
-    selectItem(id, true);
+    const on = !selected.has(id);
+    selectItem(id, on);
     refreshPlan();
-    document.getElementById('pricing').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth' });
+    if (on) {
+      btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+      if (window.EO_MOTION && window.EO_MOTION.flyToPlan) window.EO_MOTION.flyToPlan(btn);
+    }
   });
 }
 
@@ -637,13 +727,17 @@ function setLang(lang) {
   });
   applyStatic();
   renderHero();
+  renderStatement();
+  renderFilm();
   renderWhy();
   renderChapters();
+  renderZoom();
+  renderStats();
   renderSteps();
   renderPricingPickers();
   renderSummary();
   renderPlanAttach();
-  observeNewReveals(true);
+  if (window.EO_MOTION && window.EO_MOTION.rebuild) window.EO_MOTION.rebuild();
 }
 
 function wireLangToggle() {
@@ -653,32 +747,6 @@ function wireLangToggle() {
   });
 }
 
-// ===== REVEALS (tiles + section heads fade up once) =====
-let revealIO = null;
-function observeNewReveals(instantIfVisible) {
-  if (!revealIO) return;
-  document.querySelectorAll('.reveal:not(.in)').forEach((el) => {
-    if (instantIfVisible && el.getBoundingClientRect().top < innerHeight) { el.classList.add('in'); return; }
-    revealIO.observe(el);
-  });
-}
-
-function wireReveals() {
-  if (REDUCED || !('IntersectionObserver' in window)) {
-    document.body.classList.add('no-reveal');
-    return;
-  }
-  revealIO = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        revealIO.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  observeNewReveals(false);
-}
-
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
   wirePricing();
@@ -686,6 +754,13 @@ document.addEventListener('DOMContentLoaded', () => {
   wireNav();
   wireLangToggle();
   setLang(LANG);
-  wireReveals();
-  requestAnimationFrame(() => document.body.classList.add('loaded'));
+  // In-page anchors go through the smooth scroller when motion.js is running
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || a.getAttribute('href').length < 2) return;
+    const target = document.querySelector(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    scrollToEl(target, a.getAttribute('href') === '#top' ? 0 : -10);
+  });
 });
