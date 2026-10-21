@@ -342,9 +342,8 @@
 
   // "Add to plan": a small amber dot flies to the nav so the visitor sees where it went
   function flyToPlan(btn) {
-    const links = [...document.querySelectorAll('.nav-links .nav-link')];
-    const target = links.find((a) => a.getAttribute('href') === '#pricing' && a.offsetParent) ||
-                   document.querySelector('.cta-mini');
+    const visible = (sel) => [...document.querySelectorAll(sel)].find((el) => el.offsetParent);
+    const target = visible('.nav-links a[href="#pricing"]') || visible('.nav-burger') || visible('.cta-mini');
     if (!target) return;
     const a = btn.getBoundingClientRect();
     const b = target.getBoundingClientRect();

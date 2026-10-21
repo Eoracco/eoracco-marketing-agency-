@@ -2,8 +2,7 @@
 
 // ===== LANGUAGE STATE =====
 // 'en' = English only · 'bi' = bilingual (default) · 'zh' = Chinese primary
-let LANG = 'bi';
-try { LANG = localStorage.getItem('eoracco-lang') || 'bi'; } catch (e) { /* storage unavailable */ }
+let LANG = window.EO ? window.EO.lang : 'bi';
 
 // ===== DATA =====
 const WHY = [
@@ -16,56 +15,10 @@ const WHY = [
   { icon: 'pin',      title: 'SGV / SoCal Expertise', zh: '南加州本地专家',
     desc: 'Boots-on-the-ground knowledge of the San Gabriel Valley & Greater LA market.',
     desc_zh: '深耕圣盖博谷与大洛杉矶市场的本地经验。' },
-  { icon: 'layers',   title: 'One Roof, Full Stack',  zh: '所有服务一站式',
-    desc: 'Ads, social, creative, email, web, and AI voice — under a single team.',
-    desc_zh: '广告、社媒、素材、邮件、网站与 AI 语音，一个团队全包。' },
+  { icon: 'layers',   title: 'One Contact, Full Stack', zh: '一个窗口，全套服务',
+    desc: 'Ads, social, creative, 3D, web and AI voice, coordinated through one point of contact.',
+    desc_zh: '广告、社媒、内容、3D、网站与 AI 语音，由一个窗口统一对接。' },
 ];
-
-const SERVICES = [
-  { n: '01', icon: 'target', title: 'Paid Advertising',        zh: '付费广告投放',
-    desc: 'Google Ads & Meta Ads management and continuous optimization.',
-    desc_zh: '谷歌与 Meta 广告投放及持续优化。' },
-  { n: '02', icon: 'share',  title: 'Social Media Management', zh: '社交媒体管理',
-    desc: 'Content creation, scheduling, and community engagement done daily.',
-    desc_zh: '内容创作、排期发布与社群互动，每日执行。' },
-  { n: '03', icon: 'image',  title: 'Ad Creative',             zh: '广告素材制作',
-    desc: 'High-converting static image creatives for every platform.',
-    desc_zh: '高转化静态广告图，适配各平台。' },
-  { n: '04', icon: 'film',   title: 'Video Creative',          zh: '视频制作',
-    desc: 'Short-form video editing for ads, reels, and organic social — from $100 per video.',
-    desc_zh: '短视频剪辑，适用于广告、Reels 与日常内容，每条 $100 起。',
-    video: 'video/short-video-demo.mp4' },
-  { n: '05', icon: 'mail',   title: 'Email & SMS Marketing',   zh: '邮件与短信营销',
-    desc: 'Campaigns, automations, and performance reporting that compounds.',
-    desc_zh: '邮件营销活动、自动化流程与效果报告。' },
-  { n: '06', icon: 'phone',  title: 'Call Tracking',           zh: '电话来源追踪',
-    desc: 'Know exactly which ads — and keywords — drive every phone call.',
-    desc_zh: '精确追踪每通来电来自哪条广告与关键词。' },
-  { n: '07', icon: 'mic',    title: 'AI Voice Agent',          zh: 'AI 智能电话接待',
-    desc: '24/7 inbound call answering and lead qualification, auto-handled.',
-    desc_zh: '24/7 自动接听来电并筛选意向客户。' },
-  { n: '08', icon: 'code',   title: 'Web Management & SEO',    zh: '网站管理与 SEO',
-    desc: 'Compliance, tracking setup, and ongoing SEO optimization.',
-    desc_zh: '合规、追踪配置与持续 SEO 优化。' },
-  { n: '09', icon: 'app',    title: 'iOS App Development',     zh: 'iOS 应用开发',
-    desc: 'Native iPhone and iPad apps in SwiftUI, from first build to App Store launch.',
-    desc_zh: '用 SwiftUI 开发原生 iPhone 和 iPad 应用，从第一个版本到上架 App Store。',
-    img: 'images/apps/pompolo-art.webp' },
-];
-
-
-// Chapter presentation for each service (Editions-style giant words)
-const CHAPTER_META = {
-  '01': { word: 'Ads',      zhWord: '广告', tag: 'Google · Meta · TikTok',      from: 800 },
-  '02': { word: 'Social',   zhWord: '社媒', tag: 'IG · 小红书 · TikTok',        from: 500 },
-  '03': { word: 'Creative', zhWord: '素材', tag: 'Statics · 8–16 / mo',         from: 400 },
-  '04': { word: 'Video',    zhWord: '视频', tag: 'Reels · Shorts · Ads',        from: 100 },
-  '05': { word: 'Email',    zhWord: '邮件', tag: 'Campaigns · Automations',     from: 600 },
-  '06': { word: 'Tracking', zhWord: '追踪', tag: 'Numbers · Attribution',       from: 200 },
-  '07': { word: 'Voice',    zhWord: '语音', tag: '24/7 AI Reception',           from: 200 },
-  '08': { word: 'Web',      zhWord: '网站', tag: 'GTM · GA4 · SEO',             from: 400 },
-  '09': { word: 'Apps',     zhWord: '应用', tag: 'SwiftUI · iPhone · iPad',     from: null },
-};
 
 const PRICING_MONTHLY = [
   { id: 'ads-single',       name: 'Paid Ads',                  zh: '付费广告',       tier: 'Single Platform', price: 800,  cat: 'ads',      group: 'Paid Advertising' },
@@ -92,13 +45,22 @@ const PRICING_SETUP = [
   { id: 'su-tracking',   name: 'Tracking Setup',        zh: '追踪配置',      tier: 'GTM + GA4', price: 300,  group: 'Setup' },
   { id: 'su-seo',        name: 'SEO Foundation',        zh: 'SEO 基础建设',  tier: null,        price: 500,  group: 'Setup' },
   { id: 'su-web-bundle', name: 'Full Web Setup Bundle', zh: '网站配置全包',  tier: null,        price: 900,  group: 'Setup' },
+  { id: 'pitch-deck',     name: 'Pitch Deck Design',      zh: '路演 PPT 设计',      tier: 'up to 15 slides', price: 1200, group: 'Projects' },
+  { id: 'render-ext',     name: 'ADU Exterior Rendering', zh: 'ADU 外观效果图',     tier: 'per image',       price: 450,  group: 'Projects' },
+  { id: 'render-int',     name: 'Interior Rendering',     zh: '室内效果图',         tier: 'per image',       price: 350,  group: 'Projects' },
+  { id: 'walkthrough',    name: '3D Walkthrough Video',   zh: '3D 漫游视频',        tier: 'up to 30 s',      price: 1800, group: 'Projects' },
+  { id: 'product-render', name: '3D Product Render',      zh: '3D 产品渲染',        tier: 'per image',       price: 250,  group: 'Projects' },
+  { id: 'product-anim',   name: 'Product Animation',      zh: '产品动画',           tier: 'up to 15 s',      price: 900,  group: 'Projects' },
+  { id: 'mascot-2d',      name: 'Brand Mascot, 2D',       zh: '品牌吉祥物（2D）',   tier: null,              price: 600,  group: 'Projects' },
+  { id: 'mascot-3d',      name: 'Brand Mascot, 3D',       zh: '品牌吉祥物（3D）',   tier: null,              price: 1800, group: 'Projects' },
 ];
 
 const GROUP_ZH = {
   'Paid Advertising': '付费广告', 'Social Media': '社交媒体', 'Creative': '素材创意',
   'Email & SMS': '邮件与短信', 'Voice & Tracking': '语音与追踪', 'Web & SEO': '网站与SEO',
-  'Setup Fees': '一次性配置',
+  'Setup Fees': '一次性配置', 'Setup': '一次性设置', 'Projects': '3D 与项目',
 };
+const GROUP_EN = { 'Setup': 'Setup fees', 'Projects': '3D & projects' };
 
 // Mutually exclusive tiers within a category.
 const MUTEX_GROUPS = {
@@ -140,11 +102,11 @@ const I18N = {
     zh: [[{ t: '营销的' }], [{ t: '文艺复兴。' }]],
   },
   heroSub: {
-    en: 'Bilingual marketing for Los Angeles businesses. Nine services, one studio, two languages.',
-    bi: 'Bilingual marketing for Los Angeles businesses. Nine services, one studio, two languages.',
-    zh: '为洛杉矶商家打造的双语营销。九项服务，一个团队，两种语言。',
+    en: 'Bilingual marketing for Los Angeles businesses. Marketing, creative, 3D and apps, in English and Chinese.',
+    bi: 'Bilingual marketing for Los Angeles businesses. Marketing, creative, 3D and apps, in English and Chinese.',
+    zh: '为洛杉矶商家提供营销、内容、3D 与 App 服务，中英双语。',
   },
-  heroSubZh: '双语营销的新世界 · 九项服务，一个团队。',
+  heroSubZh: '营销、内容、3D 与 App，中英双语。',
   chLink: { en: 'Add to plan', bi: 'Add to plan', zh: '加入方案' },
   // Each head: title (bold) + sub (grey, Apple-style continuation) + zh line in bilingual mode
   secs: {
@@ -153,8 +115,8 @@ const I18N = {
       sub: { en: 'One studio, two languages, the full stack.', zh: '一个团队，两种语言，全套体系。' },
     },
     services: {
-      title: { en: 'Nine services.', zh: '九项服务。' },
-      sub: { en: 'One team behind all of them.', zh: '全部由同一个团队负责。' },
+      title: { en: 'Four ways we help.', zh: '四大类服务。' },
+      sub: { en: 'One point of contact for all of them.', zh: '全部由同一个窗口对接。' },
     },
     pricing: {
       title: { en: 'Build your plan.', zh: '自助配置方案。' },
@@ -180,9 +142,9 @@ const I18N = {
     zh: '大多数机构只说一种语言、只做一个渠道。我们两者兼顾：流利、本地、从头到尾。',
   },
   servicesHint: {
-    en: "Browse all nine. Add marketing services to your plan, or see the apps we've built.",
-    bi: "Browse all nine. Add marketing services to your plan, or see the apps we've built.",
-    zh: '浏览全部九项服务。营销服务可直接加入方案，也可以看看我们做过的 App。',
+    en: 'Marketing, creative, 3D visualization and apps. Open any group to see every service and price.',
+    bi: 'Marketing, creative, 3D visualization and apps. Open any group to see every service and price.',
+    zh: '营销、内容、3D 可视化与 App。点进任一类，查看全部服务和价格。',
   },
   zoom: {
     kicker: { en: 'Video Creative', zh: '视频制作' },
@@ -214,7 +176,7 @@ const I18N = {
     ],
   },
   stats: [
-    { n: 9,  suffix: '',   en: 'services, one team',        zh: '项服务，一个团队' },
+    { n: 15, suffix: '',   en: 'services, one point of contact', zh: '项服务，一个窗口对接' },
     { n: 2,  suffix: '',   en: 'languages, native in both', zh: '种语言，双母语' },
     { n: 24, suffix: '/7', en: 'AI call answering',         zh: 'AI 电话接待' },
     { n: 14, suffix: '',   en: 'days to launch, typically', zh: '天左右上线' },
@@ -283,10 +245,6 @@ function tweenFigure(el, to, render) {
 }
 
 // Service tile → the plan item "Add to plan" selects
-const SERVICE_PLAN_ID = {
-  '01': 'ads-single', '02': 'social-mgmt', '03': 'creative-starter', '04': 'short-video',
-  '05': 'email-starter', '06': 'call-tracking', '07': 'ai-voice', '08': 'web-seo',
-};
 
 // ===== RENDER =====
 function renderHero() {
@@ -302,11 +260,11 @@ function renderHero() {
   }
   const idx = document.getElementById('heroIndex');
   if (idx) {
-    idx.innerHTML = `<div class="chiclets-track">${SERVICES.map((s) => {
-      const m = CHAPTER_META[s.n];
-      const label = isZh() ? m.zhWord : m.word;
-      const zh = isBi() ? `<span class="chiclet-zh">${m.zhWord}</span>` : '';
-      return `<a class="chiclet" href="#ch-${s.n}"><span class="chiclet-icon">${icon(s.icon, 30)}</span><span class="chiclet-label">${label}</span>${zh}</a>`;
+    const picks = EO.allServices().filter((s) => s.chiclet);
+    idx.innerHTML = `<div class="chiclets-track">${picks.map((s) => {
+      const label = isZh() ? s.name.zh : s.name.en;
+      const zh = isBi() ? `<span class="chiclet-zh">${s.name.zh}</span>` : '';
+      return `<a class="chiclet" href="${s.cat.page}#${s.id}"><span class="chiclet-icon">${EO.icon(s.icon, 30)}</span><span class="chiclet-label">${label}</span>${zh}</a>`;
     }).join('')}</div>`;
   }
 }
@@ -401,37 +359,27 @@ function updateAddButtons() {
   });
 }
 
-function priceLabel(s) {
-  const m = CHAPTER_META[s.n];
-  if (m.from == null) return isZh() ? '按项目报价' : 'Quoted per project';
-  const unit = s.n === '04' ? (isZh() ? '/条' : ' per video') : (isZh() ? '/月' : '/mo');
-  const amt = fmt(m.from) + unit;
-  return isZh() ? `${amt} 起` : `From ${amt}`;
-}
-
 function renderChapters() {
   const box = document.getElementById('chapters');
   if (!box) return;
   document.getElementById('servicesHint').textContent = t(I18N.servicesHint);
-  box.innerHTML = SERVICES.map((s) => {
-    const m = CHAPTER_META[s.n];
-    const title = isZh() ? s.zh : s.title;
-    const desc = isZh() ? s.desc_zh : s.desc;
-    const id = SERVICE_PLAN_ID[s.n];
+  box.innerHTML = EO.CATEGORIES.map((c) => {
+    const from = c.services.map((x) => x.price).filter((p) => p && !p.quote).sort((a, b) => a.from - b.from)[0];
+    const count = isZh() ? `${c.services.length} 项服务` : `${c.services.length} service${c.services.length > 1 ? 's' : ''}`;
+    const name = isZh() ? (c.longName || c.name).zh : (c.longName || c.name).en;
     return `
-    <article class="card" id="ch-${s.n}">
-      <div class="card-media"><img class="card-img" src="${s.img || `images/svc-${s.n}.webp`}" alt="" loading="lazy" width="452" height="606" /></div>
+    <article class="card card--cat" id="cat-${c.key}">
+      <div class="card-media"><img class="card-img" src="${c.card.img}" alt="" loading="lazy" /></div>
       <div class="card-shade" aria-hidden="true"></div>
       <div class="card-body">
-        <p class="card-tag">${m.tag}</p>
-        <h3 class="card-title">${title}</h3>
-        ${isBi() ? `<p class="card-zh">${s.zh}</p>` : ''}
-        <p class="card-desc">${desc}</p>
+        <p class="card-tag">${count}${c.isNew ? ` · ${isZh() ? '新' : 'New'}` : ''}</p>
+        <h3 class="card-title">${name}</h3>
+        ${isBi() ? `<p class="card-zh">${(c.longName || c.name).zh}</p>` : ''}
+        <p class="card-desc">${isZh() ? c.headline.zh : c.headline.en}</p>
+        <ul class="card-chips">${c.services.map((x) => `<li><a href="${c.page}#${x.id}">${isZh() ? x.name.zh : x.name.en}</a></li>`).join('')}</ul>
         <div class="card-actions">
-          ${id
-            ? `<button type="button" class="btn btn-small ${selected.has(id) ? 'is-added' : ''}" data-add="${id}">${addLabel(id)}</button>`
-            : `<a class="btn btn-small" href="#apps">${isZh() ? '看看我们的 App' : 'See our apps'}</a>`}
-          <span class="card-price">${priceLabel(s)}</span>
+          <a class="btn btn-small" href="${c.page}">${isZh() ? '查看' + name : 'Explore ' + name}</a>
+          ${from ? `<span class="card-price">${EO.priceText(from)}</span>` : ''}
         </div>
       </div>
     </article>`;
@@ -466,7 +414,8 @@ const itemName = (item) => (isZh() ? item.zh : item.name);
 const TIER_ZH = {
   'Single Platform': '单平台', 'Dual Platform': '双平台', 'Creation Only': '仅内容创作',
   '8 images': '每月 8 张', '16 images': '每月 16 张', 'Starter': '入门版', 'Growth': '进阶版',
-  'per video': '每条',
+  'per video': '每条', 'per image': '每张', 'up to 15 slides': '最多 15 页',
+  'up to 30 s': '最长 30 秒', 'up to 15 s': '最长 15 秒',
 };
 const tierText = (item) => (isZh() ? (TIER_ZH[item.tier] || item.tier) : item.tier);
 
@@ -496,8 +445,13 @@ function renderPricingPickers() {
   PRICING_MONTHLY.forEach((i) => { (groups[i.group] = groups[i.group] || []).push(i); });
   document.getElementById('pbMonthly').innerHTML =
     Object.entries(groups).map(([g, items]) => priceGroupHTML(g, GROUP_ZH[g], items, 'monthly')).join('');
-  document.getElementById('pbSetup').innerHTML =
-    `<div class="price-group"><div class="price-group-items">${PRICING_SETUP.map((i) => priceItemHTML(i, 'setup')).join('')}</div></div>`;
+  const sg = {};
+  PRICING_SETUP.forEach((i) => { (sg[i.group] = sg[i.group] || []).push(i); });
+  document.getElementById('pbSetup').innerHTML = Object.entries(sg).map(([g, items]) => {
+    const gTitle = isZh() ? (GROUP_ZH[g] || g) : (GROUP_EN[g] || g);
+    const gSub = isBi() ? `<span class="price-group-zh"> ${GROUP_ZH[g] || ''}</span>` : '';
+    return `<div class="price-group" id="pb-${g.toLowerCase()}"><h4 class="price-group-head">${gTitle}${gSub}</h4><div class="price-group-items">${items.map((i) => priceItemHTML(i, 'setup')).join('')}</div></div>`;
+  }).join('');
 }
 
 function selectItem(id, on) {
@@ -513,6 +467,7 @@ function refreshPlan() {
   renderPricingPickers();
   renderSummary();
   updateAddButtons();
+  if (window.EO) EO.plan.set(Array.from(selected));
 }
 
 function toggleItem(id) {
@@ -565,7 +520,7 @@ function renderSummary() {
 
   const L = {
     monthly: { en: 'Monthly', bi: 'Monthly <span class="zh">月费</span>', zh: '每月费用' },
-    setup: { en: 'One-time setup', bi: 'One-time setup <span class="zh">一次性设置费</span>', zh: '一次性设置费' },
+    setup: { en: 'One-time', bi: 'One-time <span class="zh">一次性费用</span>', zh: '一次性费用' },
     grand: { en: 'First-year estimate', bi: 'First-year estimate <span class="zh">首年预估</span>', zh: '首年预估' },
   };
   const per = `<span class="unit">${isZh() ? '/月' : '/mo'}</span>`;
@@ -721,19 +676,10 @@ function wireContact() {
 }
 
 // ===== NAV =====
-function wireNav() {
-  const nav = document.getElementById('nav');
-  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-}
+function wireNav() { /* handled by site.js */ }
 
 // ===== LANGUAGE =====
 function applyStatic() {
-  const links = document.querySelectorAll('.nav-links .nav-link');
-  const navT = t(I18N.nav);
-  links.forEach((a, i) => { a.textContent = navT[i] || a.textContent; });
-
   const btnT = t(I18N.heroBtns);
   document.querySelectorAll('.hero-ctas-new .btn-label').forEach((el, i) => { el.textContent = btnT[i]; });
 
@@ -751,23 +697,13 @@ function applyStatic() {
   const ch2 = document.getElementById('contactH2');
   if (ch2) ch2.innerHTML = t(I18N.contactH2);
 
-  const heads = document.querySelectorAll('.footer h4');
-  const fh = t(I18N.footerHeads);
-  heads.forEach((h, i) => { h.textContent = fh[i] || h.textContent; });
-
   document.documentElement.lang = isZh() ? 'zh-CN' : 'en';
 }
 
 function setLang(lang) {
   LANG = lang;
-  try { localStorage.setItem('eoracco-lang', lang); } catch (e) { /* storage unavailable */ }
   document.body.classList.remove('lang-en', 'lang-zh', 'lang-bi');
   document.body.classList.add('lang-' + lang);
-  document.querySelectorAll('#langToggle button').forEach((b) => {
-    const on = b.dataset.lang === lang;
-    b.classList.toggle('active', on);
-    b.setAttribute('aria-pressed', on);
-  });
   applyStatic();
   renderHero();
   renderStatement();
@@ -785,10 +721,7 @@ function setLang(lang) {
 }
 
 function wireLangToggle() {
-  document.getElementById('langToggle').addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-lang]');
-    if (btn) setLang(btn.dataset.lang);
-  });
+  EO.onLang((l) => setLang(l));
 }
 
 // ===== INIT =====
@@ -797,7 +730,9 @@ document.addEventListener('DOMContentLoaded', () => {
   wireContact();
   wireNav();
   wireLangToggle();
+  EO.plan.get().forEach((id) => { if (ALL_ITEMS[id]) selectItem(id, true); });
   setLang(LANG);
+  EO.plan.set(Array.from(selected));
   // In-page anchors go through the smooth scroller when motion.js is running
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
