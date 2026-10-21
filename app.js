@@ -326,17 +326,8 @@ function renderApps() {
   const a = I18N.apps;
   const head = document.querySelector('#apps .sec-head h2');
   head.innerHTML = secHeadHTML(a);
-  document.getElementById('appsGrid').innerHTML = a.list.map((app) => `
-    <article class="app-tile app-${app.key} glow-card">
-      <div class="app-copy">
-        <img class="app-icon" src="${app.icon}" alt="${app.name} app icon" width="96" height="96" loading="lazy" />
-        <h3 class="app-name">${app.name}</h3>
-        <p class="app-kind">${isZh() ? app.kind.zh : app.kind.en}</p>
-        <p class="app-desc">${isZh() ? app.desc.zh : app.desc.en}${isBi() ? `<span class="zh-line">${app.desc.zh}</span>` : ''}</p>
-        <a class="link-chevron app-link" href="${app.url}" target="_blank" rel="noopener"><span class="btn-label">${isZh() ? a.store.zh : a.store.en}</span></a>
-      </div>
-      <div class="app-device" aria-hidden="true"><img src="${app.shot}" alt="" loading="lazy" /></div>
-    </article>`).join('');
+  document.getElementById('appsGrid').innerHTML = window.EO_APPS.html();
+  window.EO_APPS.wireVideos(document.getElementById('appsGrid'));
 }
 
 function renderStats() {

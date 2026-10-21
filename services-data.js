@@ -193,7 +193,7 @@
   ];
 
   const APPS = [
-    { key: 'pompolo', name: 'Pompolo', icon: 'images/apps/pompolo-icon.webp', shot: 'images/apps/pompolo-art.webp',
+    { key: 'pompolo', name: 'Pompolo', icon: 'images/apps/pompolo-icon.webp', shot: 'images/apps/pompolo-preview-poster.jpg',
       url: 'https://apps.apple.com/us/app/id6816869216',
       kind: L('Party game · iPhone & iPad', '派对游戏 · iPhone 与 iPad'),
       desc: L('A water-balloon battle for up to four players. Phones become controllers, the game casts to a TV with AirPlay, and it plays in English, Chinese and Spanish.',

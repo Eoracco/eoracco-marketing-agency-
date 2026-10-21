@@ -102,19 +102,7 @@
     <section class="sec apps" id="shipped">
       <div class="container">
         <div class="sec-head"><h2>${tx(T.apps)}<span class="h2-sub"> ${tx(T.appsSub)}</span>${EO.isBi() ? `<span class="h2-zh">${T.apps.zh}${T.appsSub.zh}</span>` : ''}</h2></div>
-        <div class="apps-grid">
-          ${EO.APPS.map((a) => `
-          <article class="app-tile app-${a.key} glow-card">
-            <div class="app-copy">
-              <img class="app-icon" src="${a.icon}" alt="${a.name} app icon" width="96" height="96" loading="lazy" />
-              <h3 class="app-name">${a.name}</h3>
-              <p class="app-kind">${tx(a.kind)}</p>
-              <p class="app-desc">${tx(a.desc)}${zhLine(a.desc)}</p>
-              <a class="link-chevron app-link" href="${a.url}" target="_blank" rel="noopener"><span class="btn-label">${tx(T.store)}</span></a>
-            </div>
-            <div class="app-device" aria-hidden="true"><img src="${a.shot}" alt="" loading="lazy" /></div>
-          </article>`).join('')}
-        </div>
+        <div class="apps-showcase">${window.EO_APPS.html()}</div>
       </div>
     </section>`;
   }
@@ -262,8 +250,7 @@
         steps.forEach((s, i) => t3.fromTo(s, { opacity: 0.22, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, i * 0.9));
       }
 
-      gsap.from('.app-tile', { y: 80, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.12,
-        scrollTrigger: { trigger: '.apps-grid', start: 'top 82%' } });
+      if (window.EO_APPS && document.querySelector('.app-show')) window.EO_APPS.animate();
       gsap.from('.cat-cta .container > *', { y: 40, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.07,
         scrollTrigger: { trigger: '.cat-cta', start: 'top 80%' } });
       gsap.from('.other-card', { y: 50, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.08,
@@ -317,6 +304,7 @@
   }
 
   render();
+  if (window.EO_APPS) window.EO_APPS.wireVideos(main);
   initMotion();
   build(true);
   wireLocalNav();
@@ -324,6 +312,7 @@
   EO.onLang(() => {
     if (ctx) ctx.revert();
     render();
+    if (window.EO_APPS) window.EO_APPS.wireVideos(main);
     build();
     wireLocalNav();
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();

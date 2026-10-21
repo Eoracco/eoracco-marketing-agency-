@@ -359,35 +359,97 @@ body.lang-zh .card-title { letter-spacing: 0; }
 .hscroll-progress span { display: block; height: 100%; background: var(--ink); transform: scaleX(0); transform-origin: left center; }
 
 /* ---------- apps we've shipped ---------- */
-.apps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.app-tile {
-  position: relative; overflow: hidden; border-radius: 32px;
-  min-height: 680px; display: flex; flex-direction: column; align-items: center; text-align: center;
-  padding: 52px 36px 0;
+.apps-showcase { display: grid; gap: 20px; }
+.app-show {
+  position: relative; overflow: hidden; border-radius: 36px; isolation: isolate;
+  display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); align-items: center; gap: 24px;
+  min-height: 680px; padding: 64px 56px 64px 72px;
 }
-.app-pompolo { background: linear-gradient(180deg, #eaf5ff 0%, #d7ebff 55%, #c6e2ff 100%); color: var(--ink); }
-.app-twotake { background: radial-gradient(90% 60% at 50% 0%, #1d2b4a 0%, #0d1424 70%); color: #f5f5f7; }
-.app-copy { display: flex; flex-direction: column; align-items: center; max-width: 440px; position: relative; z-index: 1; }
-.app-icon { width: 88px; height: 88px; border-radius: 22.5%; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18); }
-.app-name { margin-top: 20px; font-size: clamp(34px, 3.4vw, 48px); line-height: 1.04; font-weight: 700; letter-spacing: -0.035em; }
-.app-kind { margin-top: 6px; font-size: 15px; font-weight: 600; color: var(--ink-2); }
-.app-twotake .app-kind { color: rgba(245, 245, 247, 0.62); }
-.app-desc { margin-top: 14px; font-size: 17px; line-height: 1.47; color: var(--ink-2); }
-.app-twotake .app-desc { color: rgba(245, 245, 247, 0.78); }
-.app-desc .zh-line { font-size: 14px; }
-.app-twotake .app-desc .zh-line { color: rgba(245, 245, 247, 0.5); }
-.app-link { margin-top: 18px; }
-.app-twotake .app-link { color: #f5c451; }
-.app-device {
-  margin-top: auto; padding-top: 36px; width: min(280px, 70%);
+.app-show--pompolo {
+  color: var(--ink);
+  background:
+    radial-gradient(50% 60% at 78% 55%, rgba(255, 255, 255, 0.9), transparent 70%),
+    radial-gradient(40% 40% at 95% 0%, rgba(255, 190, 230, 0.55), transparent 70%),
+    linear-gradient(160deg, #eef7ff 0%, #d8ecff 55%, #c3e0ff 100%);
 }
-.app-device img {
-  width: 100%; aspect-ratio: 9 / 18.6; object-fit: cover; object-position: top center;
-  border-radius: 38px 38px 0 0; border: 9px solid #1d1d1f; border-bottom: 0;
-  box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.16);
-  background: #111;
+.app-show--twotake {
+  color: #f5f5f7;
+  background:
+    radial-gradient(45% 55% at 72% 50%, rgba(245, 196, 81, 0.22), transparent 70%),
+    radial-gradient(80% 80% at 20% 0%, #1f2e52 0%, transparent 70%),
+    #0a0f1c;
 }
-.app-twotake .app-device img { border-color: #2c2c2e; box-shadow: 0 -10px 60px rgba(245, 196, 81, 0.14); }
+.app-show-copy { position: relative; z-index: 2; max-width: 430px; }
+.app-show-icon { width: 92px; height: 92px; border-radius: 22.5%; box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2); }
+.app-show-name { margin-top: 26px; font-size: clamp(44px, 5vw, 68px); line-height: 1; font-weight: 700; letter-spacing: -0.045em; }
+.app-show-kind { margin-top: 10px; font-size: 17px; font-weight: 600; color: var(--ink-2); }
+.app-show--twotake .app-show-kind { color: rgba(245, 245, 247, 0.6); }
+.app-show-desc { margin-top: 18px; font-size: 19px; line-height: 1.45; color: var(--ink-2); letter-spacing: -0.012em; }
+.app-show--twotake .app-show-desc { color: rgba(245, 245, 247, 0.78); }
+.app-show-desc .zh-line { font-size: 15px; }
+.app-show--twotake .app-show-desc .zh-line { color: rgba(245, 245, 247, 0.5); }
+.app-show-chips { list-style: none; padding: 0; margin: 24px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.app-show-chips li {
+  font-size: 13px; font-weight: 500; padding: 6px 13px; border-radius: 980px;
+  background: rgba(255, 255, 255, 0.7); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06); color: var(--ink);
+}
+.app-show--twotake .app-show-chips li { background: rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14); color: #f5f5f7; }
+.app-store-btn {
+  margin-top: 30px; display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 24px; border-radius: 980px; font-size: 16px; font-weight: 500;
+  background: var(--ink); color: #fff; transition: background 0.3s, box-shadow 0.4s var(--ease);
+}
+.app-store-btn:hover { background: #000; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22); }
+.app-show--twotake .app-store-btn { background: #f5c451; color: #1d1d1f; }
+.app-show--twotake .app-store-btn:hover { background: #ffd36a; box-shadow: 0 12px 34px rgba(245, 196, 81, 0.35); }
+
+.app-show-visual { position: relative; z-index: 1; }
+.stage { position: relative; height: 600px; display: grid; place-items: center; }
+
+/* iPhone 17 Pro-style frame: titanium rim, black bezel, Dynamic Island */
+.iphone {
+  position: relative; z-index: 2; width: 270px; aspect-ratio: 9 / 19.5; border-radius: 54px; padding: 12px;
+  background: linear-gradient(145deg, #e4e6ea 0%, #a3a6ac 32%, #d6d8dc 55%, #7d8086 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18), 0 50px 100px rgba(25, 55, 110, 0.32), 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+.iphone::before { content: ""; position: absolute; inset: 3px; border-radius: 51px; background: #050505; }
+.iphone--dark { background: linear-gradient(145deg, #5b5d62 0%, #2a2b2e 35%, #47494d 60%, #1c1c1e 100%); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 50px 110px rgba(0, 0, 0, 0.6); }
+.iphone-screen { position: relative; z-index: 1; width: 100%; height: 100%; border-radius: 43px; overflow: hidden; background: #000; }
+.iphone-screen > img, .iphone-screen > video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.iphone-island { position: absolute; z-index: 3; top: 22px; left: 50%; width: 86px; height: 25px; margin-left: -43px; border-radius: 20px; background: #000; }
+
+.fan {
+  position: absolute; z-index: 1; left: 50%; top: 50%; width: 226px; margin: -246px 0 0 -113px;
+  border-radius: 30px; box-shadow: 0 30px 60px rgba(25, 55, 110, 0.25);
+  transform-origin: 50% 90%;
+}
+.fan-l { transform: translateX(-128px) rotate(-9deg) scale(0.92); }
+.fan-r { transform: translateX(128px) rotate(9deg) scale(0.92); }
+.stage--pompolo { padding-left: 40px; }
+
+.stage--twotake .iphone { margin-right: 120px; }
+.tt-rec {
+  position: absolute; z-index: 2; top: 58px; left: 18px; display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: #fff;
+  padding: 4px 9px; border-radius: 980px; background: rgba(0, 0, 0, 0.45);
+}
+.tt-rec i { width: 7px; height: 7px; border-radius: 50%; background: #ff3b30; animation: beat 1.2s ease-in-out infinite; }
+.tt-tag {
+  position: absolute; z-index: 2; font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+  padding: 3px 8px; border-radius: 6px; color: #1d1d1f;
+}
+.tt-tag--v { bottom: 20px; left: 18px; background: #f5c451; }
+.tt-tag--h { top: 8px; left: 8px; background: #e3e6ea; }
+.tt-band {
+  position: absolute; z-index: 1; left: 0; right: 0; top: 50%; aspect-ratio: 16 / 9; transform: translateY(-50%);
+  box-shadow: inset 0 0 0 2px #e3e6ea, 0 0 0 999px rgba(0, 0, 0, 0.38);
+}
+.tt-land {
+  position: absolute; z-index: 3; left: 50%; top: 50%; width: 300px; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden;
+  box-shadow: 0 0 0 2px #e3e6ea, 0 40px 80px rgba(0, 0, 0, 0.55);
+  transform: translate(-50%, -50%) translate(150px, 150px);
+}
+.tt-land img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* ---------- video zoom ---------- */
 .zoom { position: relative; height: 280vh; }
@@ -688,9 +750,23 @@ body.lang-bi .contact-submit .zh::before { content: " · "; }
 }
 
 @media (max-width: 834px) {
-  .apps-grid { grid-template-columns: 1fr; gap: 12px; }
-  .app-tile { min-height: 0; padding: 40px 22px 0; border-radius: 28px; }
-  .app-device { width: min(240px, 68%); }
+  .apps-showcase { gap: 12px; }
+  .app-show { grid-template-columns: 1fr; gap: 8px; min-height: 0; padding: 44px 22px 8px; border-radius: 28px; }
+  .app-show-icon { width: 76px; height: 76px; }
+  .app-show-name { margin-top: 20px; }
+  .app-show-desc { font-size: 17px; }
+  .stage { height: 500px; }
+  .iphone { width: 210px; border-radius: 44px; padding: 10px; }
+  .iphone::before { border-radius: 41px; }
+  .iphone-screen { border-radius: 35px; }
+  .iphone-island { top: 18px; width: 68px; height: 20px; margin-left: -34px; }
+  .fan { width: 180px; margin: -196px 0 0 -90px; border-radius: 24px; }
+  .fan-l { transform: translateX(-96px) rotate(-9deg) scale(0.92); }
+  .fan-r { transform: translateX(96px) rotate(9deg) scale(0.92); }
+  .stage--twotake .iphone { margin-right: 60px; }
+  .stage--pompolo { padding-left: 0; }
+  .tt-rec { top: 46px; left: 14px; }
+  .tt-land { width: 210px; border-radius: 12px; transform: translate(-50%, -50%) translate(80px, 175px); }
   html.has-motion .film { height: 240vh; }
   html.has-motion .film-frame { width: calc(100vw - 2 * var(--gutter)); height: auto; aspect-ratio: 4 / 5; border-radius: 28px; }
   .film-frame { aspect-ratio: 4 / 5; }
