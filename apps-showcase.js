@@ -89,7 +89,6 @@
         ] },
     ],
   };
-  let activeSet = 'pompolo';
   const SPEAKER = '<svg class="spk-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="m17 9 4 6M21 9l-4 6"/></svg><svg class="spk-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
 
   function spotHTML(v) {
@@ -102,15 +101,15 @@
   }
 
   function setHTML(set) {
-    const hidden = set.key !== activeSet ? ' hidden' : '';
+    const label = `<p class="spots-label"><img src="${set.icon}" alt="" width="28" height="28" />${set.name}</p>`;
     if (set.layout === 'bento') {
       const h = set.list.filter((v) => v.cls === 'spot--h');
       const v = set.list.filter((x) => x.cls === 'spot--v');
-      return `<div class="app-spots-row app-spots-row--bento" id="spots-${set.key}" role="tabpanel"${hidden}>
+      return `<div class="spots-set">${label}<div class="app-spots-row app-spots-row--bento">
           <div class="spot-stack">${h.map(spotHTML).join('')}</div>${v.map(spotHTML).join('')}
-        </div>`;
+        </div></div>`;
     }
-    return `<div class="app-spots-row" id="spots-${set.key}" role="tabpanel"${hidden}>${set.list.map(spotHTML).join('')}</div>`;
+    return `<div class="spots-set">${label}<div class="app-spots-row">${set.list.map(spotHTML).join('')}</div></div>`;
   }
 
   function spotsHTML() {
@@ -122,9 +121,6 @@
           <h3 class="app-spots-title">${tx(S.title)}</h3>
           <p class="app-spots-desc">${tx(S.desc)}${zl(S.desc)}</p>
           <a class="link-chevron" href="apps.html#app-marketing"><span class="btn-label">${tx(S.link)}</span></a>
-        </div>
-        <div class="spots-tabs" role="tablist">
-          ${S.sets.map((set) => `<button class="spots-tab" type="button" role="tab" data-set="${set.key}" aria-controls="spots-${set.key}" aria-selected="${set.key === activeSet}"><img src="${set.icon}" alt="" width="22" height="22" />${set.name}</button>`).join('')}
         </div>
         ${S.sets.map(setHTML).join('')}
       </section>`;
@@ -159,21 +155,6 @@
       soundWired = true;
       // one sound at a time: turning a spot's sound on mutes the others
       document.addEventListener('click', (e) => {
-        const tab = e.target.closest('.spots-tab');
-        if (tab) {
-          activeSet = tab.dataset.set;
-          const box = tab.closest('.app-spots');
-          box.querySelectorAll('.spots-tab').forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
-          box.querySelectorAll('[role="tabpanel"]').forEach((p) => {
-            const on = p.id === 'spots-' + activeSet;
-            p.hidden = !on;
-            if (!on) p.querySelectorAll('video').forEach((v) => { v.pause(); v.muted = true; });
-          });
-          box.querySelectorAll('.spot-sound').forEach((b) => b.setAttribute('aria-pressed', 'false'));
-          const shown = box.querySelectorAll('#spots-' + activeSet + ' .spot');
-          if (window.gsap) window.gsap.fromTo(shown, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', stagger: 0.06 });
-          return;
-        }
         const btn = e.target.closest('.spot-sound');
         if (!btn) return;
         const v = btn.parentElement.querySelector('video');
@@ -247,9 +228,11 @@
         y: 40, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.06,
         scrollTrigger: { trigger: spots, start: 'top 78%' },
       });
-      gsap.from(spots.querySelectorAll('.spots-tabs, .app-spots-row:not([hidden]) .spot'), {
-        y: 80, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.1,
-        scrollTrigger: { trigger: spots.querySelector('.spots-tabs'), start: 'top 85%' },
+      spots.querySelectorAll('.spots-set').forEach((set) => {
+        gsap.from(set.querySelectorAll('.spots-label, .spot'), {
+          y: 70, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.08,
+          scrollTrigger: { trigger: set, start: 'top 85%' },
+        });
       });
     }
   }
