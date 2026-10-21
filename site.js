@@ -128,7 +128,7 @@
             <a href="${HREF.pricing}">${tx(T.pricing)}</a>
             <a href="${HREF.process}">${tx(T.howItWorks)}</a>
             <a href="${HREF.contact}">${tx(T.contact)}</a>
-            <a href="mailto:hello@eoracco.com">hello@eoracco.com</a>
+            <a href="mailto:eoraccoofficial@gmail.com">eoraccoofficial@gmail.com</a>
           </div>
         </div>
         <div>
