@@ -1107,11 +1107,7 @@ body.lang-zh .svc-name { letter-spacing: 0; }
 .art-word { position: absolute; left: 24px; bottom: 20px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
 .art-marketing { background: radial-gradient(80% 60% at 50% 40%, #e2eeff 0%, #f5f5f7 75%); }
 .art-creative { background: radial-gradient(80% 60% at 50% 40%, #ffeedd 0%, #f5f5f7 75%); }
-.art-visualization { background: radial-gradient(80% 70% at 50% 40%, #fff3d6 0%, #eef0f7 75%); }
-.art-visualization .art-grid {
-  background-image: linear-gradient(rgba(163, 95, 0, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(163, 95, 0, 0.12) 1px, transparent 1px);
 }
-.art-visualization .art-icon { color: var(--amber-deep); }
 .art-apps { background: radial-gradient(80% 60% at 50% 40%, #e3f1ff 0%, #f5f5f7 75%); }
 
 .cat-steps { background: var(--gray); }

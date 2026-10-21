@@ -16,8 +16,8 @@ const WHY = [
     desc: 'Boots-on-the-ground knowledge of the San Gabriel Valley & Greater LA market.',
     desc_zh: '深耕圣盖博谷与大洛杉矶市场的本地经验。' },
   { icon: 'layers',   title: 'One Contact, Full Stack', zh: '一个窗口，全套服务',
-    desc: 'Ads, social, creative, 3D, web and AI voice, coordinated through one point of contact.',
-    desc_zh: '广告、社媒、内容、3D、网站与 AI 语音，由一个窗口统一对接。' },
+    desc: 'Ads, social, creative, web, AI voice and apps, coordinated through one point of contact.',
+    desc_zh: '广告、社媒、内容、网站、AI 语音与 App，由一个窗口统一对接。' },
 ];
 
 const PRICING_MONTHLY = [
@@ -45,22 +45,14 @@ const PRICING_SETUP = [
   { id: 'su-tracking',   name: 'Tracking Setup',        zh: '追踪配置',      tier: 'GTM + GA4', price: 300,  group: 'Setup' },
   { id: 'su-seo',        name: 'SEO Foundation',        zh: 'SEO 基础建设',  tier: null,        price: 500,  group: 'Setup' },
   { id: 'su-web-bundle', name: 'Full Web Setup Bundle', zh: '网站配置全包',  tier: null,        price: 900,  group: 'Setup' },
-  { id: 'pitch-deck',     name: 'Pitch Deck Design',      zh: '路演 PPT 设计',      tier: 'up to 15 slides', price: 1200, group: 'Projects' },
-  { id: 'render-ext',     name: 'ADU Exterior Rendering', zh: 'ADU 外观效果图',     tier: 'per image',       price: 450,  group: 'Projects' },
-  { id: 'render-int',     name: 'Interior Rendering',     zh: '室内效果图',         tier: 'per image',       price: 350,  group: 'Projects' },
-  { id: 'walkthrough',    name: '3D Walkthrough Video',   zh: '3D 漫游视频',        tier: 'up to 30 s',      price: 1800, group: 'Projects' },
-  { id: 'product-render', name: '3D Product Render',      zh: '3D 产品渲染',        tier: 'per image',       price: 250,  group: 'Projects' },
-  { id: 'product-anim',   name: 'Product Animation',      zh: '产品动画',           tier: 'up to 15 s',      price: 900,  group: 'Projects' },
-  { id: 'mascot-2d',      name: 'Brand Mascot, 2D',       zh: '品牌吉祥物（2D）',   tier: null,              price: 600,  group: 'Projects' },
-  { id: 'mascot-3d',      name: 'Brand Mascot, 3D',       zh: '品牌吉祥物（3D）',   tier: null,              price: 1800, group: 'Projects' },
 ];
 
 const GROUP_ZH = {
   'Paid Advertising': '付费广告', 'Social Media': '社交媒体', 'Creative': '素材创意',
   'Email & SMS': '邮件与短信', 'Voice & Tracking': '语音与追踪', 'Web & SEO': '网站与SEO',
-  'Setup Fees': '一次性配置', 'Setup': '一次性设置', 'Projects': '3D 与项目',
+  'Setup Fees': '一次性配置', 'Setup': '一次性设置', 'Projects': '项目',
 };
-const GROUP_EN = { 'Setup': 'Setup fees', 'Projects': '3D & projects' };
+const GROUP_EN = { 'Setup': 'Setup fees', 'Projects': 'Projects' };
 
 // Mutually exclusive tiers within a category.
 const MUTEX_GROUPS = {
@@ -102,11 +94,11 @@ const I18N = {
     zh: [[{ t: '营销的' }], [{ t: '文艺复兴。' }]],
   },
   heroSub: {
-    en: 'Bilingual marketing for Los Angeles businesses. Marketing, creative, 3D and apps, in English and Chinese.',
-    bi: 'Bilingual marketing for Los Angeles businesses. Marketing, creative, 3D and apps, in English and Chinese.',
-    zh: '为洛杉矶商家提供营销、内容、3D 与 App 服务，中英双语。',
+    en: 'Bilingual marketing for Los Angeles businesses. Marketing, creative and apps, in English and Chinese.',
+    bi: 'Bilingual marketing for Los Angeles businesses. Marketing, creative and apps, in English and Chinese.',
+    zh: '为洛杉矶商家提供营销、内容与 App 服务，中英双语。',
   },
-  heroSubZh: '营销、内容、3D 与 App，中英双语。',
+  heroSubZh: '营销、内容与 App，中英双语。',
   chLink: { en: 'Add to plan', bi: 'Add to plan', zh: '加入方案' },
   // Each head: title (bold) + sub (grey, Apple-style continuation) + zh line in bilingual mode
   secs: {
@@ -115,7 +107,7 @@ const I18N = {
       sub: { en: 'One studio, two languages, the full stack.', zh: '一个团队，两种语言，全套体系。' },
     },
     services: {
-      title: { en: 'Four ways we help.', zh: '四大类服务。' },
+      title: { en: 'Three ways we help.', zh: '三大类服务。' },
       sub: { en: 'One point of contact for all of them.', zh: '全部由同一个窗口对接。' },
     },
     pricing: {
@@ -142,9 +134,9 @@ const I18N = {
     zh: '大多数机构只说一种语言、只做一个渠道。我们两者兼顾：流利、本地、从头到尾。',
   },
   servicesHint: {
-    en: 'Marketing, creative, 3D visualization and apps. Open any group to see every service and price.',
-    bi: 'Marketing, creative, 3D visualization and apps. Open any group to see every service and price.',
-    zh: '营销、内容、3D 可视化与 App。点进任一类，查看全部服务和价格。',
+    en: 'Marketing, creative and apps. Open any group to see every service and price.',
+    bi: 'Marketing, creative and apps. Open any group to see every service and price.',
+    zh: '营销、内容与 App。点进任一类，查看全部服务和价格。',
   },
   zoom: {
     kicker: { en: 'Video Creative', zh: '视频制作' },
@@ -176,7 +168,7 @@ const I18N = {
     ],
   },
   stats: [
-    { n: 16, suffix: '',   en: 'services, one point of contact', zh: '项服务，一个窗口对接' },
+    { n: 11, suffix: '',   en: 'services, one point of contact', zh: '项服务，一个窗口对接' },
     { n: 2,  suffix: '',   en: 'languages, native in both', zh: '种语言，双母语' },
     { n: 24, suffix: '/7', en: 'AI call answering',         zh: 'AI 电话接待' },
     { n: 14, suffix: '',   en: 'days to launch, typically', zh: '天左右上线' },

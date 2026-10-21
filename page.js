@@ -1,4 +1,4 @@
-// EORACCO — category pages (marketing / creative / visualization / apps).
+// EORACCO — category pages (marketing / creative / apps).
 // Renders from services-data.js; motion is progressive (GSAP + ScrollTrigger + Lenis when present).
 (() => {
   const EO = window.EO;
@@ -22,7 +22,7 @@
     toastAdd: { en: 'Added to your plan.', zh: '已加入方案。' },
     toastRemove: { en: 'Removed from your plan.', zh: '已从方案移除。' },
     viewPlan: { en: 'View plan', zh: '查看方案' },
-    steps: { en: 'How a 3D project runs.', zh: '3D 项目怎么进行。' },
+    steps: { en: 'How a project runs.', zh: '项目怎么进行。' },
     apps: { en: 'Apps we’ve shipped.', zh: '我们上线的 App。' },
     appsSub: { en: 'Live on the App Store today.', zh: '现已在 App Store 上架。' },
     store: { en: 'View on the App Store', zh: '在 App Store 查看' },
