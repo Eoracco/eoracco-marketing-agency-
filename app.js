@@ -47,6 +47,10 @@ const SERVICES = [
   { n: '08', icon: 'code',   title: 'Web Management & SEO',    zh: '网站管理与 SEO',
     desc: 'Compliance, tracking setup, and ongoing SEO optimization.',
     desc_zh: '合规、追踪配置与持续 SEO 优化。' },
+  { n: '09', icon: 'app',    title: 'iOS App Development',     zh: 'iOS 应用开发',
+    desc: 'Native iPhone and iPad apps in SwiftUI, from first build to App Store launch.',
+    desc_zh: '用 SwiftUI 开发原生 iPhone 和 iPad 应用，从第一个版本到上架 App Store。',
+    img: 'images/apps/pompolo-art.webp' },
 ];
 
 
@@ -60,6 +64,7 @@ const CHAPTER_META = {
   '06': { word: 'Tracking', zhWord: '追踪', tag: 'Numbers · Attribution',       from: 200 },
   '07': { word: 'Voice',    zhWord: '语音', tag: '24/7 AI Reception',           from: 200 },
   '08': { word: 'Web',      zhWord: '网站', tag: 'GTM · GA4 · SEO',             from: 400 },
+  '09': { word: 'Apps',     zhWord: '应用', tag: 'SwiftUI · iPhone · iPad',     from: null },
 };
 
 const PRICING_MONTHLY = [
@@ -135,11 +140,11 @@ const I18N = {
     zh: [[{ t: '营销的' }], [{ t: '文艺复兴。' }]],
   },
   heroSub: {
-    en: 'Bilingual marketing for Los Angeles businesses. Eight services, one studio, two languages.',
-    bi: 'Bilingual marketing for Los Angeles businesses. Eight services, one studio, two languages.',
-    zh: '为洛杉矶商家打造的双语营销。八项服务，一个团队，两种语言。',
+    en: 'Bilingual marketing for Los Angeles businesses. Nine services, one studio, two languages.',
+    bi: 'Bilingual marketing for Los Angeles businesses. Nine services, one studio, two languages.',
+    zh: '为洛杉矶商家打造的双语营销。九项服务，一个团队，两种语言。',
   },
-  heroSubZh: '双语营销的新世界 · 八项服务，一个团队。',
+  heroSubZh: '双语营销的新世界 · 九项服务，一个团队。',
   chLink: { en: 'Add to plan', bi: 'Add to plan', zh: '加入方案' },
   // Each head: title (bold) + sub (grey, Apple-style continuation) + zh line in bilingual mode
   secs: {
@@ -148,7 +153,7 @@ const I18N = {
       sub: { en: 'One studio, two languages, the full stack.', zh: '一个团队，两种语言，全套体系。' },
     },
     services: {
-      title: { en: 'Eight services.', zh: '八项服务。' },
+      title: { en: 'Nine services.', zh: '九项服务。' },
       sub: { en: 'One team behind all of them.', zh: '全部由同一个团队负责。' },
     },
     pricing: {
@@ -175,9 +180,9 @@ const I18N = {
     zh: '大多数机构只说一种语言、只做一个渠道。我们两者兼顾：流利、本地、从头到尾。',
   },
   servicesHint: {
-    en: 'Browse all eight, and add any of them to your plan.',
-    bi: 'Browse all eight, and add any of them to your plan.',
-    zh: '浏览全部八项服务，可直接加入方案。',
+    en: "Browse all nine. Add marketing services to your plan, or see the apps we've built.",
+    bi: "Browse all nine. Add marketing services to your plan, or see the apps we've built.",
+    zh: '浏览全部九项服务。营销服务可直接加入方案，也可以看看我们做过的 App。',
   },
   zoom: {
     kicker: { en: 'Video Creative', zh: '视频制作' },
@@ -191,8 +196,25 @@ const I18N = {
     p: { en: 'We animated this short in After Effects. Your ads and reels get the same hands.',
          zh: '这支短片由我们在 After Effects 中制作。您的广告和短视频，也由同一双手完成。' },
   },
+  apps: {
+    title: { en: "Apps we've shipped.", zh: '我们上线的 App。' },
+    sub: { en: 'Built by the same team, live on the App Store.', zh: '同一个团队打造，已在 App Store 上架。' },
+    store: { en: 'View on the App Store', zh: '在 App Store 查看' },
+    list: [
+      { key: 'pompolo', name: 'Pompolo', icon: 'images/apps/pompolo-icon.webp', shot: 'images/apps/pompolo-art.webp',
+        url: 'https://apps.apple.com/us/app/id6816869216',
+        kind: { en: 'Party game · iPhone & iPad', zh: '派对游戏 · iPhone 与 iPad' },
+        desc: { en: 'A water-balloon battle for up to four players. Phones become controllers, the game casts to a TV with AirPlay, and it plays in English, Chinese and Spanish.',
+                zh: '最多四人同玩的水球对战游戏。手机就是手柄，可用 AirPlay 投到电视，支持英文、中文和西班牙文。' } },
+      { key: 'twotake', name: 'TwoTake', icon: 'images/apps/twotake-icon.webp', shot: 'images/apps/twotake-ui.webp',
+        url: 'https://apps.apple.com/us/app/twotake-9-16-16-9-camera/id6802524670',
+        kind: { en: 'Camera · iPhone', zh: '相机 · iPhone' },
+        desc: { en: 'Shoot once and get both a 9:16 vertical and a 16:9 horizontal video. The horizontal is a center crop of the same vertical frame.',
+                zh: '拍一次，同时得到 9:16 竖版和 16:9 横版视频。横版是从同一个竖版画面居中裁切出来的。' } },
+    ],
+  },
   stats: [
-    { n: 8,  suffix: '',   en: 'services, one team',        zh: '项服务，一个团队' },
+    { n: 9,  suffix: '',   en: 'services, one team',        zh: '项服务，一个团队' },
     { n: 2,  suffix: '',   en: 'languages, native in both', zh: '种语言，双母语' },
     { n: 24, suffix: '/7', en: 'AI call answering',         zh: 'AI 电话接待' },
     { n: 14, suffix: '',   en: 'days to launch, typically', zh: '天左右上线' },
@@ -225,6 +247,7 @@ const ICON_PATHS = {
   'phone':         '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
   'mic':           '<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/>',
   'code':          '<path d="m8 8-5 4 5 4M16 8l5 4-5 4M14 4l-4 16"/>',
+  'app':           '<rect x="6.5" y="2.5" width="11" height="19" rx="3"/><path d="M10.5 5.5h3"/><circle cx="12" cy="18.2" r="0.6" fill="currentColor"/>',
   'arrow-up-right':'<path d="M7 17 17 7M8 7h9v9"/>',
   'check':         '<path d="m5 12 5 5L20 7"/>',
 };
@@ -340,6 +363,23 @@ function renderFilm() {
   document.getElementById('filmP').innerHTML = (isZh() ? f.p.zh : f.p.en) + (isBi() ? `<span class="zh-line">${f.p.zh}</span>` : '');
 }
 
+function renderApps() {
+  const a = I18N.apps;
+  const head = document.querySelector('#apps .sec-head h2');
+  head.innerHTML = secHeadHTML(a);
+  document.getElementById('appsGrid').innerHTML = a.list.map((app) => `
+    <article class="app-tile app-${app.key} glow-card">
+      <div class="app-copy">
+        <img class="app-icon" src="${app.icon}" alt="${app.name} app icon" width="96" height="96" loading="lazy" />
+        <h3 class="app-name">${app.name}</h3>
+        <p class="app-kind">${isZh() ? app.kind.zh : app.kind.en}</p>
+        <p class="app-desc">${isZh() ? app.desc.zh : app.desc.en}${isBi() ? `<span class="zh-line">${app.desc.zh}</span>` : ''}</p>
+        <a class="link-chevron app-link" href="${app.url}" target="_blank" rel="noopener"><span class="btn-label">${isZh() ? a.store.zh : a.store.en}</span></a>
+      </div>
+      <div class="app-device" aria-hidden="true"><img src="${app.shot}" alt="" loading="lazy" /></div>
+    </article>`).join('');
+}
+
 function renderStats() {
   document.getElementById('statsGrid').innerHTML = I18N.stats.map((st) => `
     <div class="stat">
@@ -363,6 +403,7 @@ function updateAddButtons() {
 
 function priceLabel(s) {
   const m = CHAPTER_META[s.n];
+  if (m.from == null) return isZh() ? '按项目报价' : 'Quoted per project';
   const unit = s.n === '04' ? (isZh() ? '/条' : ' per video') : (isZh() ? '/月' : '/mo');
   const amt = fmt(m.from) + unit;
   return isZh() ? `${amt} 起` : `From ${amt}`;
@@ -379,7 +420,7 @@ function renderChapters() {
     const id = SERVICE_PLAN_ID[s.n];
     return `
     <article class="card" id="ch-${s.n}">
-      <div class="card-media"><img class="card-img" src="images/svc-${s.n}.webp" alt="" loading="lazy" width="452" height="606" /></div>
+      <div class="card-media"><img class="card-img" src="${s.img || `images/svc-${s.n}.webp`}" alt="" loading="lazy" width="452" height="606" /></div>
       <div class="card-shade" aria-hidden="true"></div>
       <div class="card-body">
         <p class="card-tag">${m.tag}</p>
@@ -387,7 +428,9 @@ function renderChapters() {
         ${isBi() ? `<p class="card-zh">${s.zh}</p>` : ''}
         <p class="card-desc">${desc}</p>
         <div class="card-actions">
-          <button type="button" class="btn btn-small ${selected.has(id) ? 'is-added' : ''}" data-add="${id}">${addLabel(id)}</button>
+          ${id
+            ? `<button type="button" class="btn btn-small ${selected.has(id) ? 'is-added' : ''}" data-add="${id}">${addLabel(id)}</button>`
+            : `<a class="btn btn-small" href="#apps">${isZh() ? '看看我们的 App' : 'See our apps'}</a>`}
           <span class="card-price">${priceLabel(s)}</span>
         </div>
       </div>
@@ -731,6 +774,7 @@ function setLang(lang) {
   renderFilm();
   renderWhy();
   renderChapters();
+  renderApps();
   renderZoom();
   renderStats();
   renderSteps();

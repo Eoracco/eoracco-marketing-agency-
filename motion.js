@@ -233,6 +233,22 @@
         scrollTrigger: { trigger: '#hscroll', start: 'top 88%' },
       });
 
+      // Apps: tiles rise, icons pop, the phones slide up as the tiles pass
+      gsap.from('.app-tile', {
+        y: 90, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.12,
+        scrollTrigger: { trigger: '.apps-grid', start: 'top 82%' },
+      });
+      gsap.from('.app-icon', {
+        scale: 0.6, opacity: 0, duration: 1.1, ease: 'back.out(1.7)', stagger: 0.12,
+        scrollTrigger: { trigger: '.apps-grid', start: 'top 75%' },
+      });
+      gsap.utils.toArray('.app-device').forEach((d) => {
+        gsap.fromTo(d, { yPercent: 28 }, {
+          yPercent: 0, ease: 'none',
+          scrollTrigger: { trigger: d.closest('.app-tile'), start: 'top bottom', end: 'bottom 70%', scrub: 0.6 },
+        });
+      });
+
       // Video: a small frame grows to full size while the copy slides in
       const zoom = gsap.timeline({
         scrollTrigger: { trigger: '.zoom', start: 'top top', end: 'bottom bottom', scrub: 0.7 },
