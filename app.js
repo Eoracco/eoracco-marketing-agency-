@@ -624,7 +624,7 @@ function wirePricing() {
 // ===== CONTACT FORM =====
 // Inquiries go to a Google Apps Script web app on the EORACCO Google account:
 // it emails the inquiry to the owner and logs it in a Google Sheet.
-const FORM_ENDPOINT = 'APPS_SCRIPT_URL';
+const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzx78Q2Y21mVupBIMDqPxiqWJCRkzESUI-8NEMmzZtRkxem00wIsdDbH_jtpQPm_TNa/exec';
 const CONTACT_EMAIL = 'eoraccoofficial@gmail.com';
 function wireContact() {
   const form = document.getElementById('contactForm');
