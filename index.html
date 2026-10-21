@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 
-  <link rel="stylesheet" href="styles.css?v=20261021c" />
+  <link rel="stylesheet" href="styles.css?v=20261021d" />
 </head>
 <body data-page="home">
   <a class="skip" href="#main">Skip to content</a>
@@ -215,6 +215,7 @@
       <div class="contact-glow" aria-hidden="true"></div>
       <div class="container">
         <div class="sec-head">
+          <p class="contact-eyebrow"><span class="live-dot" aria-hidden="true"></span><span class="t-en">Accepting new clients</span><span class="zh">现接新客户</span></p>
           <h2>Hand off your marketing.</h2>
           <p></p>
         </div>
@@ -264,14 +265,28 @@
                 <label for="f-need"><span class="t-en">What do you need?</span><span class="zh"> 需要哪类服务？</span></label>
                 <select id="f-need" name="need">
                   <option value="">Select a service / 请选择</option>
-                  <option value="paid-ads">Paid advertising / 付费广告</option>
-                  <option value="social">Social media / 社交媒体</option>
-                  <option value="creative">Ad &amp; video creative / 广告素材</option>
-                  <option value="email-sms">Email &amp; SMS / 邮件与短信</option>
-                  <option value="ai-voice">AI voice agent / AI 语音客服</option>
-                  <option value="seo">Web &amp; SEO / 网站与 SEO</option>
-                  <option value="ios-app">iOS app / iOS 应用开发</option>
-                  <option value="full">Everything / 全套服务</option>
+                  <optgroup label="Marketing / 营销">
+                    <option value="paid-ads">Paid advertising / 付费广告</option>
+                    <option value="social">Social media / 社交媒体</option>
+                    <option value="email-sms">Email &amp; SMS / 邮件与短信</option>
+                    <option value="ai-voice">AI voice agent / AI 语音客服</option>
+                    <option value="seo">Web &amp; SEO / 网站与 SEO</option>
+                  </optgroup>
+                  <optgroup label="Creative / 创意">
+                    <option value="creative">Ad &amp; video creative / 广告素材与视频</option>
+                    <option value="motion">Motion design / 动态设计</option>
+                    <option value="pitch-deck">Pitch deck / 融资路演 PPT</option>
+                  </optgroup>
+                  <optgroup label="3D / 3D 可视化">
+                    <option value="renderings">ADU &amp; remodel renderings / 效果图</option>
+                    <option value="walkthrough">3D walkthrough video / 漫游视频</option>
+                    <option value="product-3d">3D product renders / 3D 产品图</option>
+                    <option value="mascot">Brand mascot / 品牌吉祥物</option>
+                  </optgroup>
+                  <optgroup label="Apps / 应用">
+                    <option value="ios-app">iOS app / iOS 应用开发</option>
+                  </optgroup>
+                  <option value="full">Several of these / 多项服务</option>
                   <option value="other">Something else / 其他</option>
                 </select>
               </div>
@@ -289,7 +304,8 @@
                 </label>
               </div>
 
-              <button type="submit" class="contact-submit" id="contactSubmit" disabled>Send inquiry</button>
+              <p class="form-error" id="formError" role="alert" hidden></p>
+              <button type="submit" class="contact-submit" id="contactSubmit"><span class="t-en">Send inquiry</span><span class="zh">发送咨询</span></button>
 
               <p class="privacy-note">
                 <span class="t-en">We only use your details to reply to this inquiry. We never share or sell them, and you can ask us to delete them at any time.</span>
@@ -308,9 +324,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="services-data.js?v=20261021c"></script>
-  <script src="site.js?v=20261021c"></script>
-  <script src="app.js?v=20261021c"></script>
-  <script src="motion.js?v=20261021c"></script>
+  <script src="services-data.js?v=20261021d"></script>
+  <script src="site.js?v=20261021d"></script>
+  <script src="app.js?v=20261021d"></script>
+  <script src="motion.js?v=20261021d"></script>
 </body>
 </html>

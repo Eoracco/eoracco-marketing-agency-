@@ -191,9 +191,11 @@
       // Section headings rise through a mask
       gsap.utils.toArray('.sec-head').forEach((head) => {
         const h2 = head.querySelector('h2');
-        const p = head.querySelector('p');
+        const eyebrow = head.querySelector('.contact-eyebrow');
+        const p = head.querySelector('p:not(.contact-eyebrow)');
         const tl = gsap.timeline({ scrollTrigger: { trigger: head, start: 'top 86%' } });
-        tl.from(h2, { y: 70, opacity: 0, duration: 1.3, ease: EXPO });
+        if (eyebrow) tl.from(eyebrow, { y: 24, opacity: 0, duration: 1, ease: EXPO }, 0);
+        tl.from(h2, { y: 70, opacity: 0, duration: 1.3, ease: EXPO }, eyebrow ? 0.08 : 0);
         if (p && p.textContent.trim()) tl.from(p, { y: 30, opacity: 0, duration: 1.2, ease: EXPO }, 0.15);
       });
 
@@ -307,6 +309,10 @@
       });
 
       // Contact + footer
+      ScrollTrigger.create({
+        trigger: '#contact', start: () => `top ${navH()}px`, end: () => `bottom ${navH()}px`,
+        toggleClass: { targets: '#nav', className: 'on-dark' }, invalidateOnRefresh: true,
+      });
       gsap.from('.contact-left > *', {
         y: 40, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.08,
         scrollTrigger: { trigger: '.contact-grid', start: 'top 82%' },

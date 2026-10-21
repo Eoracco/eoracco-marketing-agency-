@@ -644,18 +644,41 @@ function wireContact() {
   const submitBtn = document.getElementById('contactSubmit');
   const wrap = document.getElementById('contactFormWrap');
 
-  const validate = () => {
-    submitBtn.disabled = !(form.name.value.trim() && form.email.value.trim() && form.agreed.checked);
+  const errBox = document.getElementById('formError');
+  const checks = () => [
+    [form.name, !!form.name.value.trim(), { en: 'your name', zh: '姓名' }],
+    [form.email, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.value.trim()), { en: 'a valid email', zh: '有效邮箱' }],
+    [form.agreed, form.agreed.checked, { en: 'agreement to the privacy policy', zh: '勾选同意隐私政策' }],
+  ];
+  const clearErr = (el) => {
+    const box = el.closest('.field') || el.closest('.checkbox-row');
+    if (box) box.classList.remove('is-invalid');
   };
-  form.addEventListener('input', validate);
-  form.addEventListener('change', validate);
+  form.addEventListener('input', (e) => clearErr(e.target));
+  form.addEventListener('change', (e) => clearErr(e.target));
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (submitBtn.disabled) return;
+    if (submitBtn.dataset.sending) return;
+    const missing = checks().filter(([, ok]) => !ok);
+    checks().forEach(([el, ok]) => {
+      const box = el.closest('.field') || el.closest('.checkbox-row');
+      if (box) box.classList.toggle('is-invalid', !ok);
+    });
+    if (missing.length) {
+      const list = missing.map(([, , m]) => (isZh() ? m.zh : m.en));
+      errBox.innerHTML = isZh()
+        ? `请填写：${list.join('、')}`
+        : `Please add ${list.join(', ')}.` + (isBi() ? `<span class="zh-line">请填写：${missing.map(([, , m]) => m.zh).join('、')}</span>` : '');
+      errBox.hidden = false;
+      missing[0][0].focus({ preventScroll: true });
+      submitBtn.classList.remove('shake'); void submitBtn.offsetWidth; submitBtn.classList.add('shake');
+      return;
+    }
+    errBox.hidden = true;
+    submitBtn.dataset.sending = '1';
     const firstName = form.name.value.trim().split(' ')[0];
     const hadPlan = PLAN && PLAN.ids.length;
-    submitBtn.disabled = true;
     submitBtn.textContent = isZh() ? '正在发送…' : 'Sending…';
     // Stand-in: a real integration would POST the form + PLAN somewhere.
     setTimeout(() => {
@@ -688,7 +711,7 @@ function applyStatic() {
     const sec = document.getElementById(id);
     if (!sec) return;
     const h2 = sec.querySelector('.sec-head h2');
-    const p = sec.querySelector('.sec-head p');
+    const p = sec.querySelector('.sec-head p:not(.contact-eyebrow)');
     if (h2) h2.innerHTML = secHeadHTML(s);
     if (p && s.desc) {
       p.innerHTML = (isZh() ? s.desc.zh : s.desc.en) + (isBi() ? `<span class="zh-line">${s.desc.zh}</span>` : '');
