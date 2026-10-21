@@ -27,6 +27,9 @@
     services: { en: 'Services', zh: '服务' },
     company: { en: 'Company', zh: '公司' },
     legal: { en: 'Legal', zh: '条款' },
+    privacy: { en: 'Privacy Policy', zh: '隐私政策' },
+    terms: { en: 'Terms of Service', zh: '服务条款' },
+    cookies: { en: 'Cookies', zh: 'Cookie 说明' },
   };
   const tx = (o) => EO.tx(o);
   const zhSub = (o) => (EO.isBi() && o ? `<span class="zh-inline">${o.zh}</span>` : '');
@@ -134,9 +137,9 @@
         <div>
           <h4>${tx(T.legal)}</h4>
           <div class="footer-links">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#cookies">Cookie Notice</a>
+            <a href="privacy.html">${tx(T.privacy)}</a>
+            <a href="terms.html">${tx(T.terms)}</a>
+            <a href="privacy.html#cookies">${tx(T.cookies)}</a>
           </div>
         </div>
       </div>

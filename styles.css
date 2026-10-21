@@ -1156,3 +1156,30 @@ body.lang-zh .svc-name { letter-spacing: 0; }
   .flyout-panel.is-active li, .nav.sheet-open .sheet-group, .nav.sheet-open .sheet-link { animation: none; }
   .nav-flyout, .nav-sheet, .toast { transition: none; }
 }
+
+/* ---------- legal pages ---------- */
+.legal { padding: clamp(72px, 10vh, 120px) 0 clamp(80px, 12vh, 140px); }
+.legal-inner { max-width: 760px; }
+.legal-kicker { font-size: 14px; font-weight: 600; color: var(--amber-deep); }
+.legal-title { margin-top: 12px; font-size: clamp(40px, 6vw, 64px); line-height: 1.02; font-weight: 700; letter-spacing: -0.04em; }
+body.lang-zh .legal-title { letter-spacing: 0; }
+.legal-zh-h { display: block; margin-top: 8px; font-size: 0.55em; font-weight: 600; color: var(--ink-2); letter-spacing: 0; }
+body.lang-zh .legal-zh-h { display: inline; margin: 0; font-size: 1em; color: inherit; }
+.legal-date { margin-top: 16px; font-size: 14px; color: var(--ink-3); }
+body.lang-bi .legal-date .zh::before { content: " · "; }
+.legal-intro { margin-top: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--line); font-size: 19px; line-height: 1.5; color: var(--ink-2); }
+.legal-sec { padding: 32px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 80px; }
+.legal-sec h2 { margin-bottom: 12px; font-size: 24px; line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
+.legal-sec .legal-zh-h { font-size: 16px; }
+.legal-sec p, .legal-sec li { font-size: 17px; line-height: 1.6; color: var(--ink-2); }
+.legal-sec p + p, .legal-sec ul { margin-top: 12px; }
+.legal-sec ul { padding-left: 20px; }
+.legal-sec li + li { margin-top: 6px; }
+.legal-sec b { color: var(--ink); font-weight: 600; }
+.legal a { color: var(--amber-deep); text-decoration: underline; text-underline-offset: 2px; }
+.legal-zh { margin-top: 14px; }
+.legal-zh p, .legal-zh li { font-size: 15px; color: var(--ink-3); }
+body.lang-zh .legal-zh { margin-top: 0; }
+body.lang-zh .legal-zh p, body.lang-zh .legal-zh li { font-size: 17px; color: var(--ink-2); }
+body.lang-bi .legal-intro .legal-zh { margin-top: 8px; font-size: 15px; color: var(--ink-3); }
+body.lang-bi .legal-kz::before { content: " "; }
