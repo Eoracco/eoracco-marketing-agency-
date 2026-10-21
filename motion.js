@@ -49,7 +49,14 @@
 
   // ---------- film: image sequence drawn to canvas, frame chosen by scroll ----------
   const FILM_FRAMES = 83;
-  const filmSrc = (i) => `film/f${String(i + 1).padStart(3, '0')}.webp`;
+  // full 1920x1080 frames for big / retina screens, 1280x720 for phones
+  const filmDir = () => {
+    const c = document.getElementById('filmCanvas');
+    const px = (c ? c.clientWidth : window.innerWidth) * Math.min(window.devicePixelRatio || 1, 2);
+    return px > 1400 ? 'film/hd/' : 'film/';
+  };
+  let FILM_DIR = null;
+  const filmSrc = (i) => `${FILM_DIR || (FILM_DIR = filmDir())}f${String(i + 1).padStart(3, '0')}.webp?v=2`;
   const film = { imgs: new Array(FILM_FRAMES), current: 0, started: false };
   const canvas = document.getElementById('filmCanvas');
   const c2d = canvas ? canvas.getContext('2d') : null;
@@ -94,6 +101,8 @@
     }
     if (!img) return;
     const cw = canvas.width, ch = canvas.height;
+    c2d.imageSmoothingEnabled = true;
+    c2d.imageSmoothingQuality = 'high';
     const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
     const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
     c2d.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
