@@ -745,6 +745,7 @@ body.lang-bi .contact-submit .zh::before { content: " · "; }
 .contact-submit:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 .contact-submit.shake { animation: shake 0.45s var(--ease); }
 @keyframes shake { 20%, 60% { transform: translateX(-7px); } 40%, 80% { transform: translateX(7px); } }
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .form-error { margin: -8px 0 14px; font-size: 14px; color: #d70015; }
 .form-error .zh-line { color: #d70015; opacity: 0.8; }
 .field.is-invalid input, .field.is-invalid select { border-color: #ff3b30; box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.14); }

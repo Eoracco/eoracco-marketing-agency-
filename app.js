@@ -622,6 +622,10 @@ function wirePricing() {
 }
 
 // ===== CONTACT FORM =====
+// Inquiries go to a Google Apps Script web app on the EORACCO Google account:
+// it emails the inquiry to the owner and logs it in a Google Sheet.
+const FORM_ENDPOINT = 'APPS_SCRIPT_URL';
+const CONTACT_EMAIL = 'eoraccoofficial@gmail.com';
 function wireContact() {
   const form = document.getElementById('contactForm');
   const submitBtn = document.getElementById('contactSubmit');
@@ -662,9 +666,27 @@ function wireContact() {
     submitBtn.dataset.sending = '1';
     const firstName = form.name.value.trim().split(' ')[0];
     const hadPlan = PLAN && PLAN.ids.length;
+    const label = submitBtn.innerHTML;
     submitBtn.textContent = isZh() ? '正在发送…' : 'Sending…';
-    // Stand-in: a real integration would POST the form + PLAN somewhere.
-    setTimeout(() => {
+
+    const needSel = form.need;
+    const planText = hadPlan
+      ? PLAN.ids.map((id) => ALL_ITEMS[id]).filter(Boolean).map((i) => `${i.name} (${i.zh})`).join('; ')
+        + ` | ${fmt(PLAN.monthly)}/mo + ${fmt(PLAN.setup)} one-time`
+      : '';
+    const data = new URLSearchParams({
+      name: form.name.value.trim(),
+      email: form.email.value.trim(),
+      business: form.business.value.trim(),
+      phone: form.phone.value.trim(),
+      need: needSel.value ? needSel.options[needSel.selectedIndex].text : '',
+      message: form.message.value.trim(),
+      plan: planText,
+      lang: LANG,
+      website: form.website ? form.website.value : '',   // honeypot: real people leave it empty
+    });
+
+    const done = () => {
       const planLine = hadPlan
         ? (isZh() ? `已附上您选择的 ${PLAN.ids.length} 项服务。` : `Your ${PLAN.ids.length}-service plan came with it.`)
         : '';
@@ -678,7 +700,22 @@ function wireContact() {
             ${isBi() ? '<span class="zh-line">咨询已发送，我们会在一个工作日内回复您。</span>' : ''}
           </p>
         </div>`;
-    }, 700);
+    };
+    const fail = () => {
+      delete submitBtn.dataset.sending;
+      submitBtn.innerHTML = label;
+      const mail = `<a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>`;
+      errBox.innerHTML = isZh()
+        ? `发送失败，请稍后再试，或直接发邮件到 ${mail}。`
+        : `That didn't go through. Please try again, or email us at ${mail}.`
+          + (isBi() ? `<span class="zh-line">发送失败，请稍后再试，或直接发邮件到 ${mail}。</span>` : '');
+      errBox.hidden = false;
+    };
+
+    fetch(FORM_ENDPOINT, { method: 'POST', body: data })
+      .then((r) => r.json())
+      .then((res) => (res && res.ok ? done() : fail()))
+      .catch(fail);
   });
 }
 
