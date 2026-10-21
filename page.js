@@ -33,6 +33,9 @@
   };
 
   function mediaHTML(s) {
+    if (s.video) {
+      return `<figure class="svc-media"><video class="app-video" data-src="${s.video}" poster="${s.poster}" muted loop playsinline preload="none"></video>${s.imgNote ? `<figcaption>${tx(s.imgNote)}</figcaption>` : ''}</figure>`;
+    }
     if (s.img) {
       return `<figure class="svc-media"><img src="${s.img}" alt="" loading="lazy" />${s.imgNote ? `<figcaption>${tx(s.imgNote)}</figcaption>` : ''}</figure>`;
     }

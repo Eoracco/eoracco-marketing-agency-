@@ -176,7 +176,7 @@ const I18N = {
     ],
   },
   stats: [
-    { n: 15, suffix: '',   en: 'services, one point of contact', zh: '项服务，一个窗口对接' },
+    { n: 16, suffix: '',   en: 'services, one point of contact', zh: '项服务，一个窗口对接' },
     { n: 2,  suffix: '',   en: 'languages, native in both', zh: '种语言，双母语' },
     { n: 24, suffix: '/7', en: 'AI call answering',         zh: 'AI 电话接待' },
     { n: 14, suffix: '',   en: 'days to launch, typically', zh: '天左右上线' },

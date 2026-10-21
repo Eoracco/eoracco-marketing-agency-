@@ -24,24 +24,81 @@
     },
     twotake: {
       chips: [L('9:16 + 16:9 in one take', '一次拍摄，两种比例'), L('HD · 60 fps', 'HD · 60 帧'), L('Center-crop horizontal', '横版居中裁切')],
-      stage: () => `
+      // The real TwoTake camera screen, rebuilt in HTML; photos cycle through both previews
+      stage: () => {
+        const photos = (cls) => [1, 2, 3].map((i) => `<img class="${cls} p${i}" src="images/apps/tt-photo-${i}.webp" alt="" loading="lazy" />`).join('');
+        const ic = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+        return `
         <div class="stage stage--twotake">
+          <span class="tt-callout tt-callout--v"><b>9:16</b> TikTok · Reels · Shorts</span>
+          <span class="tt-callout tt-callout--h"><b>16:9</b> YouTube · TV</span>
           <div class="iphone iphone--dark">
-            <div class="iphone-screen">
-              <img src="images/apps/twotake-vertical.webp" alt="" loading="lazy" />
-              <span class="tt-rec"><i></i>REC 00:12</span>
-              <span class="tt-tag tt-tag--v">9:16</span>
-              <span class="tt-band"><span class="tt-tag tt-tag--h">16:9</span></span>
+            <div class="iphone-screen tt-ui">
+              <span class="tt-cam"></span>
+              <div class="tt-top">
+                ${ic('<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.2"/>')}
+                <span class="tt-pill">HD</span><span class="tt-pill">60 FPS</span>
+                ${ic('<circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.5 2.5 2.5 13.5 0 16M12 4c-2.5 2.5-2.5 13.5 0 16"/>')}
+                ${ic('<path d="M13 3 6 13h5l-1 8 7-10h-5z"/><path d="M4 4l16 16"/>')}
+                ${ic('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>')}
+              </div>
+              <span class="tt-lbl tt-lbl--v">9:16</span>
+              <div class="tt-v">${photos('tt-ph')}<span class="tt-rec"><i></i>00:12</span></div>
+              <div class="tt-row">
+                <span class="tt-z">0.5x</span><span class="tt-z is-on">1x</span><span class="tt-z">2x</span>
+                <span class="tt-b">${ic('<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>')}AUTO</span>
+                <span class="tt-b">${ic('<path d="M8 4v16M8 4 5 7M8 4l3 3M16 20V4M16 20l-3-3M16 20l3-3"/>')}SWAP</span>
+              </div>
+              <div class="tt-h">${photos('tt-ph')}</div>
+              <span class="tt-lbl tt-lbl--h">16:9</span>
+              <div class="tt-bottom">
+                <span class="tt-sq">${ic('<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.2"/>')}</span>
+                <span class="tt-shutter"><i></i></span>
+                <span class="tt-sq tt-thumb">${photos('tt-ph')}</span>
+              </div>
             </div>
-            <span class="iphone-island"></span>
           </div>
-          <div class="tt-land">
-            <img src="images/apps/twotake-vertical.webp" alt="" loading="lazy" />
-            <span class="tt-tag tt-tag--h">16:9</span>
-          </div>
-        </div>`,
+        </div>`;
+      },
     },
   };
+
+  // Launch spots we produced for TwoTake — shown as proof that we market apps too
+  const SPOTS = {
+    kicker: L('App marketing', 'App 推广'),
+    title: L('We market apps, too.', '我们也做 App 推广。'),
+    desc: L('Launch spots we produced for TwoTake, cut for TikTok, Reels, Shorts and YouTube. Your app can get the same.',
+            '这些是我们为 TwoTake 制作的推广短片，适配 TikTok、Reels、Shorts 和 YouTube。您的 App 也可以。'),
+    link: L('App launch marketing', 'App 上线推广'),
+    sound: L('Sound', '声音'),
+    list: [
+      { cls: 'spot--h', src: 'video/tt-gondola.mp4', poster: 'images/apps/tt-gondola.jpg', cap: L('16:9 · YouTube', '16:9 · YouTube') },
+      { cls: 'spot--v', src: 'video/tt-party.mp4', poster: 'images/apps/tt-party.jpg', cap: L('9:16 · Reels', '9:16 · Reels') },
+      { cls: 'spot--v', src: 'video/tt-dontturn.mp4', poster: 'images/apps/tt-dontturn.jpg', cap: L('9:16 · TikTok', '9:16 · TikTok') },
+    ],
+  };
+  const SPEAKER = '<svg class="spk-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="m17 9 4 6M21 9l-4 6"/></svg><svg class="spk-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+
+  function spotsHTML() {
+    const S = SPOTS;
+    return `
+      <section class="app-spots">
+        <div class="app-spots-head">
+          <p class="app-spots-kicker">${tx(S.kicker)}</p>
+          <h3 class="app-spots-title">${tx(S.title)}</h3>
+          <p class="app-spots-desc">${tx(S.desc)}${zl(S.desc)}</p>
+          <a class="link-chevron" href="apps.html#app-marketing"><span class="btn-label">${tx(S.link)}</span></a>
+        </div>
+        <div class="app-spots-row">
+          ${S.list.map((v) => `
+          <figure class="spot ${v.cls}">
+            <video class="app-video" data-src="${v.src}" poster="${v.poster}" muted loop playsinline preload="none"></video>
+            <figcaption>${tx(v.cap)}</figcaption>
+            <button class="spot-sound" type="button" aria-label="${tx(S.sound)}" aria-pressed="false">${SPEAKER}</button>
+          </figure>`).join('')}
+        </div>
+      </section>`;
+  }
 
   const STORE = L('View on the App Store', '在 App Store 查看');
 
@@ -62,13 +119,29 @@
         </div>
         <div class="app-show-visual" aria-hidden="true">${x.stage()}</div>
       </article>`;
-    }).join('');
+    }).join('') + spotsHTML();
   }
 
   // Play the in-phone preview only while it is on screen
   let io = null;
+  let soundWired = false;
   function wireVideos(root) {
     if (io) io.disconnect();
+    if (!soundWired) {
+      soundWired = true;
+      // one sound at a time: turning a spot's sound on mutes the others
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.spot-sound');
+        if (!btn) return;
+        const v = btn.parentElement.querySelector('video');
+        const turnOn = v.muted;
+        document.querySelectorAll('.spot video').forEach((o) => { o.muted = true; });
+        document.querySelectorAll('.spot-sound').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+        v.muted = !turnOn;
+        btn.setAttribute('aria-pressed', String(turnOn));
+        if (turnOn) { if (!v.src) v.src = v.dataset.src; const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+      });
+    }
     const vids = (root || document).querySelectorAll('.app-video');
     if (!vids.length || !('IntersectionObserver' in window)) return;
     io = new IntersectionObserver((entries) => entries.forEach((e) => {
@@ -76,7 +149,14 @@
       if (e.isIntersecting) {
         if (!v.src) v.src = v.dataset.src;
         const p = v.play(); if (p && p.catch) p.catch(() => {});
-      } else if (!v.paused) v.pause();
+      } else if (!v.paused) {
+        v.pause();
+        if (!v.muted) {
+          v.muted = true;
+          const b = v.parentElement.querySelector('.spot-sound');
+          if (b) b.setAttribute('aria-pressed', 'false');
+        }
+      }
     }), { rootMargin: '200px 0px' });
     vids.forEach((v) => io.observe(v));
   }
@@ -108,20 +188,26 @@
         .fromTo(pom.querySelector('.fan-r'), { x: 0, rotation: 0, scale: 0.86, opacity: 0 }, { x: d, rotation: 9, scale: 0.92, opacity: 1, ease: 'power2.out' }, 0);
     }
 
-    // TwoTake: the 16:9 band is lifted out of the vertical frame into its own landscape video
+    // TwoTake: the two previews come up one after the other, then the callouts
     const tt = document.querySelector('.app-show--twotake');
     if (tt) {
-      const land = tt.querySelector('.tt-land');
-      const band = tt.querySelector('.tt-band');
-      const phone = tt.querySelector('.iphone');
-      const stage = tt.querySelector('.stage');
-      // start exactly on top of the band inside the phone, then lift out to the side
-      const dx = () => phone.offsetLeft + phone.offsetWidth / 2 - stage.clientWidth / 2;
-      const s0 = () => band.offsetWidth / land.offsetWidth;
-      const tl = gsap.timeline({ scrollTrigger: { trigger: tt, start: 'top 70%', end: 'center 40%', scrub: 0.8, invalidateOnRefresh: true } });
-      tl.fromTo(band, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0)
-        .fromTo(land, { xPercent: -50, yPercent: -50, x: dx, y: 0, scale: s0, opacity: 0 },
-          { xPercent: -50, yPercent: -50, x: () => Math.min(dx() + (wide ? 210 : 110), stage.clientWidth / 2 + (wide ? 40 : 20) - land.offsetWidth / 2), y: wide ? 150 : 175, scale: 1, opacity: 1, ease: 'power2.inOut', duration: 1 }, 0.25);
+      const tl = gsap.timeline({ scrollTrigger: { trigger: tt, start: 'top 65%' } });
+      tl.from(tt.querySelector('.tt-v'), { clipPath: 'inset(0 0 100% 0 round 0.6cqw)', duration: 1.1, ease: 'power3.out' }, 0.35)
+        .from(tt.querySelector('.tt-h'), { clipPath: 'inset(0 50% 0 50% round 0.6cqw)', duration: 1.1, ease: 'power3.out' }, 0.65)
+        .from(tt.querySelectorAll('.tt-callout'), { y: 16, opacity: 0, duration: 0.9, ease: EXPO, stagger: 0.15 }, 1.1);
+    }
+
+    // Launch spots: rise in, the wide one first
+    const spots = document.querySelector('.app-spots');
+    if (spots) {
+      gsap.from(spots.querySelectorAll('.app-spots-head > *'), {
+        y: 40, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.06,
+        scrollTrigger: { trigger: spots, start: 'top 78%' },
+      });
+      gsap.from(spots.querySelectorAll('.spot'), {
+        y: 80, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.1,
+        scrollTrigger: { trigger: spots.querySelector('.app-spots-row'), start: 'top 85%' },
+      });
     }
   }
 
