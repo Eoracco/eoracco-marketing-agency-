@@ -51,7 +51,6 @@
       <nav class="nav-links" aria-label="Primary">
         ${cats}
         <a class="nav-link" href="${HREF.pricing}">${tx(T.pricing)}<span class="nav-count" ${count ? '' : 'hidden'}>${count}</span></a>
-        <a class="nav-link" href="${HREF.contact}">${tx(T.contact)}</a>
         <a class="nav-link cta-mini" href="${HREF.contact}">${tx(T.book)}</a>
       </nav>
       <div class="lang-toggle" id="langToggle" role="group" aria-label="Language">
@@ -104,7 +103,6 @@
           </ul>
         </div>`).join('')}
         <a class="sheet-link" href="${HREF.pricing}">${tx(T.pricing)}</a>
-        <a class="sheet-link" href="${HREF.contact}">${tx(T.contact)}</a>
         <a class="btn btn-primary sheet-cta" href="${HREF.contact}">${tx(T.book)}</a>
       </div>
     </div>
