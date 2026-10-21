@@ -262,8 +262,9 @@ function renderHero() {
   if (idx) {
     const picks = EO.allServices().filter((s) => s.chiclet);
     idx.innerHTML = `<div class="chiclets-track">${picks.map((s) => {
-      const label = isZh() ? s.name.zh : s.name.en;
-      const zh = isBi() ? `<span class="chiclet-zh">${s.name.zh}</span>` : '';
+      const nm = s.short || s.name;
+      const label = isZh() ? nm.zh : nm.en;
+      const zh = isBi() ? `<span class="chiclet-zh">${nm.zh}</span>` : '';
       return `<a class="chiclet" href="${s.cat.page}#${s.id}"><span class="chiclet-icon">${EO.icon(s.icon, 30)}</span><span class="chiclet-label">${label}</span>${zh}</a>`;
     }).join('')}</div>`;
   }
