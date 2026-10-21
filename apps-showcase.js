@@ -63,21 +63,55 @@
     },
   };
 
-  // Launch spots we produced for TwoTake — shown as proof that we market apps too
+  const STORE = L('View on the App Store', '在 App Store 查看');
+
+  // Launch spots we produced for our own apps — shown as proof that we market apps too
   const SPOTS = {
     kicker: L('App marketing', 'App 推广'),
     title: L('We market apps, too.', '我们也做 App 推广。'),
-    desc: L('Launch spots we produced for TwoTake, cut for TikTok, Reels, Shorts and YouTube. Your app can get the same.',
-            '这些是我们为 TwoTake 制作的推广短片，适配 TikTok、Reels、Shorts 和 YouTube。您的 App 也可以。'),
+    desc: L('Launch spots we produced for Pompolo and TwoTake, cut for TikTok, Reels, Shorts and YouTube. Your app can get the same.',
+            '这些是我们为 Pompolo 和 TwoTake 制作的推广短片，适配 TikTok、Reels、Shorts 和 YouTube。您的 App 也可以。'),
     link: L('App launch marketing', 'App 上线推广'),
     sound: L('Sound', '声音'),
-    list: [
-      { cls: 'spot--h', src: 'video/tt-gondola.mp4', poster: 'images/apps/tt-gondola.jpg', cap: L('16:9 · YouTube', '16:9 · YouTube') },
-      { cls: 'spot--v', src: 'video/tt-party.mp4', poster: 'images/apps/tt-party.jpg', cap: L('9:16 · Reels', '9:16 · Reels') },
-      { cls: 'spot--v', src: 'video/tt-dontturn.mp4', poster: 'images/apps/tt-dontturn.jpg', cap: L('9:16 · TikTok', '9:16 · TikTok') },
+    sets: [
+      { key: 'pompolo', name: 'Pompolo', icon: 'images/apps/pompolo-icon.webp', layout: 'bento',
+        list: [
+          { cls: 'spot--h', src: 'video/pom-kitchen.mp4', poster: 'images/apps/pom-kitchen.jpg', cap: L('16:9 · Story spot', '16:9 · 剧情短片') },
+          { cls: 'spot--h', src: 'video/pom-night.mp4', poster: 'images/apps/pom-night.jpg', cap: L('16:9 · YouTube', '16:9 · YouTube') },
+          { cls: 'spot--v', src: 'video/pom-couch.mp4', poster: 'images/apps/pom-couch.jpg', cap: L('9:16 · Reels', '9:16 · Reels') },
+          { cls: 'spot--v', src: 'video/pom-bears.mp4', poster: 'images/apps/pom-bears.jpg', cap: L('9:16 · TikTok', '9:16 · TikTok'), silent: true, capTop: true },
+        ] },
+      { key: 'twotake', name: 'TwoTake', icon: 'images/apps/twotake-icon.webp', layout: 'row',
+        list: [
+          { cls: 'spot--h', src: 'video/tt-gondola.mp4', poster: 'images/apps/tt-gondola.jpg', cap: L('16:9 · YouTube', '16:9 · YouTube') },
+          { cls: 'spot--v', src: 'video/tt-party.mp4', poster: 'images/apps/tt-party.jpg', cap: L('9:16 · Reels', '9:16 · Reels') },
+          { cls: 'spot--v', src: 'video/tt-dontturn.mp4', poster: 'images/apps/tt-dontturn.jpg', cap: L('9:16 · TikTok', '9:16 · TikTok') },
+        ] },
     ],
   };
+  let activeSet = 'pompolo';
   const SPEAKER = '<svg class="spk-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="m17 9 4 6M21 9l-4 6"/></svg><svg class="spk-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+
+  function spotHTML(v) {
+    return `
+          <figure class="spot ${v.cls}">
+            <video class="app-video" data-src="${v.src}" poster="${v.poster}" muted loop playsinline preload="none"></video>
+            <figcaption${v.capTop ? ' class="cap-top"' : ''}>${tx(v.cap)}</figcaption>
+            ${v.silent ? '' : `<button class="spot-sound" type="button" aria-label="${tx(SPOTS.sound)}" aria-pressed="false">${SPEAKER}</button>`}
+          </figure>`;
+  }
+
+  function setHTML(set) {
+    const hidden = set.key !== activeSet ? ' hidden' : '';
+    if (set.layout === 'bento') {
+      const h = set.list.filter((v) => v.cls === 'spot--h');
+      const v = set.list.filter((x) => x.cls === 'spot--v');
+      return `<div class="app-spots-row app-spots-row--bento" id="spots-${set.key}" role="tabpanel"${hidden}>
+          <div class="spot-stack">${h.map(spotHTML).join('')}</div>${v.map(spotHTML).join('')}
+        </div>`;
+    }
+    return `<div class="app-spots-row" id="spots-${set.key}" role="tabpanel"${hidden}>${set.list.map(spotHTML).join('')}</div>`;
+  }
 
   function spotsHTML() {
     const S = SPOTS;
@@ -89,18 +123,12 @@
           <p class="app-spots-desc">${tx(S.desc)}${zl(S.desc)}</p>
           <a class="link-chevron" href="apps.html#app-marketing"><span class="btn-label">${tx(S.link)}</span></a>
         </div>
-        <div class="app-spots-row">
-          ${S.list.map((v) => `
-          <figure class="spot ${v.cls}">
-            <video class="app-video" data-src="${v.src}" poster="${v.poster}" muted loop playsinline preload="none"></video>
-            <figcaption>${tx(v.cap)}</figcaption>
-            <button class="spot-sound" type="button" aria-label="${tx(S.sound)}" aria-pressed="false">${SPEAKER}</button>
-          </figure>`).join('')}
+        <div class="spots-tabs" role="tablist">
+          ${S.sets.map((set) => `<button class="spots-tab" type="button" role="tab" data-set="${set.key}" aria-controls="spots-${set.key}" aria-selected="${set.key === activeSet}"><img src="${set.icon}" alt="" width="22" height="22" />${set.name}</button>`).join('')}
         </div>
+        ${S.sets.map(setHTML).join('')}
       </section>`;
   }
-
-  const STORE = L('View on the App Store', '在 App Store 查看');
 
   function html() {
     return EO.APPS.map((a) => {
@@ -131,6 +159,21 @@
       soundWired = true;
       // one sound at a time: turning a spot's sound on mutes the others
       document.addEventListener('click', (e) => {
+        const tab = e.target.closest('.spots-tab');
+        if (tab) {
+          activeSet = tab.dataset.set;
+          const box = tab.closest('.app-spots');
+          box.querySelectorAll('.spots-tab').forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+          box.querySelectorAll('[role="tabpanel"]').forEach((p) => {
+            const on = p.id === 'spots-' + activeSet;
+            p.hidden = !on;
+            if (!on) p.querySelectorAll('video').forEach((v) => { v.pause(); v.muted = true; });
+          });
+          box.querySelectorAll('.spot-sound').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+          const shown = box.querySelectorAll('#spots-' + activeSet + ' .spot');
+          if (window.gsap) window.gsap.fromTo(shown, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', stagger: 0.06 });
+          return;
+        }
         const btn = e.target.closest('.spot-sound');
         if (!btn) return;
         const v = btn.parentElement.querySelector('video');
@@ -204,9 +247,9 @@
         y: 40, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.06,
         scrollTrigger: { trigger: spots, start: 'top 78%' },
       });
-      gsap.from(spots.querySelectorAll('.spot'), {
+      gsap.from(spots.querySelectorAll('.spots-tabs, .app-spots-row:not([hidden]) .spot'), {
         y: 80, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.1,
-        scrollTrigger: { trigger: spots.querySelector('.app-spots-row'), start: 'top 85%' },
+        scrollTrigger: { trigger: spots.querySelector('.spots-tabs'), start: 'top 85%' },
       });
     }
   }
