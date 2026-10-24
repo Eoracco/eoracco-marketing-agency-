@@ -208,7 +208,7 @@ body.lang-zh .t-en { display: none !important; }
   to { transform: translate3d(5%, -6%, 0) scale(1.12); }
 }
 .hero-stage { flex: 1; display: flex; flex-direction: column; justify-content: center; position: relative; transform-origin: 50% 30%; }
-.hero-inner { display: flex; flex-direction: column; align-items: center; padding-top: clamp(56px, 9vh, 110px); }
+.hero-inner { display: flex; flex-direction: column; align-items: center; transform-origin: 50% 30%; padding-top: clamp(56px, 9vh, 110px); }
 .hero-status {
   display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center;
   font-size: 14px; font-weight: 500; color: var(--ink-2); margin-bottom: 26px;
@@ -238,70 +238,28 @@ body.lang-zh .hero-display { letter-spacing: 0; font-size: clamp(52px, 9vw, 128p
 .hero-sub .zh-line { font-size: 0.78em; margin-top: 10px; }
 .hero-ctas-new { margin-top: 38px; display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap; }
 
-/* hero orbit — real work floating around the headline (desktop) */
-.hero-inner { position: relative; z-index: 2; }
-.hero-orbit { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
-.oc { position: absolute; will-change: transform; }
-.oc-body, .oc-chip { animation: bob 7s ease-in-out infinite alternate; }
-.oc:nth-child(2n) .oc-body, .oc:nth-child(2n) .oc-chip { animation-duration: 8.5s; animation-delay: -3s; }
-.oc:nth-child(3n) .oc-body, .oc:nth-child(3n) .oc-chip { animation-duration: 9.5s; animation-delay: -5s; }
-@keyframes bob { from { transform: translateY(-7px); } to { transform: translateY(7px); } }
-.oc-body {
-  background: #fff; border-radius: 22px; overflow: hidden;
-  box-shadow: 0 1px 1px rgba(0,0,0,.04), 0 12px 28px -6px rgba(60,40,10,.16), 0 40px 80px -24px rgba(60,40,10,.22);
+/* hero reel — a slow, continuous row of real work */
+.reel {
+  margin-top: clamp(48px, 7vh, 80px); overflow: hidden; position: relative;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
-.oc img { display: block; width: 100%; height: auto; }
-.oc-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; font-size: 12px; font-weight: 600; color: var(--ink); text-align: left; }
-.oc-av { width: 22px; height: 22px; border-radius: 50%; background: url(images/hero/beef.webp) center/cover; box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px #f59e0b; }
-.oc-dots { margin-left: auto; color: var(--ink-3); }
-.oc-foot { display: flex; align-items: center; gap: 7px; padding: 10px 12px 12px; font-size: 12px; font-weight: 500; color: var(--ink-2); }
-.oc-photo { position: relative; }
-.oc-photo::after { content: ""; position: absolute; inset: 45% 0 0; background: linear-gradient(180deg, transparent, rgba(12,8,4,.62)); }
-.oc-cap { position: absolute; left: 14px; right: 14px; bottom: 12px; z-index: 1; color: #fff; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; text-align: left; }
-.oc-tag { position: absolute; left: 14px; top: 12px; z-index: 1; font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #1d1d1f; background: rgba(255,255,255,.88); backdrop-filter: blur(8px); padding: 4px 8px; border-radius: 99px; }
-.oc-chip {
-  display: flex; align-items: center; gap: 10px; text-align: left; white-space: nowrap;
-  padding: 10px 16px 10px 10px; border-radius: 18px;
-  background: rgba(255,255,255,.78); backdrop-filter: blur(18px) saturate(1.6); -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 14px 34px -10px rgba(60,40,10,.22);
+.reel-track { display: flex; gap: 20px; width: max-content; padding: 6px 0 4px; animation: reel 70s linear infinite; }
+.reel:hover .reel-track { animation-play-state: paused; }
+@keyframes reel { to { transform: translate3d(calc(-50% - 10px), 0, 0); } }
+.reel-tile {
+  position: relative; flex: none; width: clamp(150px, 15.5vw, 236px); aspect-ratio: 9 / 16;
+  border-radius: clamp(18px, 1.9vw, 28px); overflow: hidden; background: #111; margin: 0;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 24px 48px -24px rgba(0,0,0,.35);
 }
-.oc-chip b { display: block; font-size: 13px; font-weight: 600; color: var(--ink); }
-.oc-chip small { display: block; font-size: 11.5px; color: var(--ink-2); margin-top: 1px; }
-.oc-ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; flex: none; }
-.oc-ic.g { background: linear-gradient(135deg, #34c759, #1f9d4c); }
-.oc-ic.o { background: linear-gradient(135deg, #fbbf24, #f97316); }
-.oc-appicon { width: 40px !important; height: 40px !important; border-radius: 10px; flex: none; }
-
-/* positions: two lanes either side of the headline */
-.oc-post    { left: max(2.5%, calc(50% - 720px)); top: 7%;  width: 214px; rotate: -5deg; z-index: 2; }
-.oc-holiday { left: max(1.5%, calc(50% - 735px)); top: 43%; width: 138px; rotate: 7deg; z-index: 1; }
-.oc-call    { left: max(9%, calc(50% - 620px));   top: 63%; z-index: 3; }
-.oc-poster  { right: max(3%, calc(50% - 705px));  top: 6%;  width: 196px; rotate: 5deg; }
-.oc-sched   { right: max(8.5%, calc(50% - 630px)); top: 47%; }
-.oc-app     { right: max(3%, calc(50% - 700px));  top: 62%; rotate: -3deg; }
-@media (max-width: 1359px) {
-  .oc-holiday, .oc-app { display: none; }
-  .oc-call { left: 3%; top: 60%; }
-  .oc-sched { right: 3%; top: 58%; }
+.reel-tile video, .reel-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.reel-tile::after { content: ""; position: absolute; inset: 60% 0 0; background: linear-gradient(180deg, transparent, rgba(0,0,0,.55)); pointer-events: none; }
+.reel-tile figcaption {
+  position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 1; text-align: left;
+  font-size: 13px; font-weight: 600; letter-spacing: -0.01em; color: #fff;
 }
-@media (min-width: 1180px) {
-  .hero-display { font-size: clamp(58px, 7.6vw, 132px); }
-  body.lang-zh .hero-display { font-size: clamp(52px, 6.6vw, 116px); }
-}
-
-/* phone / tablet: a small fanned stack under the buttons instead */
-.hero-fan { display: none; }
-@media (max-width: 1179px) {
-  .hero-orbit { display: none; }
-  .hero-fan { display: flex; justify-content: center; margin-top: 40px; height: 168px; position: relative; width: 300px; }
-  .fan-card { position: absolute; top: 0; width: 120px; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; background: #eee;
-    box-shadow: 0 0 0 3px #fff, 0 16px 30px -10px rgba(60,40,10,.3); }
-  .fan-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .fan-card.f0 { left: 14px; rotate: -9deg; top: 10px; }
-  .fan-card.f1 { left: 90px; z-index: 2; }
-  .fan-card.f2 { left: 166px; rotate: 9deg; top: 10px; }
-}
-@media (prefers-reduced-motion: reduce) { .oc-body, .oc-chip { animation: none; } }
+.reel + .chiclets { margin-top: clamp(40px, 6vh, 64px); }
+@media (prefers-reduced-motion: reduce) { .reel-track { animation: none; } .reel { overflow-x: auto; } }
 
 /* service chiclets — Apple's product-nav row */
 .chiclets { margin-top: clamp(48px, 7vh, 88px); padding: 20px 0 30px; border-top: 1px solid var(--line); position: relative; background: rgba(255, 255, 255, 0.6); }
@@ -1114,7 +1072,7 @@ html.no-scroll, html.no-scroll body { overflow: hidden; }
 .localnav-links a.is-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: var(--amber); }
 
 .cat-hero { padding-top: clamp(56px, 9vh, 110px); text-align: center; overflow: hidden; }
-.cat-hero-inner { display: flex; flex-direction: column; align-items: center; }
+.cat.hero-inner { display: flex; flex-direction: column; align-items: center; transform-origin: 50% 30%; }
 .cat-kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600; color: var(--ink-2); }
 .cat-kicker-icon { color: var(--amber-deep); display: grid; }
 .cat-title {

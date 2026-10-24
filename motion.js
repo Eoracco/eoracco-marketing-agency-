@@ -132,26 +132,8 @@
       .from('.hero-display .row-in', { yPercent: 115, duration: 1.4, stagger: 0.12 }, 0.15)
       .from('.hero-sub', { y: 24, opacity: 0, duration: 1.2 }, 0.55)
       .from('.hero-ctas-new > *', { y: 20, opacity: 0, duration: 1.1, stagger: 0.08 }, 0.7)
-      .from('.chiclet', { y: 24, opacity: 0, duration: 1, stagger: 0.05 }, 0.85)
-      .from('.oc', { opacity: 0, y: 50, scale: 0.9, duration: 1.6, stagger: 0.09 }, 0.6)
-      .from('.fan-card', { opacity: 0, y: 40, rotate: 0, duration: 1.4, stagger: 0.08 }, 0.8);
-    heroParallax();
-  }
-
-  // cards drift against the pointer, each by its own depth
-  function heroParallax() {
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    const q = new WeakMap();
-    window.addEventListener('pointermove', (e) => {
-      if (window.scrollY > window.innerHeight) return;
-      const nx = e.clientX / window.innerWidth - 0.5;
-      const ny = e.clientY / window.innerHeight - 0.5;
-      document.querySelectorAll('.hero-orbit .oc-wrap').forEach((el) => {
-        if (!q.has(el)) q.set(el, { x: gsap.quickTo(el, 'x', { duration: 1.2, ease: 'power3.out' }), y: gsap.quickTo(el, 'y', { duration: 1.2, ease: 'power3.out' }) });
-        const d = parseFloat(el.parentNode.dataset.d) || 1, c = q.get(el);
-        c.x(-nx * 18 * d); c.y(-ny * 14 * d);
-      });
-    }, { passive: true });
+      .from('.reel-tile', { y: 60, opacity: 0, duration: 1.6, stagger: 0.06 }, 0.75)
+      .from('.chiclet', { y: 24, opacity: 0, duration: 1, stagger: 0.05 }, 0.85);
   }
 
   // ---------- scroll-driven scenes (rebuilt on language change) ----------
@@ -159,22 +141,13 @@
     mm = gsap.matchMedia();
     ctx = gsap.context(() => {
       // Hero: the whole stage recedes as you scroll past it
-      gsap.to('#heroStage', {
-        scale: 0.88, opacity: 0, y: -60, ease: 'none',
+      gsap.to('.hero-inner', {
+        scale: 0.92, opacity: 0, y: -40, ease: 'none',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
       });
       gsap.to('.hero-glow', {
         yPercent: 35, opacity: 0.4, ease: 'none',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
-      });
-      // orbit cards spread outward as the hero leaves
-      gsap.utils.toArray('.hero-orbit .oc').forEach((el) => {
-        const left = el.getBoundingClientRect().left < window.innerWidth / 2;
-        const d = parseFloat(el.dataset.d) || 1;
-        gsap.to(el, {
-          xPercent: (left ? -40 : 40) * d, yPercent: -30 * d, ease: 'none',
-          scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
-        });
       });
 
       // Statement: words light up in reading order
