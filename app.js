@@ -123,6 +123,12 @@ const BUNDLES = [
     ],
     items: ['ads-dual', 'social-full', 'email-sms', 'call-tracking', 'ai-voice', 'web-seo'], setup: ['su-call', 'su-email', 'su-voice'] },
 ];
+// Stripe Payment Links for each package (monthly subscription + one-time setup on the first invoice)
+const PAY_LINKS = {
+  'pkg-essentials': '',
+  'pkg-growth': '',
+  'pkg-full': '',
+};
 const PKG_PERKS = [
   { icon: 'mic', en: 'English and Chinese', zh: '中英双语' },
   { icon: 'smile', en: 'One point of contact', zh: '一个对接人' },
@@ -585,6 +591,7 @@ function renderPackages() {
       <p class="pkg-save"><s>${fmt(list)}</s> ${isZh() ? `每月省 ${fmt(list - price)}` : `Save ${fmt(list - price)}/mo`}</p>
       <p class="pkg-setup">${isZh() ? `另加一次性设置费 ${fmt(su)}` : `Plus ${fmt(su)} one-time setup`}</p>
       <button type="button" class="pkg-btn" data-pkg="${b.id}" aria-pressed="${on}">${on ? (isZh() ? '已选择 ✓' : 'Selected ✓') : (isZh() ? `选择${b.zh}` : `Choose ${b.name}`)}</button>
+      ${PAY_LINKS[b.id] ? `<a class="pkg-pay" href="${PAY_LINKS[b.id]}" rel="noopener">${isZh() ? '在线订阅付款' : 'Subscribe and pay online'} ${EO.icon('chevron', 14, 2)}</a>` : ''}
       <p class="pkg-label">${isZh() ? '每月我们会做' : 'Every month'}</p>
       <ul class="pkg-items">${b.gets.map((g) => `<li>${icon('check', 14)}<span>${L3(g)}${isBi() ? `<em class="zh-line">${g.zh}</em>` : ''}</span></li>`).join('')}</ul>
       <p class="pkg-label">${isZh() ? '包含服务' : 'Services included'}</p>
@@ -754,6 +761,17 @@ function renderSummary() {
     document.getElementById('pbBarBtn').textContent = isZh() ? '查看方案' : 'Review plan';
   }
 
+  const only = items.length === 1 && items[0].bundle && PAY_LINKS[items[0].id];
+  let payBox = document.getElementById('pbPay');
+  if (!payBox) {
+    payBox = document.createElement('div'); payBox.id = 'pbPay';
+    document.getElementById('pbCheckout').insertAdjacentElement('beforebegin', payBox);
+  }
+  payBox.innerHTML = only
+    ? `<a class="pb-pay" href="${PAY_LINKS[items[0].id]}" rel="noopener">${isZh() ? `在线付款订阅${items[0].bundle.zh}` : `Pay online for ${items[0].bundle.name}`}</a>
+       <p class="pb-pay-note">${isZh() ? '通过 Stripe 安全付款。也可以先发送方案，通话后再付。' : 'Secure checkout by Stripe. Or send the plan first and pay after our call.'}</p>`
+    : (items.length && PAY_LINKS['pkg-growth']
+      ? `<p class="pb-pay-note">${isZh() ? '自定义方案会在通话确认后，通过 Stripe 发送账单在线付款。' : 'Custom plans are billed through a Stripe invoice after our call.'}</p>` : '');
   const checkout = document.getElementById('pbCheckout');
   checkout.disabled = count === 0;
   checkout.textContent = count === 0
@@ -1021,6 +1039,23 @@ function wireLangToggle() {
   EO.onLang((l) => setLang(l));
 }
 
+function showPaidBanner() {
+  const q = new URLSearchParams(location.search);
+  const paid = q.get('paid');
+  if (!paid) return;
+  const b = BUNDLES.find((x) => x.id === 'pkg-' + paid);
+  const name = b ? (isZh() ? b.zh : b.name) : '';
+  const el = document.createElement('div');
+  el.className = 'paid-banner';
+  el.setAttribute('role', 'status');
+  el.innerHTML = `${icon('check', 18)}<div><b>${isZh() ? '付款成功，谢谢！' : 'Payment received. Thank you!'}</b><span>${isZh()
+    ? `我们会在一个工作日内发邮件和您约${name ? name + '的' : ''}启动通话。`
+    : `We'll email you within one business day to book your${name ? ' ' + name : ''} kickoff call.`}</span></div><button type="button" aria-label="Close">×</button>`;
+  document.body.appendChild(el);
+  el.querySelector('button').addEventListener('click', () => el.remove());
+  history.replaceState(null, '', location.pathname + location.hash);
+}
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
   wirePricing();
@@ -1030,6 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
   EO.plan.get().forEach((id) => { if (ALL_ITEMS[id]) selectItem(id, true); });
   setLang(LANG);
   EO.plan.set(Array.from(selected));
+  showPaidBanner();
   // In-page anchors go through the smooth scroller when motion.js is running
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
