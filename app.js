@@ -101,6 +101,17 @@ const I18N = {
     zh: '为洛杉矶商家提供营销、内容与 App 服务，中英双语。',
   },
   heroSubZh: '营销、内容与 App，中英双语。',
+  heroCards: {
+    handle: 'goldennoodle.sgv',
+    post: { en: 'Weekend special', zh: '周末限定' },
+    poster: { en: 'Spicy Beef Noodle', zh: '红油牛肉面' },
+    newTag: { en: 'New', zh: '新品' },
+    call: { en: ['New call', 'From your Google ad'], zh: ['新来电', '来自 Google 广告'] },
+    sched: { en: ['Post scheduled', 'Fri 11:30 AM · IG + FB'], zh: ['帖子已排期', '周五 11:30 · IG + FB'] },
+    sms: { en: ['Reminder sent', 'Table for 2 · Fri 7:00 PM'], zh: ['提醒已发送', '周五 19:00 · 2 位'] },
+    app: { en: ['Pompolo', 'On the App Store'], zh: ['Pompolo', 'App Store 已上架'] },
+    holiday: { en: 'Lunar New Year', zh: '新春' },
+  },
   chLink: { en: 'Add to plan', bi: 'Add to plan', zh: '加入方案' },
   // Each head: title (bold) + sub (grey, Apple-style continuation) + zh line in bilingual mode
   secs: {
@@ -241,6 +252,31 @@ function tweenFigure(el, to, render) {
 // Service tile → the plan item "Add to plan" selects
 
 // ===== RENDER =====
+function renderHeroCards() {
+  const C = I18N.heroCards;
+  const L = (o) => (isZh() ? o.zh : o.en);
+  const chip = (cls, ic, pair) => `<div class="oc-chip"><span class="oc-ic ${cls}">${EO.icon(ic, 16, 1.8)}</span><span><b>${L(pair)[0]}</b><small>${L(pair)[1]}</small></span></div>`;
+  const orbit = document.getElementById('heroOrbit');
+  if (orbit) {
+    orbit.innerHTML = `
+      <div class="oc oc-post" data-d="1.2"><div class="oc-wrap"><div class="oc-body">
+        <div class="oc-head"><span class="oc-av"></span><span>${C.handle}</span><span class="oc-dots">···</span></div>
+        <img src="images/hero/beef.webp" alt="" width="280" height="280" decoding="async" />
+        <div class="oc-foot"><svg width="15" height="15" viewBox="0 0 24 24" fill="#f43f5e" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.3 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.4.7-1.2 2.2-2.4 4.3-2.4 3.7 0 5.8 3.8 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg><span>${L(C.post)}</span></div>
+      </div></div></div>
+      <div class="oc oc-call" data-d="2"><div class="oc-wrap">${chip('g', 'phone', C.call)}</div></div>
+      <div class="oc oc-holiday" data-d="0.8"><div class="oc-wrap"><div class="oc-body oc-photo"><img src="images/hero/lantern.webp" alt="" width="220" height="275" decoding="async" /><span class="oc-cap">${L(C.holiday)}</span></div></div></div>
+      <div class="oc oc-poster" data-d="1.4"><div class="oc-wrap"><div class="oc-body oc-photo"><img src="images/hero/spicy.webp" alt="" width="240" height="300" decoding="async" /><span class="oc-tag">${L(C.newTag)}</span><span class="oc-cap">${L(C.poster)}</span></div></div></div>
+      <div class="oc oc-sched" data-d="2.2"><div class="oc-wrap">${chip('o', 'share', C.sched)}</div></div>
+      <div class="oc oc-app" data-d="1"><div class="oc-wrap"><div class="oc-chip"><img class="oc-appicon" src="images/apps/pompolo-icon.webp" alt="" width="40" height="40" decoding="async" /><span><b>${L(C.app)[0]}</b><small>${L(C.app)[1]}</small></span></div></div></div>`;
+  }
+  const fan = document.getElementById('heroFan');
+  if (fan) {
+    fan.innerHTML = ['lantern', 'beef', 'spicy'].map((f, i) =>
+      `<div class="fan-card f${i}"><img src="images/hero/${f}.webp" alt="" decoding="async" /></div>`).join('');
+  }
+}
+
 function renderHero() {
   const h1 = document.querySelector('.hero-display');
   if (h1) {
@@ -252,6 +288,7 @@ function renderHero() {
   if (sub) {
     sub.innerHTML = t(I18N.heroSub) + (isBi() ? `<span class="zh-line">${I18N.heroSubZh}</span>` : '');
   }
+  renderHeroCards();
   const idx = document.getElementById('heroIndex');
   if (idx) {
     const picks = EO.allServices().filter((s) => s.chiclet);
