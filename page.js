@@ -79,6 +79,8 @@
           <figure><span style="background-image:url(images/reel/banquet.webp)"></span><figcaption>Family Feast</figcaption></figure>
           ${mobile ? '' : '<figure><span style="background-image:url(images/reel/beef.webp)"></span><figcaption>Braised Beef</figcaption></figure>'}
         </div>
+        <div class="demo-visit"><div><small>VISIT</small><b>Open daily, 11 to 9</b><span>San Gabriel, California</span><span class="demo-btn demo-btn--dark">Get directions</span></div><span class="demo-map"><i></i></span></div>
+        <div class="demo-foot"><b>Golden Noodle</b><span>English · 中文</span></div>
       </div>`;
     const specs = s.specs.map((g) => `
       <div class="as-row">
@@ -103,7 +105,7 @@
         <div class="mbp">
           <div class="mbp-screen"><span class="mbp-notch"></span>
             <div class="mbp-menubar"><span><b>Safari</b>File&nbsp;&nbsp;Edit&nbsp;&nbsp;View&nbsp;&nbsp;History</span><span>Sat 9:41 AM</span></div>
-            <div class="mbp-browser"><div class="work-bar"><i></i><i></i><i></i><span class="work-url">${lock}goldennoodle.example</span></div>${demo(false)}</div>
+            <div class="mbp-browser"><div class="work-bar"><i></i><i></i><i></i><span class="work-url">${lock}goldennoodle.example</span></div><div class="demo-vp">${demo(false)}</div></div>
           </div>
           <div class="mbp-base"><span></span></div>
         </div>
@@ -153,6 +155,35 @@
       </section>` : ''}
 
       <div class="ap-end"><p class="svc-price">${EO.priceText(s.price)}${s.note ? `<span class="svc-note">${tx(s.note)}</span>` : ''}</p><div class="svc-actions">${planBtn}</div></div>
+    </article>`;
+  }
+
+  // iOS apps: midnight showcase with code-drawn iPhones
+  function appShowHTML(s, planBtn) {
+    const L2 = (en, zh) => tx({ en, zh });
+    const steps = [
+      { n: '01', t: L2('Design', '设计'), d: L2('Flows, screens and a clickable prototype you can try on your phone.', '流程、界面和可点击原型，直接在手机上试用。') },
+      { n: '02', t: L2('Build', '开发'), d: L2('Native SwiftUI for iPhone and iPad, tested on real devices.', '用 SwiftUI 原生开发 iPhone 与 iPad，在真机上测试。') },
+      { n: '03', t: L2('Ship', '上架'), d: L2('App Store listing, screenshots, review and launch.', 'App Store 页面、截图、审核和上线。') },
+    ];
+    return `
+    <article class="svc svc--ios" id="${s.id}">
+      <span class="ios-glow g1"></span><span class="ios-glow g2"></span><span class="ios-glow g3"></span>
+      <header class="ios-head">
+        <p class="ios-eyebrow">${tx(s.name)}</p>
+        <h2 class="ios-title">${L2('Built native.<br>Built to ship.', '原生开发，<br>一直做到上架。')}</h2>
+        <p class="ios-sub">${tx(s.desc)}${zhLine(s.desc)}</p>
+      </header>
+      <div class="ios-stage" aria-hidden="true">
+        ${s.phones.map((src, k) => `<div class="ios-ph p${k}"><div class="ios-ph-in"><div class="ios-ph-scr"><span class="ios-isl"></span><img src="${src}" alt="" loading="lazy" /></div></div></div>`).join('')}
+      </div>
+      <div class="ios-apps">
+        ${EO.APPS.map((a) => `<a class="ios-app" href="${a.url}" target="_blank" rel="noopener"><img src="${a.icon}" alt="" /><span><b>${a.name}</b><small>${tx(a.kind)}</small></span><em>${L2('View on the App Store', '在 App Store 查看')}</em></a>`).join('')}
+      </div>
+      <ol class="ios-steps">
+        ${steps.map((x) => `<li><span class="ios-n">${x.n}</span><b>${x.t}</b><p>${x.d}</p></li>`).join('')}
+      </ol>
+      <div class="ios-end"><p class="svc-price">${EO.priceText(s.price)}</p><div class="svc-actions">${planBtn}</div></div>
     </article>`;
   }
 
@@ -206,6 +237,7 @@
       : `<a class="btn btn-primary" href="index.html#contact">${tx(T.quote)}</a>`;
     if (s.showcase) return showcaseHTML(s, planBtn);
     if (s.spec) return specHTML(s, planBtn);
+    if (s.appshow) return appShowHTML(s, planBtn);
     return `
     <article class="svc ${i % 2 ? 'svc--flip' : ''}" id="${s.id}">
       <div class="svc-copy">
@@ -425,7 +457,43 @@
         gsap.from(sp.querySelectorAll('.aw-card'), { y: 60, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.12,
           scrollTrigger: { trigger: sp.querySelector('.aw-grid') || sp, start: 'top 85%' } });
       });
-      gsap.utils.toArray('.svc:not(.svc--show):not(.svc--spec):not(.svc--apple)').forEach((svc) => {
+      gsap.utils.toArray('.svc--ios').forEach((io) => {
+        gsap.from(io.querySelectorAll('.ios-head > *'), { y: 40, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.07,
+          scrollTrigger: { trigger: io, start: 'top 75%' } });
+        // phones rise from one stack and fan out as the section scrolls in
+        const ph = io.querySelectorAll('.ios-ph');
+        const spread = [-2, -1, 0, 1, 2];
+        ph.forEach((el, k) => {
+          const d = spread[k] || 0;
+          gsap.fromTo(el, { xPercent: -d * 92, yPercent: 30, rotate: 0, scale: 0.9 },
+            { xPercent: 0, yPercent: 0, rotate: d * 2.2, scale: 1, ease: 'none',
+              scrollTrigger: { trigger: io.querySelector('.ios-stage'), start: 'top 95%', end: 'top 25%', scrub: 0.9 } });
+        });
+        gsap.fromTo(io.querySelectorAll('.ios-glow'), { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, ease: 'none',
+          scrollTrigger: { trigger: io, start: 'top 90%', end: 'top 20%', scrub: true } });
+        gsap.from(io.querySelectorAll('.ios-app, .ios-steps li, .ios-end'), { y: 40, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.08,
+          scrollTrigger: { trigger: io.querySelector('.ios-apps'), start: 'top 88%' } });
+        // pointer tilt
+        const stage = io.querySelector('.ios-stage');
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+          io.addEventListener('pointermove', (e) => {
+            const r = io.getBoundingClientRect();
+            stage.style.setProperty('--ry', ((e.clientX - r.left) / r.width - 0.5) * 10 + 'deg');
+            stage.style.setProperty('--rx', -((e.clientY - r.top) / r.height - 0.5) * 6 + 'deg');
+          });
+          io.addEventListener('pointerleave', () => { stage.style.setProperty('--ry', '0deg'); stage.style.setProperty('--rx', '0deg'); });
+        }
+      });
+      // web stage: the demo site scrolls inside the devices
+      gsap.utils.toArray('.svc--apple').forEach((sp) => {
+        const st = sp.querySelector('.ap-stage');
+        if (!st) return;
+        st.querySelectorAll('.demo').forEach((d) => {
+          gsap.fromTo(d, { yPercent: 0 }, { yPercent: d.classList.contains('demo--m') ? -38 : -30, ease: 'none',
+            scrollTrigger: { trigger: st, start: 'top 20%', end: 'bottom top', scrub: 0.6 } });
+        });
+      });
+      gsap.utils.toArray('.svc:not(.svc--show):not(.svc--spec):not(.svc--apple):not(.svc--ios)').forEach((svc) => {
         const copy = svc.querySelectorAll('.svc-copy > *');
         const media = svc.querySelector('.svc-media');
         const t2 = gsap.timeline({ scrollTrigger: { trigger: svc, start: 'top 80%' } });
