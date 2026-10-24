@@ -105,7 +105,7 @@ const I18N = {
   heroSubZh: '营销、内容与 App，中英双语。',
   brandsLabel: { en: 'Brands we work with', zh: '合作品牌' },
   brands: [
-    { name: 'AKUSO', url: 'https://akuso.us/', en: 'LA style & culture magazine', zh: '洛杉矶时尚文化杂志' },
+    { name: 'AKUSO', url: 'https://akuso.us/', en: 'Style & culture in LA', zh: '洛杉矶时尚与文化' },
     { name: 'ALIGCUS', url: 'https://www.aligcus.com/', en: 'ADU design & build', zh: 'ADU 设计与建造' },
     { name: 'KATOOL', url: 'https://www.katoollift.com/', en: 'Auto shop equipment', zh: '汽修设备' },
   ],
