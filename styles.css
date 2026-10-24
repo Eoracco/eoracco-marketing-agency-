@@ -1122,6 +1122,7 @@ body.lang-zh .svc-name { letter-spacing: 0; }
 .svc-media img, .svc-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* three vertical clips rotating through the centre */
 .svc-trio { background: #0e0c0b; perspective: 1400px; isolation: isolate; }
+.svc-media.svc-trio { aspect-ratio: 4 / 5; }
 .trio-amb {
   position: absolute; inset: -20%; background-size: cover; background-position: center; z-index: 0;
   filter: blur(60px) saturate(1.4) brightness(.55); opacity: 0; transform: scale(1.1);
