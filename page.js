@@ -46,6 +46,64 @@
     </div>`;
   }
 
+  // technical spec sheet (websites): proof panel + grouped checklist
+  function specHTML(s, planBtn) {
+    const T_ = (t) => `<span class="c-t">${t}</span>`, A = (a) => `<span class="c-a">${a}</span>`, V = (v) => `<span class="c-v">"${v}"</span>`;
+    const lt = '<span class="c-p">&lt;</span>', gt = '<span class="c-p">&gt;</span>';
+    const meta = (k, n, c) => `${lt}${T_('meta')} ${A(k)}=${V(n)} ${A('content')}=${V(c)}${gt}`;
+    const code = [
+      `${lt}${T_('title')}${gt}EORACCO — Bilingual Digital Marketing…${lt}/${T_('title')}${gt}`,
+      meta('name', 'description', 'Bilingual (English + 中文) …'),
+      `${lt}${T_('link')} ${A('rel')}=${V('canonical')} ${A('href')}=${V('https://eoracco.github.io/…/')}${gt}`,
+      '',
+      meta('property', 'og:title', 'EORACCO — Bilingual Digital…'),
+      meta('property', 'og:image', '…/images/og-image.jpg'),
+      meta('property', 'og:image:width', '1200'),
+      meta('property', 'og:image:height', '630'),
+      meta('property', 'og:locale', 'en_US'),
+      meta('name', 'twitter:card', 'summary_large_image'),
+      '',
+      `${lt}${T_('script')} ${A('type')}=${V('application/ld+json')}${gt}`,
+      `  { <span class="c-v">"@type"</span>: <span class="c-v">"ProfessionalService"</span>, … }`,
+      `${lt}/${T_('script')}${gt}`,
+    ];
+    return `
+    <article class="svc svc--spec" id="${s.id}">
+      <div class="spec-head">
+        <span class="svc-icon">${EO.icon(s.icon, 26)}</span>
+        <h2 class="spec-title">${tx(s.name)}</h2>
+        ${zhLine(s.name, 'svc-zh')}
+        <p class="spec-desc">${tx(s.desc)}${zhLine(s.desc)}</p>
+      </div>
+      <figure class="spec-proof">
+        <div class="code-win">
+          <div class="code-bar"><i></i><i></i><i></i><span>index.html — &lt;head&gt;</span></div>
+          <pre class="code-body">${code.map((l, k) => `<span class="ln"><em>${k + 1}</em>${l || ' '}</span>`).join('')}</pre>
+        </div>
+        <div class="imsg">
+          <div class="imsg-time">${tx({ en: 'Today 9:41 AM', zh: '今天 上午 9:41' })}</div>
+          <div class="imsg-card">
+            <img src="images/og-image.jpg" alt="" loading="lazy" width="1200" height="630" />
+            <div class="imsg-meta"><b>EORACCO — Bilingual Digital Marketing in Los Angeles</b><span>eoracco.github.io</span></div>
+          </div>
+          <div class="imsg-status">${tx({ en: 'Delivered', zh: '已送达' })}</div>
+        </div>
+        ${s.proofNote ? `<figcaption>${tx(s.proofNote)}</figcaption>` : ''}
+      </figure>
+      <div class="spec-grid">
+        ${s.specs.map((g) => `
+        <section class="spec-card">
+          <h3><span class="spec-ic">${EO.icon(g.icon, 18, 1.8)}</span>${tx(g.title)}</h3>
+          <ul>${g.items.map((x) => `<li>${tx(x)}${zhLine(x)}</li>`).join('')}</ul>
+        </section>`).join('')}
+      </div>
+      <div class="spec-buy">
+        <p class="svc-price">${EO.priceText(s.price)}${s.note ? `<span class="svc-note">${tx(s.note)}</span>` : ''}</p>
+        <div class="svc-actions">${planBtn}</div>
+      </div>
+    </article>`;
+  }
+
   // full-bleed, cinema-dark showcase for video work
   function showcaseHTML(s, planBtn) {
     const snd = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg>`;
@@ -95,6 +153,7 @@
          <a class="link-chevron" href="index.html#contact"><span class="btn-label">${tx(T.ask)}</span></a>`
       : `<a class="btn btn-primary" href="index.html#contact">${tx(T.quote)}</a>`;
     if (s.showcase) return showcaseHTML(s, planBtn);
+    if (s.spec) return specHTML(s, planBtn);
     return `
     <article class="svc ${i % 2 ? 'svc--flip' : ''}" id="${s.id}">
       <div class="svc-copy">
@@ -275,7 +334,19 @@
         gsap.from(show.querySelectorAll('.show-ctrl, .show-foot > *, .show-note'), { y: 30, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.08,
           scrollTrigger: { trigger: show.querySelector('.show-ctrl'), start: 'top 90%' } });
       });
-      gsap.utils.toArray('.svc:not(.svc--show)').forEach((svc) => {
+      gsap.utils.toArray('.svc--spec').forEach((sp) => {
+        gsap.from(sp.querySelectorAll('.spec-head > *'), { y: 36, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.06,
+          scrollTrigger: { trigger: sp, start: 'top 78%' } });
+        const lines = sp.querySelectorAll('.code-body .ln');
+        const tp = gsap.timeline({ scrollTrigger: { trigger: sp.querySelector('.spec-proof'), start: 'top 75%' } });
+        tp.from(sp.querySelector('.code-win'), { y: 60, opacity: 0, duration: 1.3, ease: EXPO }, 0)
+          .from(lines, { opacity: 0, x: -10, duration: 0.5, ease: 'power2.out', stagger: 0.06 }, 0.35)
+          .from(sp.querySelector('.imsg-card'), { y: 40, scale: 0.94, opacity: 0, duration: 1.2, ease: EXPO }, 0.9)
+          .from(sp.querySelectorAll('.imsg-time, .imsg-status'), { opacity: 0, duration: 0.8 }, 1.3);
+        gsap.from(sp.querySelectorAll('.spec-card'), { y: 50, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.07,
+          scrollTrigger: { trigger: sp.querySelector('.spec-grid'), start: 'top 82%' } });
+      });
+      gsap.utils.toArray('.svc:not(.svc--show):not(.svc--spec)').forEach((svc) => {
         const copy = svc.querySelectorAll('.svc-copy > *');
         const media = svc.querySelector('.svc-media');
         const t2 = gsap.timeline({ scrollTrigger: { trigger: svc, start: 'top 80%' } });

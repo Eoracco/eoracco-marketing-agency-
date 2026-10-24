@@ -39,6 +39,7 @@ const PRICING_MONTHLY = [
 const PRICING_SETUP = [
   { id: 'short-video',   name: 'Short-Form Video Edit', zh: '短视频剪辑',    tier: 'per video', price: 100,  group: 'Setup' },
   { id: 'clipping',      name: 'Clipping', zh: '长视频切片', tier: 'per clip', price: 25, group: 'Setup' },
+  { id: 'web-build',     name: 'Website Development', zh: '网站开发', tier: 'per project', price: 1200, group: 'Setup' },
   { id: 'su-email',      name: 'Email Marketing Setup', zh: '邮件营销配置',  tier: null,        price: 300,  group: 'Setup' },
   { id: 'su-call',       name: 'Call Tracking Setup',   zh: '来电追踪配置',  tier: null,        price: 200,  group: 'Setup' },
   { id: 'su-voice',      name: 'AI Voice Agent Setup',  zh: 'AI 语音配置',   tier: null,        price: 1200, group: 'Setup' },
@@ -417,7 +418,7 @@ const itemName = (item) => (isZh() ? item.zh : item.name);
 const TIER_ZH = {
   'Single Platform': '单平台', 'Dual Platform': '双平台', 'Creation Only': '仅内容创作',
   '8 images': '每月 8 张', '16 images': '每月 16 张', 'Starter': '入门版', 'Growth': '进阶版',
-  'per video': '每条', 'per image': '每张', 'per campaign': '每次', 'per design': '每款', 'per clip': '每条', 'up to 15 slides': '最多 15 页',
+  'per video': '每条', 'per image': '每张', 'per campaign': '每次', 'per design': '每款', 'per clip': '每条', 'per project': '每项', 'up to 15 slides': '最多 15 页',
   'up to 30 s': '最长 30 秒', 'up to 15 s': '最长 15 秒',
 };
 const tierText = (item) => (isZh() ? (TIER_ZH[item.tier] || item.tier) : item.tier);
