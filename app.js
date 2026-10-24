@@ -88,14 +88,46 @@ const SERVICE_ROWS = [
 const BUNDLE_OFF = 0.10;
 const BUNDLES = [
   { id: 'pkg-essentials', name: 'Essentials', zh: '基础套餐',
-    for: { en: 'For a business that needs to be found and look active online.', zh: '适合需要被找到、线上保持活跃的商家。' },
-    items: ['social-mgmt', 'web-seo', 'call-tracking'] },
+    tag: { en: 'Get found.', zh: '先被找到。' },
+    for: { en: 'For a new or quiet business that needs to show up on Google and look active on social.', zh: '适合刚开业或比较冷清的商家：在 Google 上被找到，社媒保持活跃。' },
+    gets: [
+      { en: 'A monthly content calendar, posted for you', zh: '每月内容排期，由我们发布' },
+      { en: 'Captions in English and Chinese', zh: '中英文文案' },
+      { en: 'Comment and DM replies', zh: '评论与私信回复' },
+      { en: 'Google Business Profile and SEO updates', zh: 'Google 商家资料与 SEO 更新' },
+      { en: 'A tracking number for each channel, with call recordings', zh: '每个渠道一个追踪号码，含通话录音' },
+    ],
+    items: ['social-mgmt', 'web-seo', 'call-tracking'], setup: ['su-call'] },
   { id: 'pkg-growth', name: 'Growth', zh: '增长套餐', badge: { en: 'Most popular', zh: '最受欢迎' },
-    for: { en: 'Ads and content working together to reach new customers.', zh: '广告和内容一起发力，触达新客人。' },
-    items: ['ads-single', 'social-full', 'email-starter', 'call-tracking'] },
+    tag: { en: 'Reach new customers.', zh: '触达新客人。' },
+    for: { en: 'For a business ready to run ads, with content and email to follow up.', zh: '适合准备投广告的商家，用内容和邮件做后续跟进。' },
+    gets: [
+      { en: 'Google or Meta ads, tuned every week', zh: 'Google 或 Meta 广告，每周优化' },
+      { en: 'New ad tests every week', zh: '每周测试新广告' },
+      { en: 'Social content created and posted', zh: '社媒内容制作并发布' },
+      { en: 'Two to four email campaigns, plus welcome and win-back flows', zh: '每月 2–4 封营销邮件，加欢迎与召回自动流程' },
+      { en: 'Call tracking connected to Google Ads', zh: '来电追踪与 Google Ads 打通' },
+      { en: 'A monthly report in plain language', zh: '每月一份看得懂的报告' },
+    ],
+    items: ['ads-single', 'social-full', 'email-starter', 'call-tracking'], setup: ['su-call', 'su-email'] },
   { id: 'pkg-full', name: 'Full service', zh: '全托管套餐',
-    for: { en: 'Every channel, run by one team in English and Chinese.', zh: '所有渠道由同一个团队中英双语运营。' },
-    items: ['ads-dual', 'social-full', 'email-sms', 'call-tracking', 'ai-voice', 'web-seo'] },
+    tag: { en: 'Hand it all to us.', zh: '全部交给我们。' },
+    for: { en: 'For a busy owner who wants one team running every channel.', zh: '适合没空管营销、希望一个团队打理所有渠道的老板。' },
+    gets: [
+      { en: 'Google and Meta ads, tuned every week', zh: 'Google 与 Meta 双平台广告，每周优化' },
+      { en: 'Social content created and posted', zh: '社媒内容制作并发布' },
+      { en: 'Email and SMS campaigns and automated flows', zh: '邮件与短信营销及自动化流程' },
+      { en: 'An AI voice agent answering calls 24/7 in English and Chinese', zh: 'AI 语音客服中英双语全天候接听' },
+      { en: 'Call tracking, SEO and Google Business Profile', zh: '来电追踪、SEO 与 Google 商家资料' },
+      { en: 'One monthly report covering every channel', zh: '一份月报覆盖所有渠道' },
+    ],
+    items: ['ads-dual', 'social-full', 'email-sms', 'call-tracking', 'ai-voice', 'web-seo'], setup: ['su-call', 'su-email', 'su-voice'] },
+];
+const PKG_PERKS = [
+  { icon: 'mic', en: 'English and Chinese', zh: '中英双语' },
+  { icon: 'smile', en: 'One point of contact', zh: '一个对接人' },
+  { icon: 'slides', en: 'Monthly report', zh: '月度报告' },
+  { icon: 'check', en: 'Cancel with 30 days’ notice', zh: '提前 30 天通知即可取消' },
 ];
 
 const STEPS = [
@@ -485,6 +517,7 @@ const ALL_ITEMS = {};
 [...PRICING_MONTHLY, ...PRICING_SETUP].forEach((i) => { ALL_ITEMS[i.id] = i; });
 const listPrice = (b) => b.items.reduce((sum, id) => sum + ALL_ITEMS[id].price, 0);
 const bundlePrice = (b) => Math.round(listPrice(b) * (1 - BUNDLE_OFF) / 10) * 10;
+const bundleSetup = (b) => (b.setup || []).reduce((sum, id) => sum + ALL_ITEMS[id].price, 0);
 BUNDLES.forEach((b) => { ALL_ITEMS[b.id] = { id: b.id, name: `${b.name} package`, zh: b.zh, tier: null, price: bundlePrice(b), bundle: b }; });
 const isMonthly = (id) => PRICING_MONTHLY.some((p) => p.id === id) || id.startsWith('pkg-');
 const activeBundle = () => BUNDLES.find((b) => selected.has(b.id)) || null;
@@ -537,21 +570,51 @@ function renderPackages() {
   document.getElementById('pkgHelper').innerHTML = isZh()
     ? '套餐里的月度服务比单独选购便宜 10%。选好后还可以继续加别的服务。'
     : `Monthly services cost 10% less in a package. You can still add anything else.${isBi() ? '<span class="zh"> 套餐里的月度服务比单独选购便宜 10%。</span>' : ''}`;
-  document.getElementById('pbPackages').innerHTML = BUNDLES.map((b) => {
+  const per = isZh() ? '/月' : '/mo';
+  const cards = BUNDLES.map((b) => {
     const on = selected.has(b.id);
-    const list = listPrice(b), price = bundlePrice(b);
+    const list = listPrice(b), price = bundlePrice(b), su = bundleSetup(b);
     const name = isZh() ? b.zh : b.name;
     return `
     <article class="pkg ${on ? 'is-on' : ''} ${b.badge ? 'pkg--hero' : ''}">
       ${b.badge ? `<span class="pkg-badge">${L3(b.badge)}</span>` : ''}
-      <h4 class="pkg-name">${name}${isBi() ? `<span class="zh"> ${b.zh}</span>` : ''}</h4>
+      <p class="pkg-name">${name}${isBi() ? `<span class="zh"> ${b.zh}</span>` : ''}</p>
+      <h4 class="pkg-tag">${L3(b.tag)}</h4>
       <p class="pkg-for">${L3(b.for)}${biLine(b.for)}</p>
-      <p class="pkg-price"><b>${fmt(price)}</b><span>${isZh() ? '/月' : '/mo'}</span></p>
+      <p class="pkg-price"><b>${fmt(price)}</b><span>${per}</span></p>
       <p class="pkg-save"><s>${fmt(list)}</s> ${isZh() ? `每月省 ${fmt(list - price)}` : `Save ${fmt(list - price)}/mo`}</p>
-      <ul class="pkg-items">${b.items.map((id) => `<li>${icon('check', 14)}<span>${itemName(ALL_ITEMS[id])}${ALL_ITEMS[id].tier ? ` <em>${tierText(ALL_ITEMS[id])}</em>` : ''}</span></li>`).join('')}</ul>
+      <p class="pkg-setup">${isZh() ? `另加一次性设置费 ${fmt(su)}` : `Plus ${fmt(su)} one-time setup`}</p>
       <button type="button" class="pkg-btn" data-pkg="${b.id}" aria-pressed="${on}">${on ? (isZh() ? '已选择 ✓' : 'Selected ✓') : (isZh() ? `选择${b.zh}` : `Choose ${b.name}`)}</button>
+      <p class="pkg-label">${isZh() ? '每月我们会做' : 'Every month'}</p>
+      <ul class="pkg-items">${b.gets.map((g) => `<li>${icon('check', 14)}<span>${L3(g)}${isBi() ? `<em class="zh-line">${g.zh}</em>` : ''}</span></li>`).join('')}</ul>
+      <p class="pkg-label">${isZh() ? '包含服务' : 'Services included'}</p>
+      <ul class="pkg-chips">${b.items.map((id) => `<li>${itemName(ALL_ITEMS[id])}${ALL_ITEMS[id].tier ? ` · ${tierText(ALL_ITEMS[id])}` : ''}</li>`).join('')}</ul>
     </article>`;
   }).join('');
+  // comparison table
+  const rows = SERVICE_ROWS.map((r) => {
+    const cells = BUNDLES.map((b) => {
+      const hit = r.opts.find(([id]) => b.items.includes(id));
+      return `<td>${hit ? `<span class="cmp-yes">${icon('check', 14)}</span>${r.opts.length > 1 ? `<span class="cmp-lv">${L3(hit[1])}</span>` : ''}` : '<span class="cmp-no">—</span>'}</td>`;
+    }).join('');
+    return `<tr><th scope="row">${L3(r.name)}</th>${cells}</tr>`;
+  }).join('');
+  const money = (f) => BUNDLES.map((b) => `<td>${f(b)}</td>`).join('');
+  const cmpOpen = document.getElementById('pbPackages').dataset.cmp === 'open';
+  document.getElementById('pbPackages').innerHTML = `
+    <div class="pkg-grid">${cards}</div>
+    <ul class="pkg-perks"><li class="pkg-perks-h">${isZh() ? '所有套餐都包含' : 'Every package includes'}</li>${PKG_PERKS.map((p) => `<li>${EO.icon(p.icon, 18, 1.7)}<span>${L3(p)}</span></li>`).join('')}</ul>
+    <button type="button" class="pkg-cmp-btn" data-cmp aria-expanded="${cmpOpen}">${isZh() ? '对比三个套餐' : 'Compare packages'}<i class="pb-more-ic ${cmpOpen ? 'is-open' : ''}">${EO.icon('plus', 16, 2)}</i></button>
+    <div class="pkg-cmp ${cmpOpen ? 'is-open' : ''}">
+      <table>
+        <thead><tr><th></th>${BUNDLES.map((b) => `<th scope="col">${isZh() ? b.zh : b.name}</th>`).join('')}</tr></thead>
+        <tbody>${rows}
+          <tr class="cmp-money"><th scope="row">${isZh() ? '月费' : 'Monthly'}</th>${money((b) => `<b>${fmt(bundlePrice(b))}</b>${per}`)}</tr>
+          <tr class="cmp-money"><th scope="row">${isZh() ? '一次性设置费' : 'One-time setup'}</th>${money((b) => fmt(bundleSetup(b)))}</tr>
+          <tr class="cmp-money"><th scope="row">${isZh() ? '每月节省' : 'You save'}</th>${money((b) => `<span class="cmp-save">${fmt(listPrice(b) - bundlePrice(b))}${per}</span>`)}</tr>
+        </tbody>
+      </table>
+    </div>`;
 }
 
 function renderRows() {
@@ -629,7 +692,7 @@ function computeTotals() {
     items.push(it);
     if (isMonthly(id)) monthly += it.price;
     else setup += it.price;
-    if (it.bundle) saved += listPrice(it.bundle) - it.price;
+    if (it.bundle) { saved += listPrice(it.bundle) - it.price; setup += bundleSetup(it.bundle); }
   });
   items.sort((a, b) => (b.bundle ? 1 : 0) - (a.bundle ? 1 : 0));
   return { items, monthly, setup, saved };
@@ -653,7 +716,7 @@ function renderSummary() {
   } else {
     cartArea.innerHTML = `<ul class="pb-cart">${items.map((it) => {
       const tier = it.bundle
-        ? `<span class="tier">${it.bundle.items.map((id) => itemName(ALL_ITEMS[id])).join(' · ')}</span>`
+        ? `<span class="tier">${it.bundle.items.map((id) => itemName(ALL_ITEMS[id])).join(' · ')}</span><span class="tier">${isZh() ? `另含一次性设置费 ${fmt(bundleSetup(it.bundle))}` : `Plus ${fmt(bundleSetup(it.bundle))} one-time setup`}</span>`
         : (it.tier ? `<span class="tier">${tierText(it)}</span>` : '');
       const unit = isMonthly(it.id) ? `<span class="unit">${isZh() ? '/月' : '/mo'}</span>` : '';
       return `
@@ -759,6 +822,13 @@ function wirePricing() {
     if (selected.has(id)) { selected.delete(id); refreshPlan(); } else { selectItem(id, true); refreshPlan(); }
   });
   document.getElementById('pbPackages').addEventListener('click', (e) => {
+    const c = e.target.closest('[data-cmp]');
+    if (c) {
+      const box = document.getElementById('pbPackages');
+      box.dataset.cmp = box.dataset.cmp === 'open' ? '' : 'open';
+      renderPackages();
+      return;
+    }
     const b = e.target.closest('[data-pkg]');
     if (b) toggleItem(b.getAttribute('data-pkg'));
   });
