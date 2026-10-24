@@ -150,10 +150,10 @@
     },
     {
       key: 'apps', page: 'apps.html', icon: 'app',
-      name: L('Apps & Web', 'App 与网站'),
-      headline: L('Apps and websites, built properly.', 'App 和网站，从细节做对。'),
+      name: L('Web & Apps', '网站与 App'),
+      headline: L('Websites and apps, built properly.', '网站和 App，从细节做对。'),
       sub: L('Websites set up right for Google and sharing, plus native iPhone and iPad apps from first build to the App Store.', '按 Google 和社交分享标准搭建的网站，以及从第一版到上架 App Store 的原生 iPhone 与 iPad 应用。'),
-      card: { img: 'https://images.unsplash.com/photo-1591054333829-3a3ce5d57fca?w=900&h=1300&fit=crop&q=80&auto=format' },
+      card: { img: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=900&h=1300&fit=crop&q=80&auto=format' },
       services: [
         { id: 'web', short: L('Websites', '网站'), icon: 'code', plan: 'web-build', chiclet: true, spec: true,
           name: L('Website development', '网站开发'),

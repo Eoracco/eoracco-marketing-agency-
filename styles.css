@@ -1089,6 +1089,20 @@ body.lang-zh .cat-title { letter-spacing: 0; max-width: 11em; }
   aspect-ratio: 16 / 8; max-width: 100%; border-radius: 32px; overflow: hidden; background: var(--gray);
 }
 .cat-visual img { width: 100%; height: 116%; object-fit: cover; }
+.cat-visual--web { position: relative; aspect-ratio: 16 / 8.5; background: radial-gradient(70% 80% at 80% 0%, #fff1d1, transparent 60%), linear-gradient(160deg, #f6f6f8, #ececf0); }
+.hv-win { position: absolute; border-radius: 12px; overflow: hidden; background: #0c0d12;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 40px 80px -30px rgba(20,20,40,.45); }
+.hv-win img { display: block; width: 100%; height: auto; aspect-ratio: 1568 / 737; object-fit: cover; object-position: top center; }
+.hv-win .work-bar { height: 30px; } .hv-win .work-url { height: 19px; font-size: 11px; }
+.hv-back { width: 58%; left: 6%; top: 9%; opacity: .96; }
+.hv-front { width: 62%; right: 6%; top: 25%; }
+.hv-phone.mini-phone { position: absolute; left: 9%; bottom: 0; width: min(190px, 17%); }
+@media (max-width: 834px) {
+  .cat-visual--web { aspect-ratio: 4 / 3.4; }
+  .hv-back { width: 76%; left: 4%; top: 7%; } .hv-front { width: 80%; right: 4%; top: 30%; }
+  .hv-win .work-bar { height: 20px; } .hv-win .work-bar i { width: 7px; height: 7px; } .hv-win .work-url { height: 13px; font-size: 8px; padding: 0 8px; }
+  .hv-phone.mini-phone { width: 26%; left: 6%; border-width: 6px; border-radius: 24px 24px 0 0; }
+}
 .cat-visual--apps {
   aspect-ratio: auto; display: flex; justify-content: center; align-items: flex-end; gap: clamp(16px, 5vw, 64px);
   padding: 48px 16px 0; background: linear-gradient(180deg, #eaf5ff 0%, #f5f5f7 100%);

@@ -189,7 +189,14 @@
 
   function heroVisual() {
     if (cat.key === 'apps') {
-      return `<div class="cat-visual cat-visual--apps">${EO.APPS.map((a) => `<div class="mini-phone"><img src="${a.shot}" alt="${a.name}" /></div>`).join('')}</div>`;
+      // websites first, the app peeking in front
+      const win = (cls, host, img) => `<div class="hv-win ${cls}"><div class="work-bar"><i></i><i></i><i></i><span class="work-url"><svg width="9" height="10" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><path d="M2 5V3.6a3 3 0 0 1 6 0V5h.4c.9 0 1.6.7 1.6 1.6v3.8c0 .9-.7 1.6-1.6 1.6H1.6C.7 12 0 11.3 0 10.4V6.6C0 5.7.7 5 1.6 5H2zm1.3 0h3.4V3.6a1.7 1.7 0 0 0-3.4 0V5z"/></svg>${host}</span></div><img src="${img}" alt="${host}" /></div>`;
+      const app = EO.APPS[0];
+      return `<div class="cat-visual cat-visual--web">
+        ${win('hv-back', 'soplo.dev', 'images/work/soplo.webp')}
+        ${win('hv-front', 'akuso.us', 'images/work/akuso.webp')}
+        <div class="mini-phone hv-phone"><img src="${app.shot}" alt="${app.name}" /></div>
+      </div>`;
     }
     return `<div class="cat-visual"><img src="${cat.card.hero || cat.card.img}" alt="" /></div>`;
   }
@@ -334,7 +341,7 @@
         .from('.cat-visual', { y: 80, opacity: 0, scale: 0.94, duration: 1.6 }, 0.45);
       if (!intro) tl.kill();
 
-      gsap.to('.cat-visual img, .cat-visual .mini-phone', {
+      gsap.to('.cat-visual > img, .cat-visual .mini-phone, .cat-visual .hv-win', {
         yPercent: -8, ease: 'none',
         scrollTrigger: { trigger: '.cat-hero', start: 'top top', end: 'bottom top', scrub: true },
       });
