@@ -33,17 +33,6 @@
   };
 
   function mediaHTML(s) {
-    if (s.videos) {
-      const snd = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg>`;
-      return `<figure class="svc-media svc-trio">
-        ${s.videos.map((v, k) => `<span class="trio-amb" data-k="${k}" style="background-image:url(${v.poster})"></span>`).join('')}
-        <div class="trio-bars">${s.videos.map(() => '<i><b></b></i>').join('')}</div>
-        <div class="trio-stage">${s.videos.map((v, k) => `
-          <div class="trio-clip" data-k="${k}"><video class="trio-video" data-src="${v.src}" poster="${v.poster}" muted playsinline preload="none"></video></div>`).join('')}
-        </div>
-        <button type="button" class="trio-sound" aria-pressed="false" aria-label="${tx({ en: 'Sound', zh: '声音' })}">${snd}</button>
-        ${s.imgNote ? `<figcaption>${tx(s.imgNote)}</figcaption>` : ''}</figure>`;
-    }
     if (s.video) {
       return `<figure class="svc-media"><video class="app-video" data-src="${s.video}" poster="${s.poster}" muted loop playsinline preload="none"></video>${s.imgNote ? `<figcaption>${tx(s.imgNote)}</figcaption>` : ''}</figure>`;
     }
@@ -57,11 +46,55 @@
     </div>`;
   }
 
+  // full-bleed, cinema-dark showcase for video work
+  function showcaseHTML(s, planBtn) {
+    const snd = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg>`;
+    const arrow = (d) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+    const pad = (k) => String(k).padStart(2, '0');
+    return `
+    <article class="svc svc--show" id="${s.id}">
+      ${s.videos.map((v, k) => `<span class="trio-amb" data-k="${k}" style="background-image:url(${v.poster})"></span>`).join('')}
+      <span class="show-grain" aria-hidden="true"></span>
+      <div class="show-head">
+        <span class="show-kicker">${EO.icon(s.icon, 16, 1.8)}<span>${tx(s.short)}</span></span>
+        <h2 class="show-title">${tx(s.name)}</h2>
+        ${zhLine(s.name, 'show-zh')}
+        <p class="show-desc">${tx(s.desc)}${zhLine(s.desc)}</p>
+      </div>
+      <figure class="show-stage svc-trio">
+        <div class="trio-stage">${s.videos.map((v, k) => `
+          <div class="trio-clip" data-k="${k}"><video class="trio-video" data-src="${v.src}" poster="${v.poster}" muted playsinline preload="none"></video></div>`).join('')}
+        </div>
+      </figure>
+      <div class="show-ctrl">
+        <div class="show-meta">
+          <span class="show-count"><b>01</b> / ${pad(s.videos.length)}</span>
+          <span class="show-name">${s.videos.map((v, k) => `<span data-k="${k}">${tx(v.title)}</span>`).join('')}</span>
+        </div>
+        <div class="trio-bars">${s.videos.map(() => '<i><b></b></i>').join('')}</div>
+        <div class="show-btns">
+          <button type="button" class="show-btn trio-prev" aria-label="${tx({ en: 'Previous clip', zh: '上一条' })}">${arrow('M15 6l-6 6 6 6')}</button>
+          <button type="button" class="show-btn trio-next" aria-label="${tx({ en: 'Next clip', zh: '下一条' })}">${arrow('M9 6l6 6-6 6')}</button>
+          <button type="button" class="show-btn trio-sound" aria-pressed="false" aria-label="${tx({ en: 'Sound', zh: '声音' })}">${snd}</button>
+        </div>
+      </div>
+      <div class="show-foot">
+        <ul class="show-includes">${s.includes.map((x) => `<li>${EO.icon('check', 15, 2)}<span>${tx(x)}${zhLine(x)}</span></li>`).join('')}</ul>
+        <div class="show-buy">
+          <p class="svc-price">${EO.priceText(s.price)}</p>
+          <div class="svc-actions">${planBtn}</div>
+        </div>
+      </div>
+      ${s.imgNote ? `<p class="show-note">${tx(s.imgNote)}</p>` : ''}
+    </article>`;
+  }
+
   function serviceHTML(s, i) {
     const planBtn = s.plan
       ? `<button type="button" class="btn btn-primary btn-plan ${EO.plan.has(s.plan) ? 'is-added' : ''}" data-plan="${s.plan}">${tx(EO.plan.has(s.plan) ? T.added : T.add)}</button>
          <a class="link-chevron" href="index.html#contact"><span class="btn-label">${tx(T.ask)}</span></a>`
       : `<a class="btn btn-primary" href="index.html#contact">${tx(T.quote)}</a>`;
+    if (s.showcase) return showcaseHTML(s, planBtn);
     return `
     <article class="svc ${i % 2 ? 'svc--flip' : ''}" id="${s.id}">
       <div class="svc-copy">
@@ -234,7 +267,15 @@
         scrollTrigger: { trigger: '.cat-hero', start: 'top top', end: 'bottom top', scrub: true },
       });
 
-      gsap.utils.toArray('.svc').forEach((svc) => {
+      gsap.utils.toArray('.svc--show').forEach((show) => {
+        gsap.from(show.querySelectorAll('.show-head > *'), { y: 40, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.07,
+          scrollTrigger: { trigger: show, start: 'top 75%' } });
+        gsap.fromTo(show.querySelector('.show-stage'), { scale: 0.86, yPercent: 8 }, { scale: 1, yPercent: 0, ease: 'none',
+          scrollTrigger: { trigger: show, start: 'top 85%', end: 'top 15%', scrub: 0.8 } });
+        gsap.from(show.querySelectorAll('.show-ctrl, .show-foot > *, .show-note'), { y: 30, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.08,
+          scrollTrigger: { trigger: show.querySelector('.show-ctrl'), start: 'top 90%' } });
+      });
+      gsap.utils.toArray('.svc:not(.svc--show)').forEach((svc) => {
         const copy = svc.querySelectorAll('.svc-copy > *');
         const media = svc.querySelector('.svc-media');
         const t2 = gsap.timeline({ scrollTrigger: { trigger: svc, start: 'top 80%' } });
@@ -330,16 +371,20 @@
       }), { threshold: 0.25 });
       main.querySelectorAll('.app-video').forEach((v) => vidIO.observe(v));
     }
-    main.querySelectorAll('.svc-trio').forEach(wireTrio);
+    main.querySelectorAll('.svc--show').forEach(wireTrio);
   }
 
   // three clips rotating through the centre; only the centre one plays
   function wireTrio(fig) {
+    const root = fig;
+    fig = root.querySelector('.svc-trio');
+    const names = [...root.querySelectorAll('.show-name > span')];
+    const countEl = root.querySelector('.show-count b');
     const clips = [...fig.querySelectorAll('.trio-clip')];
     const vids = clips.map((c) => c.querySelector('video'));
-    const bars = [...fig.querySelectorAll('.trio-bars b')];
-    const ambs = [...fig.querySelectorAll('.trio-amb')];
-    const sndBtn = fig.querySelector('.trio-sound');
+    const bars = [...root.querySelectorAll('.trio-bars b')];
+    const ambs = [...root.querySelectorAll('.trio-amb')];
+    const sndBtn = root.querySelector('.trio-sound');
     const stage = fig.querySelector('.trio-stage');
     const n = clips.length;
     let cur = 1, live = false, sound = false, raf = 0;
@@ -347,6 +392,8 @@
     const layout = () => {
       clips.forEach((c, k) => { c.classList.remove(...POS); c.classList.add(POS[(k - cur + n) % n]); });
       ambs.forEach((a, k) => a.classList.toggle('is-on', k === cur));
+      names.forEach((a, k) => a.classList.toggle('is-on', k === cur));
+      if (countEl) countEl.textContent = String(cur + 1).padStart(2, '0');
       bars.forEach((b, k) => { b.style.transition = 'none'; b.style.width = k < cur ? '100%' : '0%'; });
     };
     const tick = () => {
@@ -365,6 +412,8 @@
     const go = (k) => { cur = (k + n) % n; layout(); if (live) play(); };
     vids.forEach((v, k) => v.addEventListener('ended', () => { if (k === cur) go(cur + 1); }));
     clips.forEach((c, k) => c.addEventListener('click', () => { if (k !== cur) go(k); }));
+    root.querySelector('.trio-prev').addEventListener('click', () => go(cur - 1));
+    root.querySelector('.trio-next').addEventListener('click', () => go(cur + 1));
     sndBtn.addEventListener('click', () => {
       sound = !sound; sndBtn.setAttribute('aria-pressed', String(sound));
       const v = vids[cur]; v.muted = !sound;
@@ -372,12 +421,12 @@
     });
     // gentle 3D tilt toward the pointer
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      fig.addEventListener('pointermove', (e) => {
+      root.addEventListener('pointermove', (e) => {
         const r = fig.getBoundingClientRect();
         stage.style.setProperty('--ty', ((e.clientX - r.left) / r.width - 0.5) * 8 + 'deg');
         stage.style.setProperty('--tx', -((e.clientY - r.top) / r.height - 0.5) * 6 + 'deg');
       });
-      fig.addEventListener('pointerleave', () => { stage.style.setProperty('--ty', '0deg'); stage.style.setProperty('--tx', '0deg'); });
+      root.addEventListener('pointerleave', () => { stage.style.setProperty('--ty', '0deg'); stage.style.setProperty('--tx', '0deg'); });
     }
     layout();
     fig.classList.add('is-pre');
@@ -395,7 +444,7 @@
         vids.forEach((v) => v.pause());
         if (sound) { sound = false; sndBtn.setAttribute('aria-pressed', 'false'); }
       }
-    }), { threshold: 0.35 }).observe(fig);
+    }), { threshold: 0.3 }).observe(fig);
   }
 
   render();
