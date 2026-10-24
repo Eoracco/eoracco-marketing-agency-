@@ -66,6 +66,38 @@ const MUTEX_GROUPS = {
   email:    ['email-starter', 'email-growth', 'email-sms'],
 };
 
+// "Build your own": one row per service, one level per row
+const SERVICE_ROWS = [
+  { key: 'ads', name: { en: 'Paid advertising', zh: '付费广告' }, desc: { en: 'Google and Meta ads, tuned and reported weekly.', zh: 'Google 与 Meta 广告，每周优化并汇报。' },
+    opts: [['ads-single', { en: 'One platform', zh: '单平台' }], ['ads-dual', { en: 'Two platforms', zh: '双平台' }]] },
+  { key: 'social', name: { en: 'Social media', zh: '社交媒体' }, desc: { en: 'Posts, captions, scheduling and replies.', zh: '帖子、文案、排期与回复。' },
+    opts: [['social-content', { en: 'Content only', zh: '仅内容' }], ['social-mgmt', { en: 'Management', zh: '代运营' }], ['social-full', { en: 'Full package', zh: '全包' }]] },
+  { key: 'creative', name: { en: 'Ad creative', zh: '广告素材' }, desc: { en: 'Fresh ad images every month.', zh: '每月更新广告图片。' },
+    opts: [['creative-starter', { en: '8 images', zh: '8 张' }], ['creative-growth', { en: '16 images', zh: '16 张' }]] },
+  { key: 'email', name: { en: 'Email & SMS', zh: '邮件与短信' }, desc: { en: 'Keep in touch with past customers.', zh: '和老客人保持联系。' },
+    opts: [['email-starter', { en: 'Email Starter', zh: '邮件入门' }], ['email-growth', { en: 'Email Growth', zh: '邮件进阶' }], ['email-sms', { en: 'Email + SMS', zh: '邮件+短信' }]] },
+  { key: 'call', name: { en: 'Call tracking', zh: '来电追踪' }, desc: { en: 'See which ad each call came from.', zh: '看到每通电话来自哪个广告。' },
+    opts: [['call-tracking', { en: 'On', zh: '开启' }]] },
+  { key: 'voice', name: { en: 'AI voice agent', zh: 'AI 语音客服' }, desc: { en: 'Answers calls in English and Chinese, 24/7.', zh: '中英双语接听电话，全天候。' },
+    opts: [['ai-voice', { en: 'On', zh: '开启' }]] },
+  { key: 'web', name: { en: 'Web & SEO care', zh: '网站与 SEO 维护' }, desc: { en: 'Updates, Google Business Profile and monthly SEO.', zh: '网站更新、Google 商家资料与每月 SEO。' },
+    opts: [['web-seo', { en: 'On', zh: '开启' }]] },
+];
+
+// Packages: monthly services bundled at 10% off their combined price
+const BUNDLE_OFF = 0.10;
+const BUNDLES = [
+  { id: 'pkg-essentials', name: 'Essentials', zh: '基础套餐',
+    for: { en: 'For a business that needs to be found and look active online.', zh: '适合需要被找到、线上保持活跃的商家。' },
+    items: ['social-mgmt', 'web-seo', 'call-tracking'] },
+  { id: 'pkg-growth', name: 'Growth', zh: '增长套餐', badge: { en: 'Most popular', zh: '最受欢迎' },
+    for: { en: 'Ads and content working together to reach new customers.', zh: '广告和内容一起发力，触达新客人。' },
+    items: ['ads-single', 'social-full', 'email-starter', 'call-tracking'] },
+  { id: 'pkg-full', name: 'Full service', zh: '全托管套餐',
+    for: { en: 'Every channel, run by one team in English and Chinese.', zh: '所有渠道由同一个团队中英双语运营。' },
+    items: ['ads-dual', 'social-full', 'email-sms', 'call-tracking', 'ai-voice', 'web-seo'] },
+];
+
 const STEPS = [
   { n: '01', title: 'Free Strategy Call', zh: '免费策略通话',
     desc_en: 'We learn about your business and identify the highest-impact opportunities.',
@@ -131,8 +163,8 @@ const I18N = {
     pricing: {
       title: { en: 'Build your plan.', zh: '自助配置方案。' },
       sub: { en: 'See the price before we talk.', zh: '通话前就能看到价格。' },
-      desc: { en: 'Pick the services you want and the total updates as you go. Send the plan with your inquiry and we confirm the details on a quick call.',
-              zh: '勾选所需服务，总价实时更新。方案会随咨询一起发送，通话确认细节后再开始。' },
+      desc: { en: 'Start with a package or pick services one by one. The total updates as you go, and we confirm the details on a quick call.',
+              zh: '选一个套餐，或逐项挑选服务，总价实时更新。通话确认细节后再开始。' },
     },
     process: {
       title: { en: 'Three steps.', zh: '三个步骤。' },
@@ -362,15 +394,16 @@ function renderStats() {
     </div>`).join('');
 }
 
+const inPlan = (id) => selected.has(id) || !!coveredBy(id);
 function addLabel(id) {
-  return selected.has(id) ? (isZh() ? '已加入方案' : 'In your plan') : t(I18N.chLink);
+  return inPlan(id) ? (isZh() ? '已加入方案' : 'In your plan') : t(I18N.chLink);
 }
 
 // Update every "Add to plan" button without re-rendering the gallery
 function updateAddButtons() {
   document.querySelectorAll('[data-add]').forEach((b) => {
     const id = b.getAttribute('data-add');
-    b.classList.toggle('is-added', selected.has(id));
+    b.classList.toggle('is-added', inPlan(id));
     b.textContent = addLabel(id);
   });
 }
@@ -421,12 +454,23 @@ function renderSteps() {
 const selected = new Set();
 const ALL_ITEMS = {};
 [...PRICING_MONTHLY, ...PRICING_SETUP].forEach((i) => { ALL_ITEMS[i.id] = i; });
-const isMonthly = (id) => PRICING_MONTHLY.some((p) => p.id === id);
+const listPrice = (b) => b.items.reduce((sum, id) => sum + ALL_ITEMS[id].price, 0);
+const bundlePrice = (b) => Math.round(listPrice(b) * (1 - BUNDLE_OFF) / 10) * 10;
+BUNDLES.forEach((b) => { ALL_ITEMS[b.id] = { id: b.id, name: `${b.name} package`, zh: b.zh, tier: null, price: bundlePrice(b), bundle: b }; });
+const isMonthly = (id) => PRICING_MONTHLY.some((p) => p.id === id) || id.startsWith('pkg-');
+const activeBundle = () => BUNDLES.find((b) => selected.has(b.id)) || null;
+const groupOf = (id) => Object.values(MUTEX_GROUPS).find((g) => g.includes(id)) || [id];
+// a monthly item is "covered" when the chosen package already includes it or another level of it
+const coveredBy = (id) => {
+  const b = activeBundle();
+  if (!b || id.startsWith('pkg-')) return null;
+  return b.items.some((bi) => groupOf(bi).includes(id)) ? b : null;
+};
 
 // Plan attached to the inquiry form (set from the summary card)
 let PLAN = null;
 
-const itemName = (item) => (isZh() ? item.zh : item.name);
+const itemName = (item) => (isZh() ? item.zh : (item.bundle ? `${item.bundle.name} package` : item.name));
 const TIER_ZH = {
   'Single Platform': '单平台', 'Dual Platform': '双平台', 'Creation Only': '仅内容创作',
   '8 images': '每月 8 张', '16 images': '每月 16 张', 'Starter': '入门版', 'Growth': '进阶版',
@@ -456,22 +500,78 @@ function priceGroupHTML(title, zh, items, kind) {
   return `<div class="price-group"><h4 class="price-group-head">${gTitle}${gSub}</h4><div class="price-group-items">${items.map((i) => priceItemHTML(i, kind)).join('')}</div></div>`;
 }
 
+const L3 = (o) => (isZh() ? o.zh : o.en);
+const biLine = (o) => (isBi() ? `<span class="zh-line">${o.zh}</span>` : '');
+
+function renderPackages() {
+  document.getElementById('pkgTitle').innerHTML = isZh() ? '从套餐开始' : `Start with a package${isBi() ? '<span class="zh"> 从套餐开始</span>' : ''}`;
+  document.getElementById('pkgHelper').innerHTML = isZh()
+    ? '套餐里的月度服务比单独选购便宜 10%。选好后还可以继续加别的服务。'
+    : `Monthly services cost 10% less in a package. You can still add anything else.${isBi() ? '<span class="zh"> 套餐里的月度服务比单独选购便宜 10%。</span>' : ''}`;
+  document.getElementById('pbPackages').innerHTML = BUNDLES.map((b) => {
+    const on = selected.has(b.id);
+    const list = listPrice(b), price = bundlePrice(b);
+    const name = isZh() ? b.zh : b.name;
+    return `
+    <article class="pkg ${on ? 'is-on' : ''} ${b.badge ? 'pkg--hero' : ''}">
+      ${b.badge ? `<span class="pkg-badge">${L3(b.badge)}</span>` : ''}
+      <h4 class="pkg-name">${name}${isBi() ? `<span class="zh"> ${b.zh}</span>` : ''}</h4>
+      <p class="pkg-for">${L3(b.for)}${biLine(b.for)}</p>
+      <p class="pkg-price"><b>${fmt(price)}</b><span>${isZh() ? '/月' : '/mo'}</span></p>
+      <p class="pkg-save"><s>${fmt(list)}</s> ${isZh() ? `每月省 ${fmt(list - price)}` : `Save ${fmt(list - price)}/mo`}</p>
+      <ul class="pkg-items">${b.items.map((id) => `<li>${icon('check', 14)}<span>${itemName(ALL_ITEMS[id])}${ALL_ITEMS[id].tier ? ` <em>${tierText(ALL_ITEMS[id])}</em>` : ''}</span></li>`).join('')}</ul>
+      <button type="button" class="pkg-btn" data-pkg="${b.id}" aria-pressed="${on}">${on ? (isZh() ? '已选择 ✓' : 'Selected ✓') : (isZh() ? `选择${b.zh}` : `Choose ${b.name}`)}</button>
+    </article>`;
+  }).join('');
+}
+
+function renderRows() {
+  document.getElementById('byoTitle').innerHTML = isZh() ? '或自由组合' : `Or build your own${isBi() ? '<span class="zh"> 或自由组合</span>' : ''}`;
+  document.getElementById('byoHelper').innerHTML = isZh() ? '每项服务选一个档位，不需要的保持「不选」。'
+    : `Pick one level for each service, or leave it off.${isBi() ? '<span class="zh"> 每项服务选一个档位，不需要的保持「不选」。</span>' : ''}`;
+  const per = isZh() ? '/月' : '/mo';
+  document.getElementById('pbMonthly').innerHTML = SERVICE_ROWS.map((r) => {
+    const cov = coveredBy(r.opts[0][0]);
+    const cur = r.opts.find(([id]) => selected.has(id));
+    const offOn = !cur && !cov;
+    return `
+    <div class="svc-row ${cur || cov ? 'is-on' : ''} ${cov ? 'is-covered' : ''}">
+      <div class="svc-row-txt"><b>${L3(r.name)}${isBi() ? `<span class="zh"> ${r.name.zh}</span>` : ''}</b><span>${L3(r.desc)}</span></div>
+      ${cov
+        ? `<span class="svc-row-inc">${icon('check', 14)}${isZh() ? `已含在${cov.zh}` : `Included in ${cov.name}`}</span>`
+        : `<div class="seg" role="group" aria-label="${L3(r.name)}">
+            <button type="button" class="seg-btn ${offOn ? 'is-on' : ''}" data-off="${r.key}" aria-pressed="${offOn}">${isZh() ? '不选' : 'Off'}</button>
+            ${r.opts.map(([id, lab]) => `<button type="button" class="seg-btn ${selected.has(id) ? 'is-on' : ''}" data-id="${id}" aria-pressed="${selected.has(id)}"><span>${r.opts.length > 1 ? L3(lab) : (isZh() ? '加入' : 'Add')}</span><em>${fmt(ALL_ITEMS[id].price)}${per}</em></button>`).join('')}
+          </div>`}
+    </div>`;
+  }).join('');
+}
+
 function renderPricingPickers() {
-  const groups = {};
-  PRICING_MONTHLY.forEach((i) => { (groups[i.group] = groups[i.group] || []).push(i); });
-  document.getElementById('pbMonthly').innerHTML =
-    Object.entries(groups).map(([g, items]) => priceGroupHTML(g, GROUP_ZH[g], items, 'monthly')).join('');
+  renderPackages();
+  renderRows();
   const sg = {};
   PRICING_SETUP.forEach((i) => { (sg[i.group] = sg[i.group] || []).push(i); });
-  document.getElementById('pbSetup').innerHTML = Object.entries(sg).map(([g, items]) => {
-    const gTitle = isZh() ? (GROUP_ZH[g] || g) : (GROUP_EN[g] || g);
-    const gSub = isBi() ? `<span class="price-group-zh"> ${GROUP_ZH[g] || ''}</span>` : '';
-    return `<div class="price-group" id="pb-${g.toLowerCase()}"><h4 class="price-group-head">${gTitle}${gSub}</h4><div class="price-group-items">${items.map((i) => priceItemHTML(i, 'setup')).join('')}</div></div>`;
-  }).join('');
+  document.getElementById('pbSetup').innerHTML = Object.entries(sg).map(([g, items]) =>
+    `<div class="price-group"><div class="price-group-items">${items.map((i) => priceItemHTML(i, 'setup')).join('')}</div></div>`).join('');
+  const nSetup = PRICING_SETUP.filter((i) => selected.has(i.id)).length;
+  const tg = document.getElementById('pbMoreToggle');
+  const open = tg.getAttribute('aria-expanded') === 'true';
+  tg.innerHTML = `<span>${isZh() ? '一次性项目与配置' : 'One-time projects & setup'}${isBi() ? '<span class="zh"> 一次性项目与配置</span>' : ''}</span>
+    <span class="pb-more-meta">${nSetup ? (isZh() ? `已选 ${nSetup} 项` : `${nSetup} added`) : (isZh() ? `${PRICING_SETUP.length} 项可选` : `${PRICING_SETUP.length} options`)}<i class="pb-more-ic ${open ? 'is-open' : ''}">${EO.icon('plus', 16, 2)}</i></span>`;
 }
 
 function selectItem(id, on) {
   if (!on) { selected.delete(id); return; }
+  if (id.startsWith('pkg-')) {
+    BUNDLES.forEach((b) => selected.delete(b.id));
+    const b = BUNDLES.find((x) => x.id === id);
+    // the package replaces any level the visitor had picked for the same services
+    b.items.forEach((bi) => groupOf(bi).forEach((g) => selected.delete(g)));
+    selected.add(id);
+    return;
+  }
+  if (coveredBy(id)) return;
   const monthly = PRICING_MONTHLY.find((i) => i.id === id);
   if (monthly && MUTEX_GROUPS[monthly.cat]) {
     MUTEX_GROUPS[monthly.cat].forEach((sid) => { if (sid !== id) selected.delete(sid); });
@@ -493,19 +593,21 @@ function toggleItem(id) {
 
 function computeTotals() {
   const items = [];
-  let monthly = 0, setup = 0;
+  let monthly = 0, setup = 0, saved = 0;
   selected.forEach((id) => {
     const it = ALL_ITEMS[id];
     if (!it) return;
     items.push(it);
     if (isMonthly(id)) monthly += it.price;
     else setup += it.price;
+    if (it.bundle) saved += listPrice(it.bundle) - it.price;
   });
-  return { items, monthly, setup };
+  items.sort((a, b) => (b.bundle ? 1 : 0) - (a.bundle ? 1 : 0));
+  return { items, monthly, setup, saved };
 }
 
 function renderSummary() {
-  const { items, monthly, setup } = computeTotals();
+  const { items, monthly, setup, saved } = computeTotals();
   const firstYear = monthly * 12 + setup;
   const count = items.length;
 
@@ -521,7 +623,9 @@ function renderSummary() {
       </div>`;
   } else {
     cartArea.innerHTML = `<ul class="pb-cart">${items.map((it) => {
-      const tier = it.tier ? `<span class="tier">${tierText(it)}</span>` : '';
+      const tier = it.bundle
+        ? `<span class="tier">${it.bundle.items.map((id) => itemName(ALL_ITEMS[id])).join(' · ')}</span>`
+        : (it.tier ? `<span class="tier">${tierText(it)}</span>` : '');
       const unit = isMonthly(it.id) ? `<span class="unit">${isZh() ? '/月' : '/mo'}</span>` : '';
       return `
         <li class="pb-cart-item">
@@ -531,7 +635,7 @@ function renderSummary() {
             <button type="button" class="pb-cart-remove" data-remove="${it.id}" aria-label="Remove ${it.name}">${isZh() ? '移除' : 'Remove'}</button>
           </div>
         </li>`;
-    }).join('')}</ul>`;
+    }).join('')}</ul>${saved ? `<p class="pb-saved">${icon('check', 14)}${isZh() ? `套餐每月为您节省 ${fmt(saved)}` : `Package saves you ${fmt(saved)}/mo`}</p>` : ''}`;
   }
 
   const L = {
@@ -616,8 +720,26 @@ function wirePricing() {
     const btn = e.target.closest('.price-item');
     if (btn) toggleItem(btn.getAttribute('data-id'));
   };
-  document.getElementById('pbMonthly').addEventListener('click', onPickerClick);
   document.getElementById('pbSetup').addEventListener('click', onPickerClick);
+  document.getElementById('pbMonthly').addEventListener('click', (e) => {
+    const b = e.target.closest('.seg-btn');
+    if (!b) return;
+    const off = b.getAttribute('data-off');
+    if (off) { SERVICE_ROWS.find((r) => r.key === off).opts.forEach(([id]) => selected.delete(id)); refreshPlan(); return; }
+    const id = b.getAttribute('data-id');
+    if (selected.has(id)) { selected.delete(id); refreshPlan(); } else { selectItem(id, true); refreshPlan(); }
+  });
+  document.getElementById('pbPackages').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-pkg]');
+    if (b) toggleItem(b.getAttribute('data-pkg'));
+  });
+  const more = document.getElementById('pbMoreToggle');
+  more.addEventListener('click', () => {
+    const open = more.getAttribute('aria-expanded') !== 'true';
+    more.setAttribute('aria-expanded', String(open));
+    document.getElementById('pbMoreBody').classList.toggle('is-open', open);
+    renderPricingPickers();
+  });
   document.getElementById('pbCartArea').addEventListener('click', (e) => {
     const btn = e.target.closest('[data-remove]');
     if (btn) toggleItem(btn.getAttribute('data-remove'));

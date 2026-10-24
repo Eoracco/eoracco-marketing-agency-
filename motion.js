@@ -281,6 +281,10 @@
           scrollTrigger: { trigger: g, start: 'top 88%' },
         });
       });
+      gsap.from('.pkg', { y: 60, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.1,
+        scrollTrigger: { trigger: '.pkg-grid', start: 'top 85%' } });
+      gsap.from('.svc-row', { y: 24, opacity: 0, duration: 1, ease: EXPO, stagger: 0.05,
+        scrollTrigger: { trigger: '.svc-rows', start: 'top 85%' } });
       gsap.from('.pb-summary-card', {
         y: 60, opacity: 0, duration: 1.3, ease: EXPO,
         scrollTrigger: { trigger: '.pb-layout', start: 'top 80%' },

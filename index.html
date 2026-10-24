@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 
-  <link rel="stylesheet" href="styles.css?v=20261024zg" />
+  <link rel="stylesheet" href="styles.css?v=20261024zi" />
 </head>
 <body data-page="home">
   <a class="skip" href="#main">Skip to content</a>
@@ -157,21 +157,31 @@
           <p></p>
         </div>
 
+        <div class="pkg-wrap">
+          <div class="pkg-head">
+            <h3 class="pb-section-head" id="pkgTitle"></h3>
+            <p class="pb-helper" id="pkgHelper"></p>
+          </div>
+          <div class="pkg-grid" id="pbPackages"></div>
+        </div>
+
         <div class="pb-layout">
           <div class="pb-picker">
             <div class="pb-section">
-              <h3 class="pb-section-head"><span class="t-en">Monthly services</span><span class="zh"> 月度服务</span></h3>
-              <p class="pb-helper"><span class="t-en">Choose one tier per service.</span><span class="zh"> 同类服务只能选一档。</span></p>
-              <div id="pbMonthly"></div>
+              <h3 class="pb-section-head" id="byoTitle"></h3>
+              <p class="pb-helper" id="byoHelper"></p>
+              <div id="pbMonthly" class="svc-rows"></div>
             </div>
 
             <div class="pb-section">
-              <h3 class="pb-section-head"><span class="t-en">One-time setup</span><span class="zh"> 一次性设置费</span></h3>
-              <div id="pbSetup"></div>
-              <p class="pricing-note">
-                <span class="t-en">iOS apps, custom video packages and strategy consulting are quoted per project.</span>
-                <span class="zh-line zh">iOS 应用、视频套餐及策略咨询按项目报价。</span>
-              </p>
+              <button type="button" class="pb-more" id="pbMoreToggle" aria-expanded="false" aria-controls="pbMoreBody"></button>
+              <div class="pb-more-body" id="pbMoreBody">
+                <div id="pbSetup"></div>
+                <p class="pricing-note">
+                  <span class="t-en">iOS apps, custom video packages and strategy consulting are quoted per project.</span>
+                  <span class="zh-line zh">iOS 应用、视频套餐及策略咨询按项目报价。</span>
+                </p>
+              </div>
             </div>
           </div>
 
@@ -352,10 +362,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="services-data.js?v=20261024zg"></script>
-  <script src="apps-showcase.js?v=20261024zg"></script>
-  <script src="site.js?v=20261024zg"></script>
-  <script src="app.js?v=20261024zg"></script>
-  <script src="motion.js?v=20261024zg"></script>
+  <script src="services-data.js?v=20261024zi"></script>
+  <script src="apps-showcase.js?v=20261024zi"></script>
+  <script src="site.js?v=20261024zi"></script>
+  <script src="app.js?v=20261024zi"></script>
+  <script src="motion.js?v=20261024zi"></script>
 </body>
 </html>
