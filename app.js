@@ -353,7 +353,7 @@ function renderChapters() {
     const name = isZh() ? (c.longName || c.name).zh : (c.longName || c.name).en;
     return `
     <article class="card card--cat" id="cat-${c.key}">
-      <div class="card-media"><img class="card-img" src="${c.card.img}" alt="" loading="lazy" /></div>
+      <div class="card-media"><img class="card-img" src="${c.card.img}" alt="" decoding="async" /></div>
       <div class="card-shade" aria-hidden="true"></div>
       <div class="card-body">
         <p class="card-tag">${count}${c.isNew ? ` · ${isZh() ? '新' : 'New'}` : ''}</p>

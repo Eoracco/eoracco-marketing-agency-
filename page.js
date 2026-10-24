@@ -73,7 +73,7 @@
     if (cat.key === 'apps') {
       return `<div class="cat-visual cat-visual--apps">${EO.APPS.map((a) => `<div class="mini-phone"><img src="${a.shot}" alt="${a.name}" /></div>`).join('')}</div>`;
     }
-    return `<div class="cat-visual"><img src="${cat.card.img}" alt="" /></div>`;
+    return `<div class="cat-visual"><img src="${cat.card.hero || cat.card.img}" alt="" /></div>`;
   }
 
   function stepsHTML() {
