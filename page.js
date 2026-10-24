@@ -34,10 +34,14 @@
 
   function mediaHTML(s) {
     if (s.videos) {
-      const snd = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg>`;
-      return `<figure class="svc-media svc-trio">${s.videos.map((v, k) => `
-        <div class="trio-clip t${k}"><video class="app-video" data-src="${v.src}" poster="${v.poster}" muted loop playsinline preload="none"></video>
-          <button type="button" class="trio-sound" aria-pressed="false" aria-label="${tx({ en: 'Sound', zh: '声音' })}">${snd}</button></div>`).join('')}
+      const snd = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg>`;
+      return `<figure class="svc-media svc-trio">
+        ${s.videos.map((v, k) => `<span class="trio-amb" data-k="${k}" style="background-image:url(${v.poster})"></span>`).join('')}
+        <div class="trio-bars">${s.videos.map(() => '<i><b></b></i>').join('')}</div>
+        <div class="trio-stage">${s.videos.map((v, k) => `
+          <div class="trio-clip" data-k="${k}"><video class="trio-video" data-src="${v.src}" poster="${v.poster}" muted playsinline preload="none"></video></div>`).join('')}
+        </div>
+        <button type="button" class="trio-sound" aria-pressed="false" aria-label="${tx({ en: 'Sound', zh: '声音' })}">${snd}</button>
         ${s.imgNote ? `<figcaption>${tx(s.imgNote)}</figcaption>` : ''}</figure>`;
     }
     if (s.video) {
@@ -326,13 +330,72 @@
       }), { threshold: 0.25 });
       main.querySelectorAll('.app-video').forEach((v) => vidIO.observe(v));
     }
-    main.querySelectorAll('.trio-sound').forEach((btn) => btn.addEventListener('click', () => {
-      const v = btn.parentElement.querySelector('video');
-      const turnOn = v.muted;
-      main.querySelectorAll('.trio-clip video').forEach((o) => { o.muted = true; });
-      main.querySelectorAll('.trio-sound').forEach((b) => b.setAttribute('aria-pressed', 'false'));
-      if (turnOn) { if (!v.src) v.src = v.dataset.src; v.muted = false; v.currentTime = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); btn.setAttribute('aria-pressed', 'true'); }
-    }));
+    main.querySelectorAll('.svc-trio').forEach(wireTrio);
+  }
+
+  // three clips rotating through the centre; only the centre one plays
+  function wireTrio(fig) {
+    const clips = [...fig.querySelectorAll('.trio-clip')];
+    const vids = clips.map((c) => c.querySelector('video'));
+    const bars = [...fig.querySelectorAll('.trio-bars b')];
+    const ambs = [...fig.querySelectorAll('.trio-amb')];
+    const sndBtn = fig.querySelector('.trio-sound');
+    const stage = fig.querySelector('.trio-stage');
+    const n = clips.length;
+    let cur = 1, live = false, sound = false, raf = 0;
+    const POS = ['pos-c', 'pos-r', 'pos-l'];
+    const layout = () => {
+      clips.forEach((c, k) => { c.classList.remove(...POS); c.classList.add(POS[(k - cur + n) % n]); });
+      ambs.forEach((a, k) => a.classList.toggle('is-on', k === cur));
+      bars.forEach((b, k) => { b.style.transition = 'none'; b.style.width = k < cur ? '100%' : '0%'; });
+    };
+    const tick = () => {
+      const v = vids[cur];
+      if (v.duration) bars[cur].style.width = (v.currentTime / v.duration * 100) + '%';
+      raf = requestAnimationFrame(tick);
+    };
+    const play = () => {
+      vids.forEach((v, k) => { if (k !== cur) { v.pause(); v.muted = true; } });
+      const v = vids[cur];
+      if (!v.src) v.src = v.dataset.src;
+      v.currentTime = 0; v.muted = !sound;
+      const p = v.play(); if (p && p.catch) p.catch(() => {});
+      cancelAnimationFrame(raf); raf = requestAnimationFrame(tick);
+    };
+    const go = (k) => { cur = (k + n) % n; layout(); if (live) play(); };
+    vids.forEach((v, k) => v.addEventListener('ended', () => { if (k === cur) go(cur + 1); }));
+    clips.forEach((c, k) => c.addEventListener('click', () => { if (k !== cur) go(k); }));
+    sndBtn.addEventListener('click', () => {
+      sound = !sound; sndBtn.setAttribute('aria-pressed', String(sound));
+      const v = vids[cur]; v.muted = !sound;
+      if (sound && v.paused) play();
+    });
+    // gentle 3D tilt toward the pointer
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      fig.addEventListener('pointermove', (e) => {
+        const r = fig.getBoundingClientRect();
+        stage.style.setProperty('--ty', ((e.clientX - r.left) / r.width - 0.5) * 8 + 'deg');
+        stage.style.setProperty('--tx', -((e.clientY - r.top) / r.height - 0.5) * 6 + 'deg');
+      });
+      fig.addEventListener('pointerleave', () => { stage.style.setProperty('--ty', '0deg'); stage.style.setProperty('--tx', '0deg'); });
+    }
+    layout();
+    fig.classList.add('is-pre');
+    if (!('IntersectionObserver' in window)) { fig.classList.remove('is-pre'); return; }
+    new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (e.isIntersecting) {
+        if (fig.classList.contains('is-pre')) {
+          vids.forEach((v) => { if (!v.src) { v.src = v.dataset.src; v.preload = 'auto'; } });
+          requestAnimationFrame(() => fig.classList.replace('is-pre', 'is-entering'));
+          setTimeout(() => fig.classList.remove('is-entering'), 1800);
+        }
+        live = true; play();
+      } else if (live) {
+        live = false; cancelAnimationFrame(raf);
+        vids.forEach((v) => v.pause());
+        if (sound) { sound = false; sndBtn.setAttribute('aria-pressed', 'false'); }
+      }
+    }), { threshold: 0.35 }).observe(fig);
   }
 
   render();

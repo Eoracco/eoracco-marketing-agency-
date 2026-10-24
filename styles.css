@@ -1120,27 +1120,50 @@ body.lang-zh .svc-name { letter-spacing: 0; }
 .svc-actions { margin-top: 22px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
 .svc-media { position: relative; margin: 0; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 30px; overflow: hidden; background: var(--gray); }
 .svc-media img, .svc-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
-/* three vertical clips, fanned */
-.svc-trio { background: radial-gradient(80% 60% at 50% 40%, #2a2420, #121010 75%); display: grid; place-items: center; }
+/* three vertical clips rotating through the centre */
+.svc-trio { background: #0e0c0b; perspective: 1400px; isolation: isolate; }
+.trio-amb {
+  position: absolute; inset: -20%; background-size: cover; background-position: center; z-index: 0;
+  filter: blur(60px) saturate(1.4) brightness(.55); opacity: 0; transform: scale(1.1);
+  transition: opacity 1.4s var(--ease), transform 6s ease-out;
+}
+.trio-amb.is-on { opacity: 1; transform: scale(1); }
+.svc-trio::after { content: ""; position: absolute; inset: 0; z-index: 0; background: radial-gradient(70% 55% at 50% 50%, transparent, rgba(0,0,0,.55)); pointer-events: none; }
+.trio-stage {
+  position: absolute; inset: 0; z-index: 1; transform-style: preserve-3d; pointer-events: none;
+  transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)); transition: transform .9s var(--ease);
+}
 .trio-clip {
-  position: absolute; top: 50%; left: 50%; height: 68%; aspect-ratio: 9 / 16; border-radius: clamp(14px, 2vw, 22px); overflow: hidden;
-  background: #000; box-shadow: 0 30px 60px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
-  transform: translate(-50%, -50%); transition: transform .8s var(--ease);
+  position: absolute; top: 50%; left: 50%; height: 70%; aspect-ratio: 9 / 16; border-radius: clamp(14px, 2vw, 22px); overflow: hidden;
+  background: #000; cursor: pointer; pointer-events: auto; will-change: transform, filter;
+  box-shadow: 0 40px 70px -24px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.08);
+  transition: transform 1.25s var(--ease), filter 1.25s var(--ease), opacity 1.25s var(--ease);
 }
-.trio-clip.t0 { transform: translate(-122%, -47%) rotate(-5deg) scale(.82); opacity: .9; }
-.trio-clip.t1 { z-index: 2; }
-.trio-clip.t2 { transform: translate(22%, -47%) rotate(5deg) scale(.82); opacity: .9; }
-.svc-trio:hover .trio-clip.t0 { transform: translate(-126%, -48%) rotate(-7deg) scale(.82); }
-.svc-trio:hover .trio-clip.t2 { transform: translate(26%, -48%) rotate(7deg) scale(.82); }
+.trio-clip video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.trio-clip.pos-c { z-index: 3; cursor: default; transform: translate3d(-50%, -50%, 0); }
+.trio-clip.pos-l { z-index: 1; transform: translate3d(-140%, -50%, 0) rotateY(22deg) scale(.82); filter: brightness(.45) saturate(.7); }
+.trio-clip.pos-r { z-index: 1; transform: translate3d(40%, -50%, 0) rotateY(-22deg) scale(.82); filter: brightness(.45) saturate(.7); }
+.trio-clip.pos-l:hover, .trio-clip.pos-r:hover { filter: brightness(.7) saturate(.9); }
+/* entrance: clips rise out of a stack and fan apart */
+.svc-trio.is-pre .trio-clip { opacity: 0; transform: translate3d(-50%, -40%, -200px) scale(.9); transition: none; }
+.svc-trio.is-entering .trio-clip { transition-duration: 1.6s; }
+.svc-trio.is-entering .trio-clip.pos-l { transition-delay: .18s; }
+.svc-trio.is-entering .trio-clip.pos-r { transition-delay: .3s; }
+.trio-bars { position: absolute; z-index: 4; top: 18px; left: 50%; width: min(42%, 220px); transform: translateX(-50%); display: flex; gap: 6px; }
+.trio-bars i { flex: 1; height: 2.5px; border-radius: 2px; background: rgba(255,255,255,.22); overflow: hidden; }
+.trio-bars b { display: block; height: 100%; width: 0; background: #fff; }
 .trio-sound {
-  position: absolute; right: 10px; top: 10px; width: 32px; height: 32px; border-radius: 50%; border: 0; cursor: pointer;
-  display: grid; place-items: center; color: #fff; background: rgba(0,0,0,.42); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  position: absolute; z-index: 4; right: 16px; bottom: 14px; width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer;
+  display: grid; place-items: center; color: #fff; background: rgba(255,255,255,.14); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: background .3s, color .3s, transform .3s var(--ease);
 }
+.trio-sound:hover { transform: scale(1.06); }
 .trio-sound .on { display: none; }
 .trio-sound[aria-pressed="true"] .on { display: inline; }
 .trio-sound[aria-pressed="true"] .off { display: none; }
 .trio-sound[aria-pressed="true"] { background: var(--amber); color: #1d1d1f; }
-.svc-trio figcaption { z-index: 3; }
+.svc-trio figcaption { z-index: 4; }
+@media (prefers-reduced-motion: reduce) { .trio-clip, .trio-amb, .trio-stage { transition-duration: .01s !important; } }
 .svc-media figcaption {
   position: absolute; left: 16px; bottom: 14px; font-size: 12px; color: #fff; padding: 5px 11px; border-radius: 980px;
   background: rgba(0, 0, 0, 0.45); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
