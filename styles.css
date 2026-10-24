@@ -1120,6 +1120,27 @@ body.lang-zh .svc-name { letter-spacing: 0; }
 .svc-actions { margin-top: 22px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
 .svc-media { position: relative; margin: 0; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 30px; overflow: hidden; background: var(--gray); }
 .svc-media img, .svc-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* three vertical clips, fanned */
+.svc-trio { background: radial-gradient(80% 60% at 50% 40%, #2a2420, #121010 75%); display: grid; place-items: center; }
+.trio-clip {
+  position: absolute; top: 50%; left: 50%; height: 68%; aspect-ratio: 9 / 16; border-radius: clamp(14px, 2vw, 22px); overflow: hidden;
+  background: #000; box-shadow: 0 30px 60px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+  transform: translate(-50%, -50%); transition: transform .8s var(--ease);
+}
+.trio-clip.t0 { transform: translate(-122%, -47%) rotate(-5deg) scale(.82); opacity: .9; }
+.trio-clip.t1 { z-index: 2; }
+.trio-clip.t2 { transform: translate(22%, -47%) rotate(5deg) scale(.82); opacity: .9; }
+.svc-trio:hover .trio-clip.t0 { transform: translate(-126%, -48%) rotate(-7deg) scale(.82); }
+.svc-trio:hover .trio-clip.t2 { transform: translate(26%, -48%) rotate(7deg) scale(.82); }
+.trio-sound {
+  position: absolute; right: 10px; top: 10px; width: 32px; height: 32px; border-radius: 50%; border: 0; cursor: pointer;
+  display: grid; place-items: center; color: #fff; background: rgba(0,0,0,.42); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.trio-sound .on { display: none; }
+.trio-sound[aria-pressed="true"] .on { display: inline; }
+.trio-sound[aria-pressed="true"] .off { display: none; }
+.trio-sound[aria-pressed="true"] { background: var(--amber); color: #1d1d1f; }
+.svc-trio figcaption { z-index: 3; }
 .svc-media figcaption {
   position: absolute; left: 16px; bottom: 14px; font-size: 12px; color: #fff; padding: 5px 11px; border-radius: 980px;
   background: rgba(0, 0, 0, 0.45); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);

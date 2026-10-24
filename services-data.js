@@ -125,6 +125,19 @@
                      L('Captions burned in', '字幕直接压在画面上'),
                      L('9:16, 1:1 and 16:9 exports', '导出 9:16、1:1、16:9')],
           price: { from: 100, unit: 'video' } },
+        { id: 'clipping', short: L('Clipping', '切片'), icon: 'play', plan: 'clipping',
+          videos: [
+            { src: 'video/coco-daythree.mp4', poster: 'images/clips/coco-daythree.jpg' },
+            { src: 'video/coco-fashion.mp4', poster: 'images/clips/coco-fashion.jpg' },
+            { src: 'video/coco-afterparty.mp4', poster: 'images/clips/coco-afterparty.jpg' },
+          ],
+          imgNote: L('Clips we edited from New York Fashion Week footage', '我们用纽约时装周素材剪的切片'),
+          name: L('Clipping', '长视频切片'),
+          desc: L('We cut podcasts, vlogs and event footage into short vertical clips for TikTok, Reels and Shorts.', '把播客、Vlog 和活动长视频剪成适合 TikTok、Reels 和 Shorts 的竖屏短片。'),
+          includes: [L('We pick the moments worth sharing', '挑出最值得传播的片段'),
+                     L('Styled captions and one consistent look', '统一风格的字幕和画面'),
+                     L('B-roll cut in, with light sound design', '穿插 B-roll，配少量音效')],
+          price: { from: 25, unit: 'clip' } },
         { id: 'motion', icon: 'spark', img: 'film/f060.webp',
           name: L('Motion design', '动态设计'),
           desc: L('After Effects animation for brand films, launches and title sequences, like the Statues short on our home page.',
@@ -177,7 +190,7 @@
   const UNIT = {
     mo: L('/mo', '/月'), video: L(' per video', '/条'), image: L(' per image', '/张'),
     deck: L(' per deck', '/套'), project: L(' per project', '/项'),
-    campaign: L(' per campaign', '/次'), design: L(' per design', '/款'),
+    campaign: L(' per campaign', '/次'), design: L(' per design', '/款'), clip: L(' per clip', '/条'),
   };
 
   // ---------- language ----------

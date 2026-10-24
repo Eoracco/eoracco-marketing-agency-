@@ -33,6 +33,13 @@
   };
 
   function mediaHTML(s) {
+    if (s.videos) {
+      const snd = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg>`;
+      return `<figure class="svc-media svc-trio">${s.videos.map((v, k) => `
+        <div class="trio-clip t${k}"><video class="app-video" data-src="${v.src}" poster="${v.poster}" muted loop playsinline preload="none"></video>
+          <button type="button" class="trio-sound" aria-pressed="false" aria-label="${tx({ en: 'Sound', zh: '声音' })}">${snd}</button></div>`).join('')}
+        ${s.imgNote ? `<figcaption>${tx(s.imgNote)}</figcaption>` : ''}</figure>`;
+    }
     if (s.video) {
       return `<figure class="svc-media"><video class="app-video" data-src="${s.video}" poster="${s.poster}" muted loop playsinline preload="none"></video>${s.imgNote ? `<figcaption>${tx(s.imgNote)}</figcaption>` : ''}</figure>`;
     }
@@ -306,8 +313,30 @@
     main.querySelectorAll('.svc').forEach((s) => io.observe(s));
   }
 
+  // play service videos only while they're on screen; one clip with sound at a time
+  let vidIO = null;
+  function wireVideos() {
+    if (window.EO_APPS) { window.EO_APPS.wireVideos(main); }
+    else if ('IntersectionObserver' in window) {
+      if (vidIO) vidIO.disconnect();
+      vidIO = new IntersectionObserver((entries) => entries.forEach((e) => {
+        const v = e.target;
+        if (e.isIntersecting) { if (!v.src) v.src = v.dataset.src; const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+        else if (!v.paused) { v.pause(); v.muted = true; const b = v.parentElement.querySelector('.trio-sound'); if (b) b.setAttribute('aria-pressed', 'false'); }
+      }), { threshold: 0.25 });
+      main.querySelectorAll('.app-video').forEach((v) => vidIO.observe(v));
+    }
+    main.querySelectorAll('.trio-sound').forEach((btn) => btn.addEventListener('click', () => {
+      const v = btn.parentElement.querySelector('video');
+      const turnOn = v.muted;
+      main.querySelectorAll('.trio-clip video').forEach((o) => { o.muted = true; });
+      main.querySelectorAll('.trio-sound').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      if (turnOn) { if (!v.src) v.src = v.dataset.src; v.muted = false; v.currentTime = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); btn.setAttribute('aria-pressed', 'true'); }
+    }));
+  }
+
   render();
-  if (window.EO_APPS) window.EO_APPS.wireVideos(main);
+  wireVideos();
   initMotion();
   build(true);
   wireLocalNav();
@@ -315,7 +344,7 @@
   EO.onLang(() => {
     if (ctx) ctx.revert();
     render();
-    if (window.EO_APPS) window.EO_APPS.wireVideos(main);
+    wireVideos();
     build();
     wireLocalNav();
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();
