@@ -102,6 +102,7 @@
       <div class="ap-stage" aria-hidden="true">
         <div class="mbp">
           <div class="mbp-screen"><span class="mbp-notch"></span>
+            <div class="mbp-menubar"><span><b>Safari</b>File&nbsp;&nbsp;Edit&nbsp;&nbsp;View&nbsp;&nbsp;History</span><span>Sat 9:41 AM</span></div>
             <div class="mbp-browser"><div class="work-bar"><i></i><i></i><i></i><span class="work-url">${lock}goldennoodle.example</span></div>${demo(false)}</div>
           </div>
           <div class="mbp-base"><span></span></div>
