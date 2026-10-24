@@ -103,6 +103,12 @@ const I18N = {
     zh: '为洛杉矶商家提供营销、内容与 App 服务，中英双语。',
   },
   heroSubZh: '营销、内容与 App，中英双语。',
+  brandsLabel: { en: 'Brands we work with', zh: '合作品牌' },
+  brands: [
+    { name: 'AKUSO', url: 'https://akuso.us/', en: 'LA style & culture magazine', zh: '洛杉矶时尚文化杂志' },
+    { name: 'ALIGCUS', url: 'https://www.aligcus.com/', en: 'ADU design & build', zh: 'ADU 设计与建造' },
+    { name: 'KATOOL', url: 'https://www.katoollift.com/', en: 'Auto shop equipment', zh: '汽修设备' },
+  ],
   reel: [
     { v: 'video/short-video-demo.mp4', p: 'images/reel/short-video.jpg', en: 'Short-form video', zh: '短视频' },
     { i: 'images/reel/beef.webp', en: 'Social content', zh: '社媒内容' },
@@ -269,6 +275,12 @@ function renderHero() {
       : `<img src="${r.i}" alt="" decoding="async" />`}<figcaption>${isZh() ? r.zh : r.en}</figcaption></figure>`;
     const set = I18N.reel.map(tile).join('');
     reel.innerHTML = `<div class="reel-track">${set}${set}</div>`;
+  }
+  const bl = document.getElementById('brandsLabel');
+  if (bl) bl.innerHTML = t(I18N.brandsLabel) + (isBi() ? `<span class="zh"> · ${I18N.brandsLabel.zh}</span>` : '');
+  const br = document.getElementById('brandsRow');
+  if (br) {
+    br.innerHTML = I18N.brands.map((b) => `<li class="client"><a href="${b.url}" target="_blank" rel="noopener"><span class="client-mark">${b.name}</span><span class="client-what">${isZh() ? b.zh : b.en}</span></a></li>`).join('');
   }
   const idx = document.getElementById('heroIndex');
   if (idx) {

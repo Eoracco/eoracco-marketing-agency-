@@ -160,6 +160,13 @@
           desc: L('Fast, bilingual websites that load quickly on phones, look right when shared and are set up for Google from day one.',
                   '中英双语网站：手机上打开快，分享出去预览好看，从第一天起就按 Google 的要求设置好。'),
           proofNote: L("This site's own head tags and its link preview in iMessage", '本站自己的 head 标签，以及在 iMessage 里的链接预览'),
+          work: { url: 'https://soplo.dev/', host: 'soplo.dev', img: 'images/work/soplo.webp',
+            name: 'SOPLO', kicker: L('Recent build', '近期作品'),
+            desc: L('An AI tool that turns any link into ready-to-post copy for LinkedIn, X, Instagram, TikTok and Facebook. We designed and built it end to end.',
+                    '一个 AI 工具：粘贴任意链接，生成可直接发布到 LinkedIn、X、Instagram、TikTok 和 Facebook 的文案。从设计到开发由我们完成。'),
+            stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Prisma', 'Stripe', 'Clerk'],
+            checks: [L('Title and meta description', 'Title 与 meta description'), L('Open Graph image and X card', 'Open Graph 分享图与 X 卡片'),
+                     L('Canonical URL', 'Canonical 网址'), L('JSON-LD structured data', 'JSON-LD 结构化数据')] },
           specs: [
             { icon: 'brush', title: L('Design & build', '设计与开发'), items: [
               L('Custom design, not a template', '定制设计，不套模板'),

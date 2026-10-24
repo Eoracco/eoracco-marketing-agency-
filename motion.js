@@ -150,6 +150,9 @@
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
       });
 
+      gsap.from('.brands-label, .client', { y: 26, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.08,
+        scrollTrigger: { trigger: '.brands', start: 'top 85%' } });
+
       // Statement: words light up in reading order
       const words = gsap.utils.toArray('#statement .w');
       if (words.length) {
