@@ -36,7 +36,7 @@
       headline: L('Marketing that brings in customers.', '带来客人的营销。'),
       sub: L('Paid ads, social, email and SMS, call tracking and SEO, run in English and Chinese.',
              '广告投放、社媒、邮件短信、来电追踪和 SEO，中英双语执行。'),
-      card: { img: 'https://images.unsplash.com/photo-1691611997169-ec769088fad5?w=900&h=1300&fit=crop&q=80&auto=format', hero: 'images/services/hero-marketing.webp' },
+      card: { img: 'https://images.unsplash.com/photo-1590098563176-07884b06d7f7?w=900&h=1300&fit=crop&crop=focalpoint&fp-x=0.45&fp-y=0.72&fp-z=1.7&q=80&auto=format', hero: 'images/services/hero-marketing.webp' },
       services: [
         { id: 'paid-ads', short: L('Ads', '广告'),  icon: 'target', img: 'images/services/paid-ads.webp', plan: 'ads-single', chiclet: true,
           name: L('Paid advertising', '付费广告投放'),
@@ -91,7 +91,7 @@
       name: L('Creative', '内容创意'),
       headline: L('Creative made for the feed.', '为信息流而做的内容。'),
       sub: L('Ad images, short-form video and motion design.', '广告图、短视频和动态设计。'),
-      card: { img: 'https://images.unsplash.com/photo-1612130536441-95ece5dcbb86?w=900&h=1300&fit=crop&q=80&auto=format', hero: 'images/services/hero-creative.webp' },
+      card: { img: 'https://images.unsplash.com/photo-1780642213026-cf15a7676c6b?w=900&h=1300&fit=crop&q=80&auto=format', hero: 'images/services/hero-creative.webp' },
       services: [
         { id: 'ad-creative', short: L('Ad Images', '广告图'),  icon: 'image', img: 'images/services/ad-creative.webp', plan: 'creative-starter', chiclet: true,
           name: L('Ad creative', '广告素材图'),
