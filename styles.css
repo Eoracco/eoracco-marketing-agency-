@@ -629,6 +629,7 @@ body.lang-zh .zoom-h { letter-spacing: 0; }
 .pb-pay:hover { background: #5148e5; transform: translateY(-1px); }
 .pb-pay + .pb-pay-note { margin-bottom: 4px; }
 .pb-pay-note { margin-top: 10px; font-size: 12.5px; color: var(--ink-3); text-align: center; }
+.pb-pay-note a { color: var(--ink-2); text-decoration: underline; }
 #pbPay + .pb-checkout { margin-top: 12px; }
 .paid-banner { position: fixed; z-index: 200; left: 50%; top: calc(var(--nav-h) + 16px); translate: -50% 0; width: min(560px, calc(100% - 32px));
   display: flex; gap: 12px; align-items: flex-start; padding: 16px 18px; border-radius: 18px; background: #fff;

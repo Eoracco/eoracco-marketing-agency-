@@ -769,7 +769,7 @@ function renderSummary() {
   }
   payBox.innerHTML = only
     ? `<a class="pb-pay" href="${PAY_LINKS[items[0].id]}" rel="noopener">${isZh() ? `在线付款订阅${items[0].bundle.zh}` : `Pay online for ${items[0].bundle.name}`}</a>
-       <p class="pb-pay-note">${isZh() ? '通过 Stripe 安全付款。也可以先发送方案，通话后再付。' : 'Secure checkout by Stripe. Or send the plan first and pay after our call.'}</p>`
+       <p class="pb-pay-note">${isZh() ? '通过 Stripe 安全付款，每月自动扣费，可随时取消。订阅即表示同意<a href="terms.html#subscriptions">服务条款</a>。' : 'Secure checkout by Stripe. Billed monthly until you cancel. By subscribing you agree to our <a href="terms.html#subscriptions">terms</a>.'}</p>`
     : (items.length && PAY_LINKS['pkg-growth']
       ? `<p class="pb-pay-note">${isZh() ? '自定义方案会在通话确认后，通过 Stripe 发送账单在线付款。' : 'Custom plans are billed through a Stripe invoice after our call.'}</p>` : '');
   const checkout = document.getElementById('pbCheckout');
