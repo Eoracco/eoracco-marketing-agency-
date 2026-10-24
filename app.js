@@ -125,9 +125,9 @@ const BUNDLES = [
 ];
 // Stripe Payment Links for each package (monthly subscription + one-time setup on the first invoice)
 const PAY_LINKS = {
-  'pkg-essentials': '',
-  'pkg-growth': '',
-  'pkg-full': '',
+  'pkg-essentials': 'https://buy.stripe.com/7sY8wQ3DD1Mz6YDdPp7EQ02',
+  'pkg-growth': 'https://buy.stripe.com/7sYdRa2zz3UH82H26H7EQ03',
+  'pkg-full': 'https://buy.stripe.com/7sY7sM6PPdvh6YD6mX7EQ04',
 };
 const PKG_PERKS = [
   { icon: 'mic', en: 'English and Chinese', zh: '中英双语' },
@@ -782,8 +782,8 @@ function renderSummary() {
   reset.disabled = count === 0;
   reset.textContent = isZh() ? '清空' : 'Clear';
   document.getElementById('pbSecure').innerHTML = `${icon('check', 14)}<span>` +
-    (isZh() ? '现在无需付款，通话确认后开始'
-      : 'No payment now. We confirm on a quick call.') + '</span>';
+    (isZh() ? '发送方案不收费，通话确认后再开始'
+      : 'Sending a plan is free. We confirm details on a quick call.') + '</span>';
 
   document.querySelector('.pb-disclaimer').innerHTML =
     isZh()
