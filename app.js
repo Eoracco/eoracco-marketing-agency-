@@ -45,6 +45,8 @@ const PRICING_SETUP = [
   { id: 'su-tracking',   name: 'Tracking Setup',        zh: '追踪配置',      tier: 'GTM + GA4', price: 300,  group: 'Setup' },
   { id: 'su-seo',        name: 'SEO Foundation',        zh: 'SEO 基础建设',  tier: null,        price: 500,  group: 'Setup' },
   { id: 'su-web-bundle', name: 'Full Web Setup Bundle', zh: '网站配置全包',  tier: null,        price: 900,  group: 'Setup' },
+  { id: 'holiday-promo', name: 'Holiday Promotion Kit', zh: '节日促销活动包', tier: 'per campaign', price: 300, group: 'Setup' },
+  { id: 'menu-poster',   name: 'Menu & Poster Design', zh: '菜单与海报设计', tier: 'per design', price: 150, group: 'Setup' },
 ];
 
 const GROUP_ZH = {
@@ -398,7 +400,7 @@ const itemName = (item) => (isZh() ? item.zh : item.name);
 const TIER_ZH = {
   'Single Platform': '单平台', 'Dual Platform': '双平台', 'Creation Only': '仅内容创作',
   '8 images': '每月 8 张', '16 images': '每月 16 张', 'Starter': '入门版', 'Growth': '进阶版',
-  'per video': '每条', 'per image': '每张', 'up to 15 slides': '最多 15 页',
+  'per video': '每条', 'per image': '每张', 'per campaign': '每次', 'per design': '每款', 'up to 15 slides': '最多 15 页',
   'up to 30 s': '最长 30 秒', 'up to 15 s': '最长 15 秒',
 };
 const tierText = (item) => (isZh() ? (TIER_ZH[item.tier] || item.tier) : item.tier);

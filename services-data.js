@@ -2,6 +2,8 @@
 // Edit `price` here and every page follows.
 (function () {
   const ICONS = {
+    gift:    '<rect x="3" y="8" width="18" height="13" rx="1.5"/><path d="M3 12h18M12 8v13"/><path d="M12 8c-1.5-3-5-3.5-5-1.2C7 8 9.5 8 12 8zM12 8c1.5-3 5-3.5 5-1.2C17 8 14.5 8 12 8z"/>',
+    menu:    '<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',
     target:  '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>',
     share:   '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>',
     mail:    '<rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m3 7 9 6 9-6"/>',
@@ -90,7 +92,7 @@
       key: 'creative', page: 'creative.html', icon: 'brush',
       name: L('Creative', '内容创意'),
       headline: L('Creative made for the feed.', '为信息流而做的内容。'),
-      sub: L('Ad images, short-form video and motion design.', '广告图、短视频和动态设计。'),
+      sub: L('Ad images, holiday promotions, menus and posters, short-form video and motion design.', '广告图、节日促销、菜单海报、短视频和动态设计。'),
       card: { img: 'https://images.unsplash.com/photo-1780642213026-cf15a7676c6b?w=900&h=1300&fit=crop&q=80&auto=format', hero: 'images/services/hero-creative.webp?v=2' },
       services: [
         { id: 'ad-creative', short: L('Ad Images', '广告图'),  icon: 'image', img: 'images/services/ad-creative.webp?v=2', plan: 'creative-starter', chiclet: true,
@@ -100,6 +102,22 @@
                      L('Every size each platform needs', '各平台需要的尺寸全部做齐'),
                      L('English and Chinese versions', '中英文两个版本')],
           price: { from: 400, unit: 'mo' }, note: L('16 images $700/mo · single image $75', '16 张 $700/月 · 单张 $75') },
+        { id: 'holiday-promo', short: L('Holiday Promos', '节日促销'), icon: 'gift', img: 'images/services/holiday-promo.webp', plan: 'holiday-promo', chiclet: true,
+          name: L('Holiday promotion kit', '节日促销活动包'),
+          desc: L('One holiday campaign designed across every channel: Lunar New Year, Mid-Autumn, Thanksgiving, Mother’s Day and more.',
+                  '一个节日活动，所有渠道一起做好：春节、中秋、感恩节、母亲节等。'),
+          includes: [L('Poster and in-store sign files', '海报与店内标牌设计文件'),
+                     L('Instagram and Facebook posts in English and Chinese', 'Instagram 与 Facebook 中英文帖子'),
+                     L('SMS and email copy for your customer list', '发给老客人的短信与邮件文案')],
+          price: { from: 300, unit: 'campaign' }, note: L('Book about three weeks before the holiday', '建议节日前三周预订') },
+        { id: 'menu-poster', short: L('Menus & Posters', '菜单海报'), icon: 'menu', img: 'images/services/menu-poster.webp', plan: 'menu-poster', chiclet: true,
+          name: L('Menu and poster design', '菜单与海报设计'),
+          desc: L('Bilingual menus, table QR stands and in-store posters, delivered as print-ready files.',
+                  '中英双语菜单、桌面扫码点餐牌和店内海报，交付可直接印刷的文件。'),
+          includes: [L('English and Chinese on every design', '每款设计都有中英文'),
+                     L('Print-ready PDF plus a version for screens', '可印刷 PDF，外加电子屏版本'),
+                     L('Two rounds of changes', '两轮修改')],
+          price: { from: 150, unit: 'design' }, note: L('Printing is arranged by you; we send the files', '印刷由店家自行安排，我们交付文件') },
         { id: 'video', short: L('Video', '视频'),  icon: 'film', video: 'video/pom-couch.mp4', poster: 'images/apps/pom-couch.jpg', imgNote: L('A spot we produced for our game Pompolo', '我们为自家游戏 Pompolo 制作的短视频'), plan: 'short-video', chiclet: true,
           name: L('Short-form video', '短视频剪辑'),
           desc: L('Reels, Shorts and TikTok ads edited for vertical screens.', '为竖屏剪辑的 Reels、Shorts 和 TikTok 广告。'),
@@ -159,6 +177,7 @@
   const UNIT = {
     mo: L('/mo', '/月'), video: L(' per video', '/条'), image: L(' per image', '/张'),
     deck: L(' per deck', '/套'), project: L(' per project', '/项'),
+    campaign: L(' per campaign', '/次'), design: L(' per design', '/款'),
   };
 
   // ---------- language ----------
