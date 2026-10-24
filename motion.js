@@ -150,8 +150,12 @@
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
       });
 
-      gsap.from('.brands-label, .client', { y: 26, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.08,
-        scrollTrigger: { trigger: '.brands', start: 'top 85%' } });
+      // laurels: stems draw, then leaves open from the base up, then a gold glint crosses the names
+      const tb = gsap.timeline({ scrollTrigger: { trigger: '.brands', start: 'top 80%' },
+        onComplete: () => { const el = document.querySelector('.brands'); if (el) el.classList.add('is-shine'); } });
+      tb.from('.brands-label, .client-txt', { y: 22, opacity: 0, duration: 1.1, ease: EXPO, stagger: 0.08 }, 0)
+        .fromTo('.laurel .stem', { strokeDasharray: 140, strokeDashoffset: 140 }, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.out' }, 0.15)
+        .from('.laurel .lf', { scale: 0, opacity: 0, duration: 0.5, ease: 'back.out(2)', stagger: { each: 0.025, from: 'start' } }, 0.3);
 
       // Statement: words light up in reading order
       const words = gsap.utils.toArray('#statement .w');

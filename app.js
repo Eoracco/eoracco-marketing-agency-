@@ -288,6 +288,31 @@ function tweenFigure(el, to, render) {
 
 // Service tile → the plan item "Add to plan" selects
 
+// A laurel branch drawn in code: a curved stem with leaves set along it
+function laurel(mirror) {
+  const cx = 74, cy = 66, r = 56, a0 = 112, a1 = 244, n = 9;
+  const rad = (d) => (d * Math.PI) / 180;
+  const pt = (d) => [cx + r * Math.cos(rad(d)), cy + r * Math.sin(rad(d))];
+  const [x0, y0] = pt(a0), [x1, y1] = pt(a1);
+  const leaf = 'M0 0C3.5-4.6 11-5.4 17 0C11 5.4 3.5 4.6 0 0Z';
+  let leaves = '';
+  for (let i = 0; i < n; i++) {
+    const d = a0 + ((a1 - a0) * (i + 0.5)) / n;
+    const [x, y] = pt(d);
+    const tan = (Math.atan2(Math.cos(rad(d)), -Math.sin(rad(d))) * 180) / Math.PI;
+    const sz = 0.78 + 0.32 * Math.sin((Math.PI * (i + 1)) / (n + 1));
+    leaves += `<path class="lf" d="${leaf}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(tan + 38).toFixed(1)}) scale(${sz.toFixed(2)})"/>`;
+    leaves += `<path class="lf" d="${leaf}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(tan - 34).toFixed(1)}) scale(${(sz * 0.92).toFixed(2)})"/>`;
+  }
+  const [tx, ty] = pt(a1 + 4);
+  leaves += `<path class="lf" d="${leaf}" transform="translate(${tx.toFixed(1)} ${ty.toFixed(1)}) rotate(${((Math.atan2(Math.cos(rad(a1)), -Math.sin(rad(a1))) * 180) / Math.PI).toFixed(1)}) scale(.9)"/>`;
+  return `<svg class="laurel ${mirror ? 'laurel--r' : ''}" viewBox="0 0 64 132" aria-hidden="true">
+    <g fill="url(#laurelGold)"${mirror ? ' transform="translate(64 0) scale(-1 1)"' : ''}>
+      <path class="stem" d="M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="url(#laurelGold)" stroke-width="1.6" stroke-linecap="round"/>
+      ${leaves}
+    </g></svg>`;
+}
+
 // ===== RENDER =====
 function renderHero() {
   const h1 = document.querySelector('.hero-display');
@@ -312,7 +337,11 @@ function renderHero() {
   if (bl) bl.innerHTML = t(I18N.brandsLabel) + (isBi() ? `<span class="zh"> · ${I18N.brandsLabel.zh}</span>` : '');
   const br = document.getElementById('brandsRow');
   if (br) {
-    br.innerHTML = I18N.brands.map((b) => `<li class="client"><a href="${b.url}" target="_blank" rel="noopener"><span class="client-mark">${b.name}</span><span class="client-what">${isZh() ? b.zh : b.en}</span></a></li>`).join('');
+    br.innerHTML = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+        <linearGradient id="laurelGold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#f7dc8a"/><stop offset=".45" stop-color="#d4a437"/><stop offset=".7" stop-color="#b07d1c"/><stop offset="1" stop-color="#e9c46a"/>
+        </linearGradient></defs></svg>` +
+      I18N.brands.map((b) => `<li class="client"><a href="${b.url}" target="_blank" rel="noopener">${laurel(false)}<span class="client-txt"><span class="client-mark">${b.name}</span><span class="client-what">${isZh() ? b.zh : b.en}</span></span>${laurel(true)}</a></li>`).join('');
   }
   const idx = document.getElementById('heroIndex');
   if (idx) {

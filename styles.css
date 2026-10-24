@@ -1204,12 +1204,17 @@ body.lang-zh .svc-name { letter-spacing: 0; }
 .brands-label { font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
 .brands-label .zh { letter-spacing: .04em; }
 .brands-row { list-style: none; margin: 26px 0 0; padding: 0; display: flex; justify-content: center; align-items: flex-start; gap: clamp(28px, 8vw, 120px); flex-wrap: wrap; }
-.client a { display: flex; flex-direction: column; align-items: center; gap: 8px; color: inherit; }
-.client-mark { font-size: clamp(24px, 2.6vw, 34px); font-weight: 800; letter-spacing: .2em; margin-right: -.2em; color: #a1a1a6; transition: color .5s var(--ease), transform .5s var(--ease); }
-.client-what { font-size: 12.5px; color: var(--ink-3); opacity: .8; transition: opacity .5s var(--ease), color .5s; }
-.client a:hover .client-mark { color: var(--ink); transform: translateY(-2px); }
-.client a:hover .client-what { opacity: 1; color: var(--ink-2); }
-@media (max-width: 834px) { .brands-row { gap: 22px 36px; } }
+.client a { display: flex; align-items: center; gap: 4px; color: inherit; }
+.client-txt { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 150px; }
+.client-mark { font-size: clamp(20px, 2.1vw, 28px); font-weight: 700; letter-spacing: .2em; margin-right: -.2em; color: var(--ink);
+  background: linear-gradient(100deg, #1d1d1f 0%, #1d1d1f 40%, #c9962c 50%, #1d1d1f 60%, #1d1d1f 100%); background-size: 260% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; background-clip: text; color: transparent; transition: background-position 1.4s var(--ease); }
+.client-what { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.laurel { width: clamp(40px, 4vw, 54px); height: auto; flex: none; overflow: visible; filter: drop-shadow(0 1px 0 rgba(255,255,255,.6)) drop-shadow(0 4px 10px rgba(176,125,28,.18)); }
+.laurel .lf { transform-box: fill-box; transform-origin: 0% 50%; }
+.client a:hover .client-mark, .brands.is-shine .client-mark { background-position: 0% 0; }
+.client a:hover .laurel { filter: drop-shadow(0 1px 0 rgba(255,255,255,.6)) drop-shadow(0 6px 16px rgba(212,164,55,.4)); }
+@media (max-width: 834px) { .brands-row { flex-direction: column; align-items: center; gap: 18px; } .client-txt { min-width: 170px; } }
 
 /* ---------- Apple-style product page (Website development) ---------- */
 .svc.svc--apple { width: 100%; max-width: none; display: block; padding: clamp(90px, 11vw, 150px) 0 clamp(70px, 9vw, 120px); overflow: hidden; }
