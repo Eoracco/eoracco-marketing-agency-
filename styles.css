@@ -1161,8 +1161,12 @@ body.lang-zh .svc-name { letter-spacing: 0; }
 .work-checks { list-style: none; margin: 16px 0 18px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
 .work-checks li { display: flex; gap: 7px; align-items: flex-start; font-size: 13.5px; line-height: 1.35; color: var(--ink); }
 .work-checks svg { color: var(--green); flex: none; margin-top: 2px; }
+.spec-work + .spec-work { margin-top: clamp(48px, 7vw, 96px); }
+.spec-work--flip { grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr); }
+.spec-work--flip .work-win { order: 2; }
 @media (max-width: 834px) {
   .spec-work { grid-template-columns: 1fr; }
+  .spec-work--flip .work-win { order: 0; }
   .work-bar { height: 30px; } .work-url { height: 20px; font-size: 11px; }
 }
 .spec-proof { position: relative; margin: clamp(40px, 6vw, 72px) 0 0; padding: clamp(28px, 4vw, 56px); border-radius: 32px;

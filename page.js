@@ -75,21 +75,21 @@
         ${zhLine(s.name, 'svc-zh')}
         <p class="spec-desc">${tx(s.desc)}${zhLine(s.desc)}</p>
       </div>
-      ${s.work ? `
-      <div class="spec-work">
-        <a class="work-win" href="${s.work.url}" target="_blank" rel="noopener">
-          <div class="work-bar"><i></i><i></i><i></i><span class="work-url"><svg width="10" height="11" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><path d="M2 5V3.6a3 3 0 0 1 6 0V5h.4c.9 0 1.6.7 1.6 1.6v3.8c0 .9-.7 1.6-1.6 1.6H1.6C.7 12 0 11.3 0 10.4V6.6C0 5.7.7 5 1.6 5H2zm1.3 0h3.4V3.6a1.7 1.7 0 0 0-3.4 0V5z"/></svg>${s.work.host}</span></div>
-          <img src="${s.work.img}" alt="${s.work.name} home page" loading="lazy" width="1568" height="737" />
+      ${(s.works || []).map((w, k) => `
+      <div class="spec-work ${k % 2 ? 'spec-work--flip' : ''}">
+        <a class="work-win" href="${w.url}" target="_blank" rel="noopener">
+          <div class="work-bar"><i></i><i></i><i></i><span class="work-url"><svg width="10" height="11" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><path d="M2 5V3.6a3 3 0 0 1 6 0V5h.4c.9 0 1.6.7 1.6 1.6v3.8c0 .9-.7 1.6-1.6 1.6H1.6C.7 12 0 11.3 0 10.4V6.6C0 5.7.7 5 1.6 5H2zm1.3 0h3.4V3.6a1.7 1.7 0 0 0-3.4 0V5z"/></svg>${w.host}</span></div>
+          <img src="${w.img}" alt="${w.name} home page" loading="lazy" width="1568" height="737" />
         </a>
         <div class="work-copy">
-          <span class="work-kicker">${tx(s.work.kicker)}</span>
-          <h3 class="work-name">${s.work.name}</h3>
-          <p class="work-desc">${tx(s.work.desc)}${zhLine(s.work.desc)}</p>
-          <ul class="work-stack">${s.work.stack.map((x) => `<li>${x}</li>`).join('')}</ul>
-          <ul class="work-checks">${s.work.checks.map((x) => `<li>${EO.icon('check', 14, 2.2)}<span>${tx(x)}</span></li>`).join('')}</ul>
-          <a class="link-chevron" href="${s.work.url}" target="_blank" rel="noopener"><span class="btn-label">${tx({ en: 'Visit soplo.dev', zh: '访问 soplo.dev' })}</span></a>
+          <span class="work-kicker">${tx(w.kicker)}</span>
+          <h3 class="work-name">${w.name}</h3>
+          <p class="work-desc">${tx(w.desc)}${zhLine(w.desc)}</p>
+          <ul class="work-stack">${w.stack.map((x) => `<li>${x}</li>`).join('')}</ul>
+          <ul class="work-checks">${w.checks.map((x) => `<li>${EO.icon('check', 14, 2.2)}<span>${tx(x)}</span></li>`).join('')}</ul>
+          <a class="link-chevron" href="${w.url}" target="_blank" rel="noopener"><span class="btn-label">${tx({ en: 'Visit ', zh: '访问 ' })}${w.host}</span></a>
         </div>
-      </div>` : ''}
+      </div>`).join('')}
       <figure class="spec-proof">
         <div class="code-win">
           <div class="code-bar"><i></i><i></i><i></i><span>index.html — &lt;head&gt;</span></div>
@@ -352,14 +352,13 @@
       gsap.utils.toArray('.svc--spec').forEach((sp) => {
         gsap.from(sp.querySelectorAll('.spec-head > *'), { y: 36, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.06,
           scrollTrigger: { trigger: sp, start: 'top 78%' } });
-        const work = sp.querySelector('.spec-work');
-        if (work) {
+        sp.querySelectorAll('.spec-work').forEach((work) => {
           const tw = gsap.timeline({ scrollTrigger: { trigger: work, start: 'top 78%' } });
           tw.from(work.querySelector('.work-win'), { y: 70, rotateX: 8, opacity: 0, duration: 1.5, ease: EXPO, transformPerspective: 1400 }, 0)
             .from(work.querySelectorAll('.work-copy > *'), { y: 26, opacity: 0, duration: 1.1, ease: EXPO, stagger: 0.06 }, 0.25);
           gsap.fromTo(work.querySelector('.work-win img'), { scale: 1.08 }, { scale: 1, ease: 'none',
             scrollTrigger: { trigger: work, start: 'top bottom', end: 'bottom top', scrub: true } });
-        }
+        });
         const lines = sp.querySelectorAll('.code-body .ln');
         const tp = gsap.timeline({ scrollTrigger: { trigger: sp.querySelector('.spec-proof'), start: 'top 75%' } });
         tp.from(sp.querySelector('.code-win'), { y: 60, opacity: 0, duration: 1.3, ease: EXPO }, 0)
