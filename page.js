@@ -48,6 +48,7 @@
 
   // technical spec sheet (websites): proof panel + grouped checklist
   function specHTML(s, planBtn) {
+    const L2 = (en, zh) => tx({ en, zh });
     const T_ = (t) => `<span class="c-t">${t}</span>`, A = (a) => `<span class="c-a">${a}</span>`, V = (v) => `<span class="c-v">"${v}"</span>`;
     const lt = '<span class="c-p">&lt;</span>', gt = '<span class="c-p">&gt;</span>';
     const meta = (k, n, c) => `${lt}${T_('meta')} ${A(k)}=${V(n)} ${A('content')}=${V(c)}${gt}`;
@@ -55,67 +56,102 @@
       `${lt}${T_('title')}${gt}EORACCO — Bilingual Digital Marketing…${lt}/${T_('title')}${gt}`,
       meta('name', 'description', 'Bilingual (English + 中文) …'),
       `${lt}${T_('link')} ${A('rel')}=${V('canonical')} ${A('href')}=${V('https://eoracco.github.io/…/')}${gt}`,
-      '',
       meta('property', 'og:title', 'EORACCO — Bilingual Digital…'),
       meta('property', 'og:image', '…/images/og-image.jpg'),
       meta('property', 'og:image:width', '1200'),
       meta('property', 'og:image:height', '630'),
       meta('property', 'og:locale', 'en_US'),
       meta('name', 'twitter:card', 'summary_large_image'),
-      '',
-      `${lt}${T_('script')} ${A('type')}=${V('application/ld+json')}${gt}`,
-      `  { <span class="c-v">"@type"</span>: <span class="c-v">"ProfessionalService"</span>, … }`,
-      `${lt}/${T_('script')}${gt}`,
+      `${lt}${T_('script')} ${A('type')}=${V('application/ld+json')}${gt}{ <span class="c-v">"@type"</span>: <span class="c-v">"ProfessionalService"</span> }${lt}/${T_('script')}${gt}`,
     ];
+    const lock = '<svg width="9" height="10" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><path d="M2 5V3.6a3 3 0 0 1 6 0V5h.4c.9 0 1.6.7 1.6 1.6v3.8c0 .9-.7 1.6-1.6 1.6H1.6C.7 12 0 11.3 0 10.4V6.6C0 5.7.7 5 1.6 5H2zm1.3 0h3.4V3.6a1.7 1.7 0 0 0-3.4 0V5z"/></svg>';
+    const sys = '<span class="ip-sys"><i class="sig"></i><i class="wifi"></i><i class="bat"></i></span>';
+    // a small demo site, drawn in code, shown on the laptop and the phone
+    const demo = (mobile) => `
+      <div class="demo ${mobile ? 'demo--m' : ''}">
+        <div class="demo-nav"><b>Golden Noodle</b>${mobile ? '<span class="demo-burger"></span>' : '<span>Menu</span><span>Visit</span><span>Catering</span><span class="demo-lang">中文</span><span class="demo-cta">Order pickup</span>'}</div>
+        <div class="demo-hero">
+          <img src="images/reel/beef.webp" alt="" loading="lazy" />
+          <div class="demo-copy"><small>SAN GABRIEL VALLEY</small><h4>Hand-pulled noodles,<br>made to order.</h4><span class="demo-btn">Order pickup</span></div>
+        </div>
+        <div class="demo-row">
+          <figure><span style="background-image:url(images/reel/spicy.webp)"></span><figcaption>Spicy Beef</figcaption></figure>
+          <figure><span style="background-image:url(images/reel/banquet.webp)"></span><figcaption>Family Feast</figcaption></figure>
+          ${mobile ? '' : '<figure><span style="background-image:url(images/reel/beef.webp)"></span><figcaption>Braised Beef</figcaption></figure>'}
+        </div>
+      </div>`;
+    const specs = s.specs.map((g) => `
+      <div class="as-row">
+        <h3 class="as-h">${tx(g.title)}</h3>
+        <ul class="as-list">${g.items.map((x) => `<li>${tx(x)}${zhLine(x)}</li>`).join('')}</ul>
+      </div>`).join('');
+    const works = (s.works || []).map((w) => `
+      <a class="aw-card" href="${w.url}" target="_blank" rel="noopener">
+        <div class="aw-shot"><div class="work-bar"><i></i><i></i><i></i><span class="work-url">${lock}${w.host}</span></div><img src="${w.img}" alt="${w.name}" loading="lazy" /></div>
+        <div class="aw-meta"><b>${w.name}</b><span>${tx(w.desc)}</span><em>${w.stack.join(' · ')}</em></div>
+      </a>`).join('');
     return `
-    <article class="svc svc--spec" id="${s.id}">
-      <div class="spec-head">
-        <span class="svc-icon">${EO.icon(s.icon, 26)}</span>
-        <h2 class="spec-title">${tx(s.name)}</h2>
-        ${zhLine(s.name, 'svc-zh')}
-        <p class="spec-desc">${tx(s.desc)}${zhLine(s.desc)}</p>
-      </div>
-      ${(s.works || []).map((w, k) => `
-      <div class="spec-work ${k % 2 ? 'spec-work--flip' : ''}">
-        <a class="work-win" href="${w.url}" target="_blank" rel="noopener">
-          <div class="work-bar"><i></i><i></i><i></i><span class="work-url"><svg width="10" height="11" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><path d="M2 5V3.6a3 3 0 0 1 6 0V5h.4c.9 0 1.6.7 1.6 1.6v3.8c0 .9-.7 1.6-1.6 1.6H1.6C.7 12 0 11.3 0 10.4V6.6C0 5.7.7 5 1.6 5H2zm1.3 0h3.4V3.6a1.7 1.7 0 0 0-3.4 0V5z"/></svg>${w.host}</span></div>
-          <img src="${w.img}" alt="${w.name} home page" loading="lazy" width="1568" height="737" />
-        </a>
-        <div class="work-copy">
-          <span class="work-kicker">${tx(w.kicker)}</span>
-          <h3 class="work-name">${w.name}</h3>
-          <p class="work-desc">${tx(w.desc)}${zhLine(w.desc)}</p>
-          <ul class="work-stack">${w.stack.map((x) => `<li>${x}</li>`).join('')}</ul>
-          <ul class="work-checks">${w.checks.map((x) => `<li>${EO.icon('check', 14, 2.2)}<span>${tx(x)}</span></li>`).join('')}</ul>
-          <a class="link-chevron" href="${w.url}" target="_blank" rel="noopener"><span class="btn-label">${tx({ en: 'Visit ', zh: '访问 ' })}${w.host}</span></a>
-        </div>
-      </div>`).join('')}
-      <figure class="spec-proof">
-        <div class="code-win">
-          <div class="code-bar"><i></i><i></i><i></i><span>index.html — &lt;head&gt;</span></div>
-          <pre class="code-body">${code.map((l, k) => `<span class="ln"><em>${k + 1}</em>${l || ' '}</span>`).join('')}</pre>
-        </div>
-        <div class="imsg">
-          <div class="imsg-time">${tx({ en: 'Today 9:41 AM', zh: '今天 上午 9:41' })}</div>
-          <div class="imsg-card">
-            <img src="images/og-image.jpg" alt="" loading="lazy" width="1200" height="630" />
-            <div class="imsg-meta"><b>EORACCO — Bilingual Digital Marketing in Los Angeles</b><span>eoracco.github.io</span></div>
+    <article class="svc svc--apple" id="${s.id}">
+      <header class="ap-head">
+        <p class="ap-eyebrow">${tx(s.name)}</p>
+        <h2 class="ap-title">${L2('Fast. Findable.<br>Shareable.', '打开快。搜得到。<br>分享好看。')}</h2>
+        <p class="ap-sub">${tx(s.desc)}${zhLine(s.desc)}</p>
+        <div class="ap-cta"><p class="svc-price">${EO.priceText(s.price)}</p><div class="svc-actions">${planBtn}</div></div>
+      </header>
+
+      <div class="ap-stage" aria-hidden="true">
+        <div class="mbp">
+          <div class="mbp-screen"><span class="mbp-notch"></span>
+            <div class="mbp-browser"><div class="work-bar"><i></i><i></i><i></i><span class="work-url">${lock}goldennoodle.example</span></div>${demo(false)}</div>
           </div>
-          <div class="imsg-status">${tx({ en: 'Delivered', zh: '已送达' })}</div>
+          <div class="mbp-base"><span></span></div>
         </div>
-        ${s.proofNote ? `<figcaption>${tx(s.proofNote)}</figcaption>` : ''}
-      </figure>
-      <div class="spec-grid">
-        ${s.specs.map((g) => `
-        <section class="spec-card">
-          <h3><span class="spec-ic">${EO.icon(g.icon, 18, 1.8)}</span>${tx(g.title)}</h3>
-          <ul>${g.items.map((x) => `<li>${tx(x)}${zhLine(x)}</li>`).join('')}</ul>
-        </section>`).join('')}
+        <div class="ip">
+          <div class="ip-screen"><span class="ip-island"></span><div class="ip-bar"><span>9:41</span>${sys}</div>${demo(true)}</div>
+        </div>
       </div>
-      <div class="spec-buy">
-        <p class="svc-price">${EO.priceText(s.price)}${s.note ? `<span class="svc-note">${tx(s.note)}</span>` : ''}</p>
-        <div class="svc-actions">${planBtn}</div>
-      </div>
+      <p class="ap-caption">${L2('A sample site, built for every screen. One codebase, tested on iPhone, Android and desktop.', '示例网站：一套代码适配所有屏幕，在 iPhone、Android 和电脑上实测。')}</p>
+
+      <section class="ap-band ap-speed">
+        <h3 class="ap-h">${L2('Built to Google’s “good” line.', '按 Google 的“良好”标准开发。')}</h3>
+        <p class="ap-p">${L2('Core Web Vitals are how Google measures real-world speed. These are the thresholds we build every page to.', 'Core Web Vitals 是 Google 衡量真实加载体验的指标，我们每个页面都按这三条标准开发。')}</p>
+        <div class="ap-metrics">
+          <div class="ap-metric"><span class="ap-num"><i data-to="2.5" data-dec="1">0</i><small>s</small></span><b>LCP</b><span>${L2('Main content shows in under 2.5 seconds', '主要内容 2.5 秒内显示')}</span></div>
+          <div class="ap-metric"><span class="ap-num"><i data-to="200" data-dec="0">0</i><small>ms</small></span><b>INP</b><span>${L2('Taps respond in under 200 milliseconds', '点击 200 毫秒内响应')}</span></div>
+          <div class="ap-metric"><span class="ap-num"><i data-to="0.1" data-dec="1">0</i></span><b>CLS</b><span>${L2('Layout stays put while it loads', '加载时页面不乱跳')}</span></div>
+        </div>
+      </section>
+
+      <section class="ap-band ap-share">
+        <div class="ap-share-copy">
+          <h3 class="ap-h">${L2('Looks right<br>wherever it’s shared.', '无论分享到哪里，<br>都好看。')}</h3>
+          <p class="ap-p">${L2('Open Graph and X card tags give every page its own title, description and 1200 × 630 image, so a link in iMessage, WhatsApp, Facebook or LinkedIn becomes a proper preview.', '用 Open Graph 和 X 卡片标签，给每个页面设好标题、描述和 1200 × 630 的分享图。链接发到 iMessage、WhatsApp、Facebook 或 LinkedIn，都会显示完整的预览卡片。')}</p>
+          <div class="code-win ap-code"><div class="code-bar"><i></i><i></i><i></i><span>index.html — &lt;head&gt;</span></div>
+            <pre class="code-body">${code.map((l, k) => `<span class="ln"><em>${k + 1}</em>${l}</span>`).join('')}</pre></div>
+        </div>
+        <div class="ip ip--msg">
+          <div class="ip-screen"><span class="ip-island"></span><div class="ip-bar"><span>9:41</span>${sys}</div>
+            <div class="msg-head"><span class="msg-av">E</span><b>Emily</b></div>
+            <div class="msg-body">
+              <span class="msg-in">${L2('Who did your website?', '你们网站谁做的？')}</span>
+              <div class="msg-link"><img src="images/og-image.jpg" alt="" loading="lazy" /><div><b>EORACCO — Bilingual Digital Marketing in Los Angeles</b><span>eoracco.github.io</span></div></div>
+              <span class="msg-meta">${L2('Delivered', '已送达')}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ap-band ap-specs">
+        <h3 class="ap-h">${L2('Tech specs.', '技术规格。')}</h3>
+        <div class="as-table">${specs}</div>
+      </section>
+
+      ${works ? `<section class="ap-band ap-work">
+        <h3 class="ap-h">${L2('Recent builds.', '近期作品。')}</h3>
+        <div class="aw-grid">${works}</div>
+      </section>` : ''}
+
+      <div class="ap-end"><p class="svc-price">${EO.priceText(s.price)}${s.note ? `<span class="svc-note">${tx(s.note)}</span>` : ''}</p><div class="svc-actions">${planBtn}</div></div>
     </article>`;
   }
 
@@ -354,26 +390,41 @@
         gsap.from(show.querySelectorAll('.show-ctrl, .show-foot > *, .show-note'), { y: 30, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.08,
           scrollTrigger: { trigger: show.querySelector('.show-ctrl'), start: 'top 90%' } });
       });
-      gsap.utils.toArray('.svc--spec').forEach((sp) => {
-        gsap.from(sp.querySelectorAll('.spec-head > *'), { y: 36, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.06,
+      gsap.utils.toArray('.svc--apple').forEach((sp) => {
+        gsap.from(sp.querySelectorAll('.ap-head > *'), { y: 40, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.07,
           scrollTrigger: { trigger: sp, start: 'top 78%' } });
-        sp.querySelectorAll('.spec-work').forEach((work) => {
-          const tw = gsap.timeline({ scrollTrigger: { trigger: work, start: 'top 78%' } });
-          tw.from(work.querySelector('.work-win'), { y: 70, rotateX: 8, opacity: 0, duration: 1.5, ease: EXPO, transformPerspective: 1400 }, 0)
-            .from(work.querySelectorAll('.work-copy > *'), { y: 26, opacity: 0, duration: 1.1, ease: EXPO, stagger: 0.06 }, 0.25);
-          gsap.fromTo(work.querySelector('.work-win img'), { scale: 1.08 }, { scale: 1, ease: 'none',
-            scrollTrigger: { trigger: work, start: 'top bottom', end: 'bottom top', scrub: true } });
+        // devices: laptop rises and settles, phone slides in from the right
+        const stage = sp.querySelector('.ap-stage');
+        gsap.fromTo(stage.querySelector('.mbp'), { y: 120, scale: 0.88, opacity: 0.4 }, { y: 0, scale: 1, opacity: 1, ease: 'none',
+          scrollTrigger: { trigger: stage, start: 'top 95%', end: 'top 30%', scrub: 0.8 } });
+        gsap.fromTo(stage.querySelector('.ip'), { xPercent: 60, y: 80, opacity: 0 }, { xPercent: 0, y: 0, opacity: 1, ease: 'none',
+          scrollTrigger: { trigger: stage, start: 'top 70%', end: 'top 20%', scrub: 0.8 } });
+        gsap.fromTo(stage.querySelectorAll('.mbp .demo-hero img, .ip .demo-hero img'), { scale: 1.15 }, { scale: 1, ease: 'none',
+          scrollTrigger: { trigger: stage, start: 'top bottom', end: 'bottom top', scrub: true } });
+        // metrics count up
+        sp.querySelectorAll('.ap-num i').forEach((el) => {
+          const to = parseFloat(el.dataset.to), dec = parseInt(el.dataset.dec, 10) || 0, o = { v: 0 };
+          gsap.to(o, { v: to, duration: 1.8, ease: 'power3.out', onUpdate: () => { el.textContent = o.v.toFixed(dec); },
+            scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
         });
-        const lines = sp.querySelectorAll('.code-body .ln');
-        const tp = gsap.timeline({ scrollTrigger: { trigger: sp.querySelector('.spec-proof'), start: 'top 75%' } });
-        tp.from(sp.querySelector('.code-win'), { y: 60, opacity: 0, duration: 1.3, ease: EXPO }, 0)
-          .from(lines, { opacity: 0, x: -10, duration: 0.5, ease: 'power2.out', stagger: 0.06 }, 0.35)
-          .from(sp.querySelector('.imsg-card'), { y: 40, scale: 0.94, opacity: 0, duration: 1.2, ease: EXPO }, 0.9)
-          .from(sp.querySelectorAll('.imsg-time, .imsg-status'), { opacity: 0, duration: 0.8 }, 1.3);
-        gsap.from(sp.querySelectorAll('.spec-card'), { y: 50, opacity: 0, duration: 1.2, ease: EXPO, stagger: 0.07,
-          scrollTrigger: { trigger: sp.querySelector('.spec-grid'), start: 'top 82%' } });
+        gsap.from(sp.querySelectorAll('.ap-metric'), { y: 50, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.1,
+          scrollTrigger: { trigger: sp.querySelector('.ap-metrics'), start: 'top 85%' } });
+        // share: code lines type in, then the preview arrives in Messages
+        const share = sp.querySelector('.ap-share');
+        const ts = gsap.timeline({ scrollTrigger: { trigger: share, start: 'top 70%' } });
+        ts.from(share.querySelectorAll('.ap-share-copy > .ap-h, .ap-share-copy > .ap-p'), { y: 30, opacity: 0, duration: 1.1, ease: EXPO, stagger: 0.08 }, 0)
+          .from(share.querySelector('.ap-code'), { y: 40, opacity: 0, duration: 1.2, ease: EXPO }, 0.2)
+          .from(share.querySelectorAll('.ap-code .ln'), { opacity: 0, x: -8, duration: 0.4, stagger: 0.07 }, 0.5)
+          .from(share.querySelector('.ip--msg'), { y: 60, opacity: 0, duration: 1.3, ease: EXPO }, 0.3)
+          .from(share.querySelector('.msg-in'), { scale: 0.6, opacity: 0, transformOrigin: '0% 100%', duration: 0.6, ease: 'back.out(1.6)' }, 1.0)
+          .from(share.querySelector('.msg-link'), { scale: 0.6, opacity: 0, transformOrigin: '100% 100%', duration: 0.8, ease: 'back.out(1.4)' }, 1.5)
+          .from(share.querySelector('.msg-meta'), { opacity: 0, duration: 0.4 }, 2.1);
+        gsap.from(sp.querySelectorAll('.as-row'), { y: 30, opacity: 0, duration: 1, ease: EXPO, stagger: 0.06,
+          scrollTrigger: { trigger: sp.querySelector('.as-table'), start: 'top 85%' } });
+        gsap.from(sp.querySelectorAll('.aw-card'), { y: 60, opacity: 0, duration: 1.3, ease: EXPO, stagger: 0.12,
+          scrollTrigger: { trigger: sp.querySelector('.aw-grid') || sp, start: 'top 85%' } });
       });
-      gsap.utils.toArray('.svc:not(.svc--show):not(.svc--spec)').forEach((svc) => {
+      gsap.utils.toArray('.svc:not(.svc--show):not(.svc--spec):not(.svc--apple)').forEach((svc) => {
         const copy = svc.querySelectorAll('.svc-copy > *');
         const media = svc.querySelector('.svc-media');
         const t2 = gsap.timeline({ scrollTrigger: { trigger: svc, start: 'top 80%' } });
