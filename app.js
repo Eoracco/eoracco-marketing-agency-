@@ -7,14 +7,14 @@ let LANG = window.EO ? window.EO.lang : 'bi';
 // ===== DATA =====
 const WHY = [
   { icon: 'globe',    title: 'Bilingual EN + CN',      zh: '中英双语服务',
-    desc: 'Native fluency in both English and Mandarin — across copy, calls, and creative.',
-    desc_zh: '英语与普通话双母语水准，文案、通话、素材全覆盖。' },
+    desc: 'English and Mandarin across copy, calls and creative.',
+    desc_zh: '英语与普通话，文案、通话、素材都能做。' },
   { icon: 'sparkles', title: 'AI-Powered Content',    zh: 'AI 内容系统',
     desc: 'A modern stack of AI-assisted ad creative, copy, and voice agents.',
     desc_zh: '以 AI 辅助的广告素材、文案与语音客服体系。' },
-  { icon: 'pin',      title: 'SGV / SoCal Expertise', zh: '南加州本地专家',
-    desc: 'Boots-on-the-ground knowledge of the San Gabriel Valley & Greater LA market.',
-    desc_zh: '深耕圣盖博谷与大洛杉矶市场的本地经验。' },
+  { icon: 'pin',      title: 'Local to SGV / LA', zh: '洛杉矶本地',
+    desc: 'Based in Los Angeles and familiar with the San Gabriel Valley market.',
+    desc_zh: '立足洛杉矶，熟悉圣盖博谷一带的市场。' },
   { icon: 'layers',   title: 'One Contact, Full Stack', zh: '一个窗口，全套服务',
     desc: 'Ads, social, creative, web, AI voice and apps, coordinated through one point of contact.',
     desc_zh: '广告、社媒、内容、网站、AI 语音与 App，由一个窗口统一对接。' },
@@ -130,8 +130,8 @@ const I18N = {
     },
   },
   statement: {
-    en: 'Most agencies speak one language and run one channel. We do both — fluently, locally, end to end.',
-    zh: '大多数机构只说一种语言、只做一个渠道。我们两者兼顾：流利、本地、从头到尾。',
+    en: 'Two languages and every channel, handled by one team from start to finish.',
+    zh: '中英两种语言、多个渠道，由同一个团队从头跟到尾。',
   },
   servicesHint: {
     en: 'Marketing, creative and apps. Open any group to see every service and price.',
