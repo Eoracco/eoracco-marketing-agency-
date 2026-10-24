@@ -1072,7 +1072,7 @@ html.no-scroll, html.no-scroll body { overflow: hidden; }
 .localnav-links a.is-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: var(--amber); }
 
 .cat-hero { padding-top: clamp(56px, 9vh, 110px); text-align: center; overflow: hidden; }
-.cat.hero-inner { display: flex; flex-direction: column; align-items: center; transform-origin: 50% 30%; }
+.cat-hero-inner { display: flex; flex-direction: column; align-items: center; }
 .cat-kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600; color: var(--ink-2); }
 .cat-kicker-icon { color: var(--amber-deep); display: grid; }
 .cat-title {

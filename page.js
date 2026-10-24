@@ -261,7 +261,6 @@
 
     <section class="cat-hero">
       <div class="container cat-hero-inner">
-        <p class="cat-kicker"><span class="cat-kicker-icon">${EO.icon(cat.icon, 22)}</span>${tx(catName)}${EO.isBi() ? ` · ${catName.zh}` : ''}</p>
         <h1 class="cat-title">${tx(cat.headline)}</h1>
         ${EO.isBi() ? `<p class="cat-title-zh">${cat.headline.zh}</p>` : ''}
         <p class="cat-sub">${tx(cat.sub)}${zhLine(cat.sub)}</p>
@@ -329,8 +328,7 @@
     const EXPO = 'expo.out';
     ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: EXPO } });
-      if (intro) tl.from('.cat-kicker', { y: 16, opacity: 0, duration: 1 }, 0.05)
-        .from('.cat-title', { y: 60, opacity: 0, duration: 1.3 }, 0.12)
+      if (intro) tl.from('.cat-title', { y: 60, opacity: 0, duration: 1.3 }, 0.12)
         .from('.cat-title-zh, .cat-sub', { y: 24, opacity: 0, duration: 1.1, stagger: 0.06 }, 0.35)
         .from('.cat-hero .cat-ctas > *', { y: 18, opacity: 0, duration: 1, stagger: 0.08 }, 0.5)
         .from('.cat-visual', { y: 80, opacity: 0, scale: 0.94, duration: 1.6 }, 0.45);
