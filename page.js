@@ -55,7 +55,7 @@
     const code = [
       `${lt}${T_('title')}${gt}EORACCO — Bilingual Digital Marketing…${lt}/${T_('title')}${gt}`,
       meta('name', 'description', 'Bilingual (English + 中文) …'),
-      `${lt}${T_('link')} ${A('rel')}=${V('canonical')} ${A('href')}=${V('https://eoracco.github.io/…/')}${gt}`,
+      `${lt}${T_('link')} ${A('rel')}=${V('canonical')} ${A('href')}=${V('https://eoracco.com/')}${gt}`,
       meta('property', 'og:title', 'EORACCO — Bilingual Digital…'),
       meta('property', 'og:image', '…/images/og-image.jpg'),
       meta('property', 'og:image:width', '1200'),
@@ -137,7 +137,7 @@
             <div class="msg-head"><span class="msg-av">E</span><b>Emily</b></div>
             <div class="msg-body">
               <span class="msg-in">${L2('Who did your website?', '你们网站谁做的？')}</span>
-              <div class="msg-link"><img src="images/og-image.jpg" alt="" loading="lazy" /><div><b>EORACCO — Bilingual Digital Marketing in Los Angeles</b><span>eoracco.github.io</span></div></div>
+              <div class="msg-link"><img src="images/og-image.jpg" alt="" loading="lazy" /><div><b>EORACCO — Bilingual Digital Marketing in Los Angeles</b><span>eoracco.com</span></div></div>
               <span class="msg-meta">${L2('Delivered', '已送达')}</span>
             </div>
           </div>
