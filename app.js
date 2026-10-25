@@ -897,7 +897,10 @@ function wirePricing() {
 // it emails the inquiry to the owner and logs it in a Google Sheet.
 const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzx78Q2Y21mVupBIMDqPxiqWJCRkzESUI-8NEMmzZtRkxem00wIsdDbH_jtpQPm_TNa/exec';
 const CONTACT_EMAIL = 'eoraccoofficial@gmail.com';
+// never put visitor-typed text into the page as HTML
+const escapeHTML = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 function wireContact() {
+  const formOpenedAt = Date.now();
   const form = document.getElementById('contactForm');
   const submitBtn = document.getElementById('contactSubmit');
   const wrap = document.getElementById('contactFormWrap');
@@ -935,7 +938,7 @@ function wireContact() {
     }
     errBox.hidden = true;
     submitBtn.dataset.sending = '1';
-    const firstName = form.name.value.trim().split(' ')[0];
+    const firstName = escapeHTML(form.name.value.trim().split(' ')[0].slice(0, 40));
     const hadPlan = PLAN && PLAN.ids.length;
     const label = submitBtn.innerHTML;
     submitBtn.textContent = isZh() ? '正在发送…' : 'Sending…';
@@ -955,6 +958,7 @@ function wireContact() {
       plan: planText,
       lang: LANG,
       website: form.website ? form.website.value : '',   // honeypot: real people leave it empty
+      t: String(Date.now() - formOpenedAt),             // bots submit instantly
     });
 
     const done = () => {
