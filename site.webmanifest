@@ -1,0 +1,14 @@
+{
+  "name": "EORACCO",
+  "short_name": "EORACCO",
+  "description": "Bilingual marketing, creative, websites and iOS apps in Los Angeles.",
+  "start_url": "/eoracco-marketing-agency-/",
+  "scope": "/eoracco-marketing-agency-/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

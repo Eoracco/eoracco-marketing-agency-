@@ -322,8 +322,16 @@
     </section>`;
   }
 
+  const BASE_TITLE = document.title;
+  const ZH_TITLE = {
+    marketing: '洛杉矶双语营销：广告投放、社媒运营、SEO · EORACCO',
+    creative: '广告创意、短视频与切片剪辑 · EORACCO',
+    apps: '网站开发与 iOS App 开发 · EORACCO',
+  };
+
   function render() {
-    document.title = `${tx(catName)} · EORACCO`;
+    // English keeps the SEO title written in the HTML; Chinese gets its own.
+    document.title = EO.isZh() ? (ZH_TITLE[document.body.dataset.page] || `${tx(catName)} · EORACCO`) : BASE_TITLE;
     main.innerHTML = `
     <div class="localnav" id="localnav">
       <div class="localnav-inner">

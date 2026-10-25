@@ -1,3 +1,4 @@
+const HOME_TITLE = document.title;
 // EORACCO Landing Page — vanilla JS
 
 // ===== LANGUAGE STATE =====
@@ -1017,6 +1018,7 @@ function applyStatic() {
   if (ch2) ch2.innerHTML = t(I18N.contactH2);
 
   document.documentElement.lang = isZh() ? 'zh-CN' : 'en';
+  document.title = isZh() ? 'EORACCO — 洛杉矶双语数字营销工作室' : HOME_TITLE;
 }
 
 function setLang(lang) {
