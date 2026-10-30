@@ -764,6 +764,10 @@ body.lang-zh .pb-summary-title .zh { font-size: 22px; color: var(--ink); font-we
 .pb-total-row--grand { margin-top: 10px; padding-top: 16px; border-top: 1px solid var(--line); }
 .pb-total-row--grand .pb-total-label { color: var(--ink); font-weight: 600; }
 .pb-total-row--grand .pb-total-val { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; }
+.pb-total-row--grand .pb-total-val .unit { font-size: 0.5em; font-weight: 500; letter-spacing: 0; margin-left: 2px; }
+.pb-total-row--note { font-size: 13px; }
+.pb-total-row--note .pb-total-label, .pb-total-row--note .pb-total-val { color: var(--ink-3); font-weight: 500; }
+.pb-total-row[hidden] { display: none; }
 
 .pb-checkout {
   margin-top: 22px; width: 100%; border: 0; border-radius: 980px; padding: 15px 20px;

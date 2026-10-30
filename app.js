@@ -798,19 +798,24 @@ function renderSummary() {
     }).join('')}</ul>${saved ? `<p class="pb-saved">${icon('check', 14)}${isZh() ? `套餐每月为您节省 ${fmt(saved)}` : `Package saves you ${fmt(saved)}/mo`}</p>` : ''}`;
   }
 
+  // The headline is what a client pays each month. The one-time setup sits above it, and the
+  // first-year figure is a small reference line. A plan with only one-time work shows that total instead.
   const L = {
-    monthly: { en: 'Monthly', bi: 'Monthly <span class="zh">月费</span>', zh: '每月费用' },
-    setup: { en: 'One-time', bi: 'One-time <span class="zh">一次性费用</span>', zh: '一次性费用' },
-    grand: { en: 'First-year estimate', bi: 'First-year estimate <span class="zh">首年预估</span>', zh: '首年预估' },
+    monthly: { en: 'Monthly', bi: 'Monthly <span class="zh">每月</span>', zh: '每月费用' },
+    total: { en: 'Total', bi: 'Total <span class="zh">合计</span>', zh: '合计' },
+    setup: { en: 'One-time setup', bi: 'One-time setup <span class="zh">一次性费用</span>', zh: '一次性费用' },
+    year: { en: 'First year, all in', bi: 'First year, all in <span class="zh">首年合计</span>', zh: '首年合计' },
   };
   const per = `<span class="unit">${isZh() ? '/月' : '/mo'}</span>`;
-  tweenFigure(document.querySelector('#pbMonthlyTotal'), monthly, (v) => fmt(v) + per);
+  const oneOffOnly = monthly === 0 && setup > 0;
+  tweenFigure(document.querySelector('#pbMonthlyTotal'), oneOffOnly ? setup : monthly, (v) => fmt(v) + (oneOffOnly ? '' : per));
   tweenFigure(document.querySelector('#pbSetupTotal'), setup, fmt);
   tweenFigure(document.querySelector('#pbFirstYear'), firstYear, fmt);
-  const labels = document.querySelectorAll('.pb-total-row .pb-total-label');
-  labels[0].innerHTML = t(L.monthly);
-  labels[1].innerHTML = t(L.setup);
-  labels[2].innerHTML = t(L.grand);
+  document.querySelector('#pbMonthlyRow .pb-total-label').innerHTML = t(oneOffOnly ? L.total : L.monthly);
+  document.querySelector('#pbSetupRow .pb-total-label').innerHTML = t(L.setup);
+  document.querySelector('#pbYearRow .pb-total-label').innerHTML = t(L.year);
+  document.getElementById('pbSetupRow').hidden = oneOffOnly || setup === 0;
+  document.getElementById('pbYearRow').hidden = oneOffOnly || monthly === 0;
 
   const bar = document.getElementById('pbBar');
   if (bar) {
