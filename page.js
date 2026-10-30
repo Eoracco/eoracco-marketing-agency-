@@ -193,7 +193,7 @@
     const arrow = (d) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
     const pad = (k) => String(k).padStart(2, '0');
     return `
-    <article class="svc svc--show" id="${s.id}">
+    <article class="svc svc--show${s.theme === 'light' ? ' svc--show-light' : ''}" id="${s.id}">
       ${s.videos.map((v, k) => `<span class="trio-amb" data-k="${k}" style="background-image:url(${v.poster})"></span>`).join('')}
       <span class="show-grain" aria-hidden="true"></span>
       <div class="show-head">
