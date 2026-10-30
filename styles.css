@@ -768,6 +768,10 @@ body.lang-zh .pb-summary-title .zh { font-size: 22px; color: var(--ink); font-we
 .pb-total-row--note { font-size: 13px; }
 .pb-total-row--note .pb-total-label, .pb-total-row--note .pb-total-val { color: var(--ink-3); font-weight: 500; }
 .pb-total-row[hidden] { display: none; }
+.pb-bill { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 16px; padding: 4px; border-radius: 980px; background: rgba(0, 0, 0, 0.05); }
+.pb-bill-btn { border: 0; border-radius: 980px; padding: 8px 12px; background: transparent; color: var(--ink-2); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .25s, color .25s, box-shadow .25s; }
+.pb-bill-btn:hover { color: var(--ink); }
+.pb-bill-btn.is-on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04); }
 
 .pb-checkout {
   margin-top: 22px; width: 100%; border: 0; border-radius: 980px; padding: 15px 20px;

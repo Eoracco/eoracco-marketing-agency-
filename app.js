@@ -580,6 +580,10 @@ function renderSteps() {
 
 // ===== PRICING PLAN BUILDER =====
 const selected = new Set();
+// Show prices per month or per year (the plan card toggle). Billing itself stays monthly.
+let BILL = 'mo';
+const perUnit = () => (BILL === 'yr' ? (isZh() ? '/年' : '/yr') : (isZh() ? '/月' : '/mo'));
+const asBill = (n) => (BILL === 'yr' ? n * 12 : n);
 const ALL_ITEMS = {};
 [...PRICING_MONTHLY, ...PRICING_SETUP].forEach((i) => { ALL_ITEMS[i.id] = i; });
 const listPrice = (b) => b.items.reduce((sum, id) => sum + ALL_ITEMS[id].price, 0);
@@ -689,7 +693,7 @@ function renderRows() {
   document.getElementById('byoTitle').innerHTML = isZh() ? '或自由组合' : `Or build your own${isBi() ? '<span class="zh"> 或自由组合</span>' : ''}`;
   document.getElementById('byoHelper').innerHTML = isZh() ? '每项服务选一个档位，不需要的保持「不选」。'
     : `Pick one level for each service, or leave it off.${isBi() ? '<span class="zh"> 每项服务选一个档位，不需要的保持「不选」。</span>' : ''}`;
-  const per = isZh() ? '/月' : '/mo';
+  const per = perUnit();
   document.getElementById('pbMonthly').innerHTML = SERVICE_ROWS.map((r) => {
     const cov = coveredBy(r.opts[0][0]);
     const cur = r.opts.find(([id]) => selected.has(id));
@@ -701,7 +705,7 @@ function renderRows() {
         ? `<span class="svc-row-inc">${icon('check', 14)}${isZh() ? `已含在${cov.zh}` : `Included in ${cov.name}`}</span>`
         : `<div class="seg" role="group" aria-label="${L3(r.name)}">
             <button type="button" class="seg-btn ${offOn ? 'is-on' : ''}" data-off="${r.key}" aria-pressed="${offOn}">${isZh() ? '不选' : 'Off'}</button>
-            ${r.opts.map(([id, lab]) => `<button type="button" class="seg-btn ${selected.has(id) ? 'is-on' : ''}" data-id="${id}" aria-pressed="${selected.has(id)}"><span>${r.opts.length > 1 ? L3(lab) : (isZh() ? '加入' : 'Add')}</span><em>${fmt(ALL_ITEMS[id].price)}${per}</em></button>`).join('')}
+            ${r.opts.map(([id, lab]) => `<button type="button" class="seg-btn ${selected.has(id) ? 'is-on' : ''}" data-id="${id}" aria-pressed="${selected.has(id)}"><span>${r.opts.length > 1 ? L3(lab) : (isZh() ? '加入' : 'Add')}</span><em>${fmt(asBill(ALL_ITEMS[id].price))}${per}</em></button>`).join('')}
           </div>`}
     </div>`;
   }).join('');
@@ -786,12 +790,12 @@ function renderSummary() {
       const tier = it.bundle
         ? `<span class="tier">${it.bundle.items.map((id) => itemName(ALL_ITEMS[id])).join(' · ')}</span><span class="tier">${isZh() ? `另含一次性设置费 ${fmt(bundleSetup(it.bundle))}` : `Plus ${fmt(bundleSetup(it.bundle))} one-time setup`}</span>`
         : (it.tier ? `<span class="tier">${tierText(it)}</span>` : '');
-      const unit = isMonthly(it.id) ? `<span class="unit">${isZh() ? '/月' : '/mo'}</span>` : '';
+      const unit = isMonthly(it.id) ? `<span class="unit">${perUnit()}</span>` : '';
       return `
         <li class="pb-cart-item">
           <div class="pb-cart-name">${itemName(it)}${tier}</div>
           <div class="pb-cart-right">
-            <span class="pb-cart-price">${fmt(it.price)}${unit}</span>
+            <span class="pb-cart-price">${fmt(isMonthly(it.id) ? asBill(it.price) : it.price)}${unit}</span>
             <button type="button" class="pb-cart-remove" data-remove="${it.id}" aria-label="Remove ${it.name}">${isZh() ? '移除' : 'Remove'}</button>
           </div>
         </li>`;
@@ -802,18 +806,29 @@ function renderSummary() {
   // first-year figure is a small reference line. A plan with only one-time work shows that total instead.
   const L = {
     monthly: { en: 'Monthly', bi: 'Monthly <span class="zh">每月</span>', zh: '每月费用' },
+    yearly: { en: 'Yearly', bi: 'Yearly <span class="zh">每年</span>', zh: '每年费用' },
+    perMonth: { en: 'Per month', bi: 'Per month <span class="zh">折合每月</span>', zh: '折合每月' },
     total: { en: 'Total', bi: 'Total <span class="zh">合计</span>', zh: '合计' },
     setup: { en: 'One-time setup', bi: 'One-time setup <span class="zh">一次性费用</span>', zh: '一次性费用' },
     year: { en: 'First year, all in', bi: 'First year, all in <span class="zh">首年合计</span>', zh: '首年合计' },
   };
-  const per = `<span class="unit">${isZh() ? '/月' : '/mo'}</span>`;
+  const per = `<span class="unit">${perUnit()}</span>`;
+  const perMo = `<span class="unit">${isZh() ? '/月' : '/mo'}</span>`;
   const oneOffOnly = monthly === 0 && setup > 0;
-  tweenFigure(document.querySelector('#pbMonthlyTotal'), oneOffOnly ? setup : monthly, (v) => fmt(v) + (oneOffOnly ? '' : per));
+  const yr = BILL === 'yr';
+  tweenFigure(document.querySelector('#pbMonthlyTotal'), oneOffOnly ? setup : asBill(monthly), (v) => fmt(v) + (oneOffOnly ? '' : per));
   tweenFigure(document.querySelector('#pbSetupTotal'), setup, fmt);
-  tweenFigure(document.querySelector('#pbFirstYear'), firstYear, fmt);
-  document.querySelector('#pbMonthlyRow .pb-total-label').innerHTML = t(oneOffOnly ? L.total : L.monthly);
+  // The small reference line: the first-year total when showing monthly, the monthly price when showing yearly.
+  tweenFigure(document.querySelector('#pbFirstYear'), yr ? monthly : firstYear, (v) => fmt(v) + (yr ? perMo : ''));
+  document.querySelector('#pbMonthlyRow .pb-total-label').innerHTML = t(oneOffOnly ? L.total : yr ? L.yearly : L.monthly);
   document.querySelector('#pbSetupRow .pb-total-label').innerHTML = t(L.setup);
-  document.querySelector('#pbYearRow .pb-total-label').innerHTML = t(L.year);
+  document.querySelector('#pbYearRow .pb-total-label').innerHTML = t(yr ? L.perMonth : L.year);
+  document.querySelectorAll('.pb-bill-btn').forEach((b) => {
+    const on = b.dataset.bill === BILL;
+    b.classList.toggle('is-on', on);
+    b.setAttribute('aria-pressed', String(on));
+    b.textContent = b.dataset.bill === 'yr' ? (isZh() ? '按年' : 'Yearly') : (isZh() ? '按月' : 'Monthly');
+  });
   document.getElementById('pbSetupRow').hidden = oneOffOnly || setup === 0;
   document.getElementById('pbYearRow').hidden = oneOffOnly || monthly === 0;
 
@@ -822,7 +837,7 @@ function renderSummary() {
     bar.classList.toggle('has-items', count > 0);
     document.getElementById('pbBarTotal').innerHTML = count === 0
       ? (isZh() ? '尚未选择服务' : 'No services yet')
-      : `${fmt(monthly)}<span class="unit">${isZh() ? '/月' : '/mo'}</span>${setup ? ` <span class="pb-bar-setup">+ ${fmt(setup)} ${isZh() ? '一次性' : 'setup'}</span>` : ''}`;
+      : `${fmt(asBill(monthly))}<span class="unit">${perUnit()}</span>${setup ? ` <span class="pb-bar-setup">+ ${fmt(setup)} ${isZh() ? '一次性' : 'setup'}</span>` : ''}`;
     document.getElementById('pbBarCount').textContent = isZh() ? `${count} 项服务` : `${count} service${count === 1 ? '' : 's'}`;
     document.getElementById('pbBarBtn').textContent = isZh() ? '查看方案' : 'Review plan';
   }
@@ -939,6 +954,13 @@ function wirePricing() {
     new IntersectionObserver(([e]) => { summaryVisible = e.isIntersecting; sync(); }, { threshold: 0.15 })
       .observe(document.querySelector('.pb-summary-card'));
   }
+  document.querySelector('.pb-bill').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-bill]');
+    if (!b || b.dataset.bill === BILL) return;
+    BILL = b.dataset.bill;
+    renderRows();
+    renderSummary();
+  });
   document.getElementById('pbReset').addEventListener('click', () => {
     selected.clear();
     refreshPlan();
