@@ -180,13 +180,23 @@ const I18N = {
     { name: 'ALIGCUS', url: 'https://www.aligcus.com/', en: 'ADU design & build', zh: 'ADU 设计与建造' },
     { name: 'KATOOL', url: 'https://www.katoollift.com/', en: 'Auto shop equipment', zh: '汽修设备' },
   ],
+  // hero row: one card per service, each showing real work for it
   reel: [
-    { v: 'video/short-video-demo.mp4', p: 'images/reel/short-video.jpg', en: 'Short-form video', zh: '短视频' },
-    { i: 'images/reel/beef.webp', en: 'Social content', zh: '社媒内容' },
-    { v: 'video/pom-couch.mp4', p: 'images/apps/pom-couch.jpg', en: 'App promo · Pompolo', zh: 'App 推广 · Pompolo' },
-    { i: 'images/reel/spicy.webp', en: 'Menus & posters', zh: '菜单与海报' },
-    { v: 'video/tt-dontturn.mp4', p: 'images/apps/tt-dontturn.jpg', en: 'App ad · TwoTake', zh: 'App 广告 · TwoTake' },
-    { i: 'images/reel/banquet.webp', en: 'Holiday campaigns', zh: '节日活动' },
+    { id: 'video',         v: 'video/edit-double-standard.mp4', p: 'images/clips/edit-double-standard.jpg' },
+    { id: 'paid-ads',      i: 'images/services/paid-ads.webp?v=2' },
+    { id: 'web',           i: 'images/services/web-build.webp' },
+    { id: 'clipping',      v: 'video/coco-fashion.mp4', p: 'images/clips/coco-fashion.jpg' },
+    { id: 'social',        i: 'images/services/social.webp?v=5' },
+    { id: 'ios',           v: 'video/tt-dontturn.mp4', p: 'images/apps/tt-dontturn.jpg' },
+    { id: 'menu-poster',   i: 'images/services/menu-poster.webp?v=4' },
+    { id: 'ai-voice',      i: 'images/services/ai-voice.webp?v=5' },
+    { id: 'app-marketing', v: 'video/pom-couch.mp4', p: 'images/apps/pom-couch.jpg' },
+    { id: 'holiday-promo', i: 'images/reel/banquet.webp' },
+    { id: 'email-sms',     i: 'images/services/email-sms.webp?v=5' },
+    { id: 'ad-creative',   i: 'images/services/ad-creative.webp?v=2' },
+    { id: 'call-tracking', i: 'images/services/call-tracking.webp?v=2' },
+    { id: 'motion',        i: 'film/f060.webp' },
+    { id: 'web-seo',       i: 'images/services/web-seo.webp?v=2' },
   ],
   chLink: { en: 'Add to plan', bi: 'Add to plan', zh: '加入方案' },
   // Each head: title (bold) + sub (grey, Apple-style continuation) + zh line in bilingual mode
@@ -372,11 +382,27 @@ function renderHero() {
   }
   const reel = document.getElementById('heroReel');
   if (reel) {
-    const tile = (r) => `<figure class="reel-tile">${r.v
-      ? `<video src="${r.v}" poster="${r.p}" muted loop playsinline autoplay preload="metadata"></video>`
-      : `<img src="${r.i}" alt="" decoding="async" />`}<figcaption>${isZh() ? r.zh : r.en}</figcaption></figure>`;
-    const set = I18N.reel.map(tile).join('');
-    reel.innerHTML = `<div class="reel-track">${set}${set}</div>`;
+    const svcs = Object.fromEntries(EO.allServices().map((s) => [s.id, s]));
+    const nm = (o) => (isZh() ? o.zh : o.en);
+    const go = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+    const card = (r, dup) => {
+      const s = svcs[r.id];
+      if (!s) return '';
+      const media = r.v
+        ? `<video src="${r.v}" poster="${r.p}" muted loop playsinline autoplay preload="metadata"></video>`
+        : `<img src="${r.i}" alt="" loading="lazy" decoding="async" />`;
+      return `<a class="reel-tile" href="${s.cat.page}#${s.id}"${dup ? ' aria-hidden="true" tabindex="-1"' : ''}>
+        <span class="rc-media">${media}</span>
+        <span class="rc-body">
+          <span class="rc-kicker">${nm(s.cat.name)}</span>
+          <span class="rc-name">${nm(s.name)}${isBi() ? `<span class="rc-zh">${s.name.zh}</span>` : ''}</span>
+          <span class="rc-desc">${nm(s.desc)}</span>
+          <span class="rc-foot"><span class="rc-price">${EO.priceText(s.price)}</span><span class="rc-go">${go}</span></span>
+        </span>
+      </a>`;
+    };
+    const set = (dup) => I18N.reel.map((r) => card(r, dup)).join('');
+    reel.innerHTML = `<div class="reel-track">${set(false)}${set(true)}</div>`;
   }
   const bl = document.getElementById('brandsLabel');
   if (bl) bl.innerHTML = t(I18N.brandsLabel) + (isBi() ? `<span class="zh"> · ${I18N.brandsLabel.zh}</span>` : '');

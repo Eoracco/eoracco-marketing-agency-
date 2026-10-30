@@ -132,7 +132,7 @@
       .from('.hero-display .row-in', { yPercent: 115, duration: 1.4, stagger: 0.12 }, 0.15)
       .from('.hero-sub', { y: 24, opacity: 0, duration: 1.2 }, 0.55)
       .from('.hero-ctas-new > *', { y: 20, opacity: 0, duration: 1.1, stagger: 0.08 }, 0.7)
-      .from('.reel-tile', { y: 60, opacity: 0, duration: 1.6, stagger: 0.06 }, 0.75)
+      .from('.reel-tile:nth-child(-n+8)', { y: 60, opacity: 0, duration: 1.6, stagger: 0.06, clearProps: 'transform,opacity' }, 0.75)
       .from('.chiclet', { y: 24, opacity: 0, duration: 1, stagger: 0.05 }, 0.85);
   }
 
