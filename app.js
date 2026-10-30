@@ -199,6 +199,12 @@ const I18N = {
       title: { en: 'Three ways we help.', zh: '三大类服务。' },
       sub: { en: 'One point of contact for all of them.', zh: '全部由同一个窗口对接。' },
     },
+    all: {
+      title: { en: 'Every service.', zh: '全部服务。' },
+      sub: { en: 'Pick one, or hand us all of them.', zh: '选一项，或者全部交给我们。' },
+      desc: { en: 'Fifteen services in three groups, each with a starting price. Tap any one to see what’s included.',
+              zh: '三大类共十五项服务，每项都标了起步价。点进任意一项，查看具体包含什么。' },
+    },
     pricing: {
       title: { en: 'Build your plan.', zh: '自助配置方案。' },
       sub: { en: 'See the price before we talk.', zh: '通话前就能看到价格。' },
@@ -500,6 +506,34 @@ function renderChapters() {
         </div>
       </div>
     </article>`;
+  }).join('');
+}
+
+function renderDirectory() {
+  const grid = document.getElementById('dirGrid');
+  if (!grid) return;
+  const nm = (x) => (isZh() ? x.zh : x.en);
+  grid.innerHTML = EO.CATEGORIES.map((c) => {
+    const cn = c.longName || c.name;
+    return `
+    <div class="dir-col">
+      <a class="dir-cat" href="${c.page}">
+        <span class="dir-cat-icon">${EO.icon(c.icon, 22)}</span>
+        <span class="dir-cat-name">${nm(cn)}${isBi() ? `<span class="dir-zh">${cn.zh}</span>` : ''}</span>
+        <span class="dir-cat-count">${isZh() ? c.services.length + ' 项' : c.services.length + ' services'}</span>
+      </a>
+      <ul class="dir-list">${c.services.map((s) => `
+        <li><a class="dir-row" href="${c.page}#${s.id}">
+          <span class="dir-icon">${EO.icon(s.icon, 22)}</span>
+          <span class="dir-txt">
+            <span class="dir-name">${nm(s.name)}${isBi() ? `<span class="dir-zh">${s.name.zh}</span>` : ''}</span>
+            <span class="dir-desc">${nm(s.desc)}</span>
+            <span class="dir-price">${EO.priceText(s.price)}</span>
+          </span>
+          <svg class="dir-go" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a></li>`).join('')}
+      </ul>
+    </div>`;
   }).join('');
 }
 
@@ -1031,6 +1065,7 @@ function setLang(lang) {
   renderFilm();
   renderWhy();
   renderChapters();
+  renderDirectory();
   renderApps();
   renderZoom();
   renderStats();
