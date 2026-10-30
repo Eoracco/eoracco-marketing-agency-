@@ -283,11 +283,10 @@ body.lang-zh .hero-display { letter-spacing: 0; font-size: clamp(52px, 9vw, 128p
 .chiclet-icon { height: 36px; display: grid; place-items: center; color: var(--ink); transition: color 0.3s, transform 0.4s var(--ease); }
 .chiclet-label { font-size: 12px; font-weight: 500; color: var(--ink); }
 .chiclet-zh { font-size: 11px; color: var(--ink-3); margin-top: -4px; }
-.chiclet-icon { width: 52px; height: 52px; border-radius: 15px; transition: color .3s, background .35s, transform .45s var(--ease), box-shadow .35s; }
 .chiclet-label { transition: color .3s; }
-.chiclet:hover .chiclet-icon, .chiclet:focus-visible .chiclet-icon { color: #fff; background: var(--acc, var(--amber-deep)); transform: translateY(-3px);
-  box-shadow: 0 10px 22px -10px var(--acc, var(--amber-deep)); }
-.chiclet:hover .chiclet-label, .chiclet:focus-visible .chiclet-label { color: var(--acc, var(--amber-deep)); }
+/* Apple's product-nav row: line icons in ink; hover tints the icon only and lifts it a touch */
+.chiclet:hover .chiclet-icon, .chiclet:focus-visible .chiclet-icon { color: var(--acc, var(--amber-deep)); transform: translateY(-2px); }
+.chiclet:hover .chiclet-label, .chiclet:focus-visible .chiclet-label { color: var(--ink); }
 .chiclet:focus-visible { outline: none; }
 
 /* ---------- statement ---------- */
@@ -1814,45 +1813,43 @@ body.lang-bi .legal-kz::before { content: " "; }
 
 
 /* ---------- every service: full directory ---------- */
-/* one accent per group: marketing orange, creative violet, web & apps blue */
-[data-cat="marketing"] { --acc: #ea580c; --acc-tint: #fff3ea; --acc-soft: rgba(234, 88, 12, .12); }
-[data-cat="creative"]  { --acc: #7c3aed; --acc-tint: #f4efff; --acc-soft: rgba(124, 58, 237, .12); }
-[data-cat="apps"]      { --acc: #2563eb; --acc-tint: #edf3ff; --acc-soft: rgba(37, 99, 235, .12); }
+/* one Apple system colour per group, used as an iOS-style icon gradient */
+[data-cat="marketing"] { --acc: #ff7a00; --g1: #ffb340; --g2: #ff5e3a; --acc-tint: #fff4e8; }
+[data-cat="creative"]  { --acc: #8e44ef; --g1: #c86dff; --g2: #6d5cff; --acc-tint: #f5efff; }
+[data-cat="apps"]      { --acc: #0a7cff; --g1: #4fc3ff; --g2: #0a6cff; --acc-tint: #eaf4ff; }
 .directory { background: var(--bg); }
 .dir-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3.4vw, 56px); align-items: start; }
-.dir-cat { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding-bottom: 16px; border-bottom: 2px solid var(--acc, var(--ink)); color: var(--ink); }
-.dir-cat-icon { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; color: var(--acc); background: var(--acc-tint); transition: background .3s, color .3s; }
-.dir-cat-name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; transition: color .3s; }
-.dir-cat-name .dir-zh { display: block; font-size: 13px; font-weight: 600; color: var(--ink-3); letter-spacing: 0; margin-top: 2px; }
-.dir-cat-count { font-size: 12px; font-weight: 600; color: var(--ink-3); letter-spacing: .04em; }
-.dir-cat:hover .dir-cat-name { color: var(--acc); }
-.dir-cat:hover .dir-cat-icon { background: var(--acc); color: #fff; }
+.dir-cat { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid rgba(0,0,0,.16); color: var(--ink); }
+.dir-cat-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #fff;
+  background: linear-gradient(160deg, var(--g1), var(--g2)); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 6px 14px -8px var(--g2); }
+.dir-cat-name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.dir-cat-name .dir-zh { display: block; font-size: 13px; font-weight: 500; color: var(--ink-3); letter-spacing: 0; margin-top: 2px; }
+.dir-cat-count { font-size: 12px; font-weight: 500; color: var(--ink-3); }
+.dir-cat:hover .dir-cat-count { color: var(--acc); }
 .dir-list { list-style: none; margin: 0; padding: 0; }
-.dir-list li { border-bottom: 1px solid var(--line); padding: 4px 0; }
-.dir-row { position: relative; display: grid; grid-template-columns: 36px minmax(0, 1fr) 30px; align-items: start; gap: 14px; padding: 14px 12px; margin: 0 -12px; color: var(--ink);
-  border-radius: 16px; transition: background .35s, box-shadow .35s; }
-.dir-icon { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: var(--ink-2); background: var(--gray);
-  transition: color .3s, background .3s, transform .45s var(--ease); }
-.dir-txt { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-.dir-name { font-size: 17px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.25; transition: color .3s; }
-.dir-name .dir-zh { display: block; font-size: 13px; font-weight: 500; color: var(--ink-3); margin-top: 2px; }
-.dir-desc { font-size: 14px; line-height: 1.4; color: var(--ink-3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.dir-price { margin-top: 3px; font-size: 13px; font-weight: 600; color: var(--acc); }
-.dir-go { width: 30px; height: 30px; padding: 8px; border-radius: 50%; color: var(--ink-3); margin-top: 3px; box-sizing: border-box;
-  transition: transform .45s var(--ease), color .3s, background .3s; }
-.dir-row:hover, .dir-row:focus-visible { background: var(--acc-tint); box-shadow: inset 0 0 0 1px var(--acc-soft); outline: none; }
-.dir-row:hover .dir-icon, .dir-row:focus-visible .dir-icon { background: var(--acc); color: #fff; transform: scale(1.06) rotate(-4deg); }
-.dir-row:hover .dir-name, .dir-row:focus-visible .dir-name { color: var(--acc); }
-.dir-row:hover .dir-go, .dir-row:focus-visible .dir-go { background: var(--acc); color: #fff; transform: translateX(3px); }
-.dir-list li:has(.dir-row:hover) { border-bottom-color: transparent; }
-.dir-list li:has(+ li .dir-row:hover) { border-bottom-color: transparent; }
-/* service cards in the hero use the same group colours */
+.dir-list li { border-bottom: 1px solid var(--line); padding: 4px 0; transition: border-color .3s; }
+.dir-row { position: relative; display: grid; grid-template-columns: 38px minmax(0, 1fr) 16px; align-items: start; gap: 14px; padding: 14px 12px; margin: 0 -12px; color: var(--ink);
+  border-radius: 18px; transition: background .4s var(--ease); }
+/* at rest: a soft tinted tile; on hover it fills like an iOS app icon */
+.dir-icon { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; color: var(--acc); background: var(--acc-tint);
+  transition: color .35s, background .35s, box-shadow .35s; }
+.dir-txt { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.dir-name { font-size: 17px; font-weight: 600; letter-spacing: -0.016em; line-height: 1.25; }
+.dir-name .dir-zh { display: block; font-size: 13px; font-weight: 400; color: var(--ink-3); margin-top: 2px; }
+.dir-desc { font-size: 14px; line-height: 1.42; color: var(--ink-3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.dir-price { margin-top: 4px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.dir-go { width: 16px; height: 16px; padding: 0; color: rgba(0,0,0,.28); margin-top: 11px; transition: transform .45s var(--ease), color .3s; }
+.dir-row:hover, .dir-row:focus-visible { background: #f5f5f7; outline: none; }
+.dir-row:hover .dir-icon, .dir-row:focus-visible .dir-icon { color: #fff; background: linear-gradient(160deg, var(--g1), var(--g2));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 6px 14px -8px var(--g2); }
+.dir-row:hover .dir-go, .dir-row:focus-visible .dir-go { color: var(--acc); transform: translateX(3px); }
+.dir-list li:has(.dir-row:hover), .dir-list li:has(+ li .dir-row:hover) { border-bottom-color: transparent; }
+/* hero service cards: same colours, kept quiet */
 .reel-tile .rc-kicker { color: var(--acc, var(--amber-deep)); }
-.reel-tile:hover .rc-go { background: var(--acc, var(--ink)); }
-.reel-tile:hover .rc-name { color: var(--acc, var(--ink)); }
-.rc-name { transition: color .3s; }
+.reel-tile:hover .rc-go { background: var(--ink); color: #fff; }
 @media (max-width: 1080px) { .dir-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 720px) {
   .dir-grid { grid-template-columns: 1fr; gap: 44px; }
-  .dir-row { grid-template-columns: 34px minmax(0, 1fr) 30px; padding: 12px 10px; margin: 0 -10px; }
+  .dir-row { grid-template-columns: 36px minmax(0, 1fr) 16px; padding: 12px 10px; margin: 0 -10px; }
+  .dir-icon { width: 36px; height: 36px; }
 }
