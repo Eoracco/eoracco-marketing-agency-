@@ -768,10 +768,42 @@ body.lang-zh .pb-summary-title .zh { font-size: 22px; color: var(--ink); font-we
 .pb-total-row--note { font-size: 13px; }
 .pb-total-row--note .pb-total-label, .pb-total-row--note .pb-total-val { color: var(--ink-3); font-weight: 500; }
 .pb-total-row[hidden] { display: none; }
-.pb-bill { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 16px; padding: 4px; border-radius: 980px; background: rgba(0, 0, 0, 0.05); }
+.pb-bill { position: relative; isolation: isolate; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 16px; padding: 4px; border-radius: 980px; background: rgba(0, 0, 0, 0.05); }
+/* the sliding thumb, with a warm glow and a shine that passes over it on each switch */
+.pb-bill::before { content: ""; position: absolute; z-index: -1; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 6px); border-radius: 980px; background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04), 0 6px 18px rgba(251, 191, 36, 0.28);
+  transition: transform 0.55s var(--ease); }
+.pb-bill[data-bill="yr"]::before { transform: translateX(calc(100% + 4px)); }
+.pb-bill::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
+  background: linear-gradient(110deg, transparent 35%, rgba(251, 191, 36, 0.35) 50%, transparent 65%); background-size: 250% 100%; background-position: 120% 0; opacity: 0; }
+.pb-bill[data-bill="yr"]::after { animation: pbShine 0.9s var(--ease); }
+.pb-bill[data-bill="mo"]::after { animation: pbShine2 0.9s var(--ease); }
+@keyframes pbShine { 0% { opacity: 1; background-position: 120% 0; } 100% { opacity: 0; background-position: -20% 0; } }
+@keyframes pbShine2 { 0% { opacity: 1; background-position: -20% 0; } 100% { opacity: 0; background-position: 120% 0; } }
 .pb-bill-btn { border: 0; border-radius: 980px; padding: 8px 12px; background: transparent; color: var(--ink-2); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .25s, color .25s, box-shadow .25s; }
 .pb-bill-btn:hover { color: var(--ink); }
-.pb-bill-btn.is-on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04); }
+.pb-bill-btn { position: relative; z-index: 1; }
+.pb-bill-btn.is-on { color: var(--ink); }
+
+/* the plan card: a slow warm ring of light, brighter once the plan has something in it */
+@property --pb-a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.pb-summary-card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 1;
+  background: conic-gradient(from var(--pb-a), transparent 0deg, rgba(251, 191, 36, 0.0) 40deg, rgba(251, 191, 36, 0.9) 100deg, rgba(249, 115, 22, 0.85) 150deg, rgba(251, 191, 36, 0.0) 210deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0.35; transition: opacity 0.6s; animation: pbSpin 7s linear infinite; }
+.pb-summary-card.has-items::after { opacity: 1; }
+.pb-summary-card.has-items { box-shadow: 0 0 0 1px var(--line), 0 30px 80px rgba(0, 0, 0, 0.08), 0 0 60px rgba(251, 191, 36, 0.12); }
+@keyframes pbSpin { to { --pb-a: 360deg; } }
+/* the headline price flashes warm when it changes */
+.pb-total-row--grand.is-flash .pb-total-val { animation: pbFlash 0.9s var(--ease); }
+@keyframes pbFlash { 0% { text-shadow: 0 0 0 rgba(251, 191, 36, 0); } 30% { color: #c26a00; text-shadow: 0 0 24px rgba(251, 191, 36, 0.65); } 100% { text-shadow: 0 0 0 rgba(251, 191, 36, 0); } }
+/* a shine across the send button once there's a plan to send */
+.pb-checkout { position: relative; overflow: hidden; }
+.pb-checkout:not(:disabled)::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgba(251, 191, 36, 0.45) 48%, rgba(255, 255, 255, 0.35) 55%, transparent 70%);
+  transform: translateX(-130%); animation: pbBtnShine 4s var(--ease) infinite 1s; }
+@keyframes pbBtnShine { 0% { transform: translateX(-130%); } 40%, 100% { transform: translateX(130%); } }
+@media (prefers-reduced-motion: reduce) { .pb-summary-card::after, .pb-bill::after, .pb-checkout::after, .pb-total-row--grand.is-flash .pb-total-val { animation: none; } .pb-bill::before { transition: none; } }
 
 .pb-checkout {
   margin-top: 22px; width: 100%; border: 0; border-radius: 980px; padding: 15px 20px;

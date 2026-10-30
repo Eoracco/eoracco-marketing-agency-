@@ -823,6 +823,18 @@ function renderSummary() {
   document.querySelector('#pbMonthlyRow .pb-total-label').innerHTML = t(oneOffOnly ? L.total : yr ? L.yearly : L.monthly);
   document.querySelector('#pbSetupRow .pb-total-label').innerHTML = t(L.setup);
   document.querySelector('#pbYearRow .pb-total-label').innerHTML = t(yr ? L.perMonth : L.year);
+  // Light effects: the card's ring brightens once something is in the plan, the toggle's thumb
+  // slides to the chosen side, and the headline figure flashes when it changes.
+  document.querySelector('.pb-summary-card').classList.toggle('has-items', count > 0);
+  document.querySelector('.pb-bill').dataset.bill = BILL;
+  const grandKey = `${oneOffOnly ? setup : asBill(monthly)}|${BILL}`;
+  const grandRow = document.getElementById('pbMonthlyRow');
+  if (grandRow.dataset.k && grandRow.dataset.k !== grandKey && count > 0 && !REDUCED) {
+    grandRow.classList.remove('is-flash');
+    void grandRow.offsetWidth;
+    grandRow.classList.add('is-flash');
+  }
+  grandRow.dataset.k = grandKey;
   document.querySelectorAll('.pb-bill-btn').forEach((b) => {
     const on = b.dataset.bill === BILL;
     b.classList.toggle('is-on', on);
