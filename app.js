@@ -391,7 +391,7 @@ function renderHero() {
       const media = r.v
         ? `<video src="${r.v}" poster="${r.p}" muted loop playsinline autoplay preload="metadata"></video>`
         : `<img src="${r.i}" alt="" loading="lazy" decoding="async" />`;
-      return `<a class="reel-tile" href="${s.cat.page}#${s.id}"${dup ? ' aria-hidden="true" tabindex="-1"' : ''}>
+      return `<a class="reel-tile" data-cat="${s.cat.key}" href="${s.cat.page}#${s.id}"${dup ? ' aria-hidden="true" tabindex="-1"' : ''}>
         <span class="rc-media">${media}</span>
         <span class="rc-body">
           <span class="rc-kicker">${nm(s.cat.name)}</span>
@@ -421,7 +421,7 @@ function renderHero() {
       const nm = s.short || s.name;
       const label = isZh() ? nm.zh : nm.en;
       const zh = isBi() ? `<span class="chiclet-zh">${nm.zh}</span>` : '';
-      return `<a class="chiclet" href="${s.cat.page}#${s.id}"><span class="chiclet-icon">${EO.icon(s.icon, 30)}</span><span class="chiclet-label">${label}</span>${zh}</a>`;
+      return `<a class="chiclet" data-cat="${s.cat.key}" href="${s.cat.page}#${s.id}"><span class="chiclet-icon">${EO.icon(s.icon, 30)}</span><span class="chiclet-label">${label}</span>${zh}</a>`;
     }).join('')}</div>`;
   }
 }
@@ -542,7 +542,7 @@ function renderDirectory() {
   grid.innerHTML = EO.CATEGORIES.map((c) => {
     const cn = c.longName || c.name;
     return `
-    <div class="dir-col">
+    <div class="dir-col" data-cat="${c.key}">
       <a class="dir-cat" href="${c.page}">
         <span class="dir-cat-icon">${EO.icon(c.icon, 22)}</span>
         <span class="dir-cat-name">${nm(cn)}${isBi() ? `<span class="dir-zh">${cn.zh}</span>` : ''}</span>
