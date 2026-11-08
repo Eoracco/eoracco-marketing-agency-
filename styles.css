@@ -1893,3 +1893,11 @@ body.lang-bi .legal-kz::before { content: " "; }
   .dir-row { grid-template-columns: 36px minmax(0, 1fr) 16px; padding: 12px 10px; margin: 0 -10px; }
   .dir-icon { width: 36px; height: 36px; }
 }
+
+/* desktop: service links centered in the bar; language toggle and "Book a call" on the right */
+@media (min-width: 900px) {
+  .nav-links { position: absolute; left: 50%; transform: translateX(-50%); margin-left: 0; }
+  .nav-links > .cta-mini { display: none; }
+  .lang-toggle { margin-left: auto; }
+  .nav-link.nav-cta-mobile { display: inline-block; }
+}
