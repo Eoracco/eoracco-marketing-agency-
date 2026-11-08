@@ -20,11 +20,24 @@
   const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const byId = Object.fromEntries(DATA.ITEMS.map((i) => [i.id, i]));
 
+  // this script renders two views: the Custom home (custom/) and the product catalogue (custom/products/)
+  const VIEW = document.body.dataset.view === 'products' ? 'products' : 'home';
+  const ROOT = VIEW === 'products' ? '../' : '';        // EORACCO Custom home
+  const SITE = ROOT + '../';                            // main eoracco.com site
+  const onHome = VIEW === 'home';
+  const homeAnchor = (id) => (onHome ? `#${id}` : `${ROOT}#${id}`);
+
+  // the project list is kept on this device so it survives moving between the two pages
+  const LIST_KEY = 'eoracco-custom-list';
+  const loadList = () => { try { return (JSON.parse(localStorage.getItem(LIST_KEY) || '[]') || []).filter((id) => byId[id]); } catch (e) { return []; } };
+  const saveList = () => { try { localStorage.setItem(LIST_KEY, JSON.stringify(state.list)); } catch (e) { /* storage unavailable */ } };
+
   const T = {
     sub: L('Custom', '企业定制'),
     agency: L('Agency', '营销服务'),
     customTab: L('Custom', '企业定制'),
     switchLabel: L('Switch between EORACCO Agency and EORACCO Custom', '切换 EORACCO 营销服务 / 企业定制'),
+    navProducts: L('Products', '产品'),
     navWho: L('Who it’s for', '适合谁'),
     navHow: L('How it works', '流程'),
     navPrice: L('Pricing', '费用'),
@@ -108,8 +121,8 @@
     msgPh: L('e.g. Gold and black logo, for 80 top clients, needs to feel premium', '例如：金黑配色 logo，送给 80 位重要客户，要有高级感'),
     logoNote: L('We’ll ask for your logo by email — any format is fine.', '我们会通过邮件向您要 logo，任何格式都可以。'),
     optional: L('optional', '选填'),
-    agree: L('I agree to the <a href="../privacy.html">Privacy Policy</a> and to EORACCO contacting me about this project.',
-             '我同意<a href="../privacy.html">隐私政策</a>，并同意 EORACCO 就本项目与我联系。'),
+    agree: L('I agree to the <a href="{P}">Privacy Policy</a> and to EORACCO contacting me about this project.',
+             '我同意<a href="{P}">隐私政策</a>，并同意 EORACCO 就本项目与我联系。'),
     send: L('Send project brief', '提交定制需求'),
     sending: L('Sending…', '正在发送…'),
     sentH: L('Brief received.', '需求已收到。'),
@@ -121,12 +134,19 @@
     need: L('your name', '姓名'),
     needEmail: L('a valid email', '有效邮箱'),
     needAgree: L('agreement to the privacy policy', '勾选同意隐私政策'),
+    allProducts: L('See all products', '查看全部产品'),
+    prodKicker: L('EORACCO Custom · Products', 'EORACCO Custom · 产品'),
+    prodH: L('Products we recommend.', '我们推荐的产品。'),
+    prodP: L('A short list we have checked for quality and minimums. Add what you like to your project, then send one brief for all of it.',
+             '我们按品质和起订量筛过的一批产品。把喜欢的加入定制，最后一起提交一份需求就行。'),
+    all: L('All', '全部'),
+    showing: L('items', '件'),
     privacy: L('Privacy', '隐私政策'),
     terms: L('Terms', '服务条款'),
     mainLink: L('EORACCO also does marketing, design and websites', 'EORACCO 也提供营销、设计和网站服务'),
   };
 
-  const state = { app: DATA.APPS[0].key, list: [], sent: false };
+  const state = { app: DATA.APPS[0].key, filter: 'all', list: loadList(), sent: false };
 
   // ---------- markup ----------
   const HERO_IDS = ['EO-03', 'EO-22', 'EO-14', 'EO-20'];
@@ -135,20 +155,21 @@
     const l = EO.lang;
     return `
     <div class="container gnav-inner">
-      <a class="brand" href="#top" aria-label="EORACCO Custom"><span class="brand-mark" aria-hidden="true"></span>EORACCO</a>
+      <a class="brand" href="${onHome ? '#top' : ROOT}" aria-label="EORACCO Custom"><span class="brand-mark" aria-hidden="true"></span>EORACCO</a>
       <div class="site-switch gnav-brand" role="group" aria-label="${tx(T.switchLabel)}">
-        <a href="../">${tx(T.agency)}</a>
-        <a class="is-on" href="#top" aria-current="true">${tx(T.customTab)}</a>
+        <a href="${SITE}">${tx(T.agency)}</a>
+        <a class="is-on" href="${onHome ? '#top' : ROOT}" aria-current="true">${tx(T.customTab)}</a>
       </div>
       <nav class="gnav-links" aria-label="Sections">
-        <a href="#who">${tx(T.navWho)}</a>
-        <a href="#how">${tx(T.navHow)}</a>
-        <a href="#pricing">${tx(T.navPrice)}</a>
+        <a href="${ROOT}products/" class="${onHome ? '' : 'is-current'}">${tx(T.navProducts)}</a>
+        <a href="${homeAnchor('who')}">${tx(T.navWho)}</a>
+        <a href="${homeAnchor('how')}">${tx(T.navHow)}</a>
+        <a href="${homeAnchor('pricing')}">${tx(T.navPrice)}</a>
       </nav>
       <div class="lang-toggle" role="group" aria-label="Language">
         ${['en', 'bi', 'zh'].map((k) => `<button type="button" data-lang="${k}" class="${l === k ? 'active' : ''}" aria-pressed="${l === k}">${{ en: 'EN', bi: '双语', zh: '中文' }[k]}</button>`).join('')}
       </div>
-      <a class="btn btn-small btn-dark gnav-cta" href="#start">${tx(T.navStart)}</a>
+      <a class="btn btn-small btn-dark gnav-cta" href="${homeAnchor('start')}">${tx(T.navStart)}</a>
     </div>`;
   }
 
@@ -158,11 +179,11 @@
       <span class="brand"><span class="brand-mark" aria-hidden="true"></span>EORACCO<span class="gnav-sub">${tx(T.sub)}</span></span>
       <span class="gfoot-links">
         <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
-        <a href="../privacy.html">${tx(T.privacy)}</a>
-        <a href="../terms.html">${tx(T.terms)}</a>
+        <a href="${SITE}privacy.html">${tx(T.privacy)}</a>
+        <a href="${SITE}terms.html">${tx(T.terms)}</a>
       </span>
       <span class="gfoot-copy">© 2026 EORACCO · Los Angeles</span>
-      <a class="gfoot-main" href="../">${tx(T.mainLink)} <span aria-hidden="true">→</span></a>
+      <a class="gfoot-main" href="${SITE}">${tx(T.mainLink)} <span aria-hidden="true">→</span></a>
     </div>`;
   }
 
@@ -228,6 +249,7 @@
           </button>`).join('')}
         </div>
         <div class="app-panel" id="appPanel" role="tabpanel">${appPanelHTML()}</div>
+        <p class="promo-all"><a class="btn btn-ghost" href="products/">${tx(T.allProducts)} <span aria-hidden="true">→</span></a></p>
         <p class="promo-photo-note">${tx(T.photoNote)}</p>
         <div class="promo-other">
           <h3>${tx(T.otherH)}${zhLine(T.otherH)}</h3>
@@ -327,7 +349,7 @@
         ${field('msg', 'textarea', false, T.msgPh)}
         <p class="promo-logo-note">${tx(T.logoNote)}</p>
         <input type="text" name="website" tabindex="-1" autocomplete="off" class="promo-hp" aria-hidden="true" />
-        <label class="checkbox-row"><input type="checkbox" name="agreed" /><span>${tx(T.agree)}</span></label>
+        <label class="checkbox-row"><input type="checkbox" name="agreed" /><span>${tx(T.agree).replace(/\{P\}/g, SITE + 'privacy.html')}</span></label>
         <p class="promo-error" id="promoError" role="alert" hidden></p>
         <button type="submit" class="btn btn-primary promo-send" id="promoSend">${tx(T.send)}</button>
       </form>`;
@@ -343,6 +365,39 @@
           <p class="promo-mail"><a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>
         </div>
         <div class="promo-form-card" id="promoFormCard">${formHTML()}</div>
+      </div>
+    </section>`;
+  }
+
+  function productsHTML() {
+    const items = state.filter === 'all'
+      ? DATA.ITEMS
+      : DATA.APPS.find((a) => a.key === state.filter).items.map((id) => byId[id]);
+    const chips = [{ key: 'all', name: T.all }].concat(DATA.APPS);
+    return `
+    <section class="prod-head" id="top">
+      <div class="container">
+        <p class="promo-kicker">${tx(T.prodKicker)}</p>
+        <h1 class="promo-h2 prod-h1">${tx(T.prodH)}${zhLine(T.prodH)}</h1>
+        <p class="prod-lede">${tx(T.prodP)}${zhLine(T.prodP)}</p>
+      </div>
+    </section>
+    <section class="promo-gifts prod-list">
+      <div class="container">
+        <div class="promo-chips" role="tablist" aria-label="Filter">
+          ${chips.map((c) => `
+          <button type="button" role="tab" class="promo-chip ${state.filter === c.key ? 'is-on' : ''}" data-filter="${c.key}" aria-selected="${state.filter === c.key}">
+            ${tx(c.name)}${isBi() ? `<span class="zh">${c.name.zh}</span>` : ''}
+          </button>`).join('')}
+        </div>
+        <p class="prod-count">${items.length} ${tx(T.showing)}</p>
+        <div class="promo-grid" id="prodGrid">${items.map(cardHTML).join('')}</div>
+        <p class="promo-photo-note">${tx(T.photoNote)}</p>
+        <div class="promo-other">
+          <h3>${tx(T.otherH)}${zhLine(T.otherH)}</h3>
+          <p>${tx(T.otherP)}</p>
+          <a class="btn btn-small" href="${ROOT}#start">${tx(T.start)}</a>
+        </div>
       </div>
     </section>`;
   }
@@ -364,7 +419,9 @@
     if (nav) nav.innerHTML = navHTML();
     if (foot) foot.innerHTML = footHTML();
     syncLang();
-    main.innerHTML = `${heroHTML()}${whoHTML()}${whyHTML()}${howHTML()}${priceHTML()}${startHTML()}<div class="promo-bar" id="promoBar" hidden></div>`;
+    main.innerHTML = (onHome
+      ? `${heroHTML()}${whoHTML()}${whyHTML()}${howHTML()}${priceHTML()}${startHTML()}`
+      : productsHTML()) + '<div class="promo-bar" id="promoBar" hidden></div>';
 
     const form = document.getElementById('promoForm');
     if (form && saved) Object.entries(saved).forEach(([k, v]) => { const el = form.elements[k]; if (el) { if (el.type === 'checkbox') el.checked = v; else el.value = v; } });
@@ -391,7 +448,7 @@
     const n = state.list.length;
     bar.hidden = !n || state.sent;
     if (!n) return;
-    bar.innerHTML = `<span><b>${n}</b> ${tx(n === 1 ? T.barOne : T.barMany)}</span><a class="btn btn-small btn-dark" href="#start">${tx(T.barGo)}</a>`;
+    bar.innerHTML = `<span><b>${n}</b> ${tx(n === 1 ? T.barOne : T.barMany)}</span><a class="btn btn-small btn-dark" href="${homeAnchor('start')}">${tx(T.barGo)}</a>`;
   }
 
   main.addEventListener('click', (e) => {
@@ -402,16 +459,24 @@
       document.getElementById('appPanel').innerHTML = appPanelHTML();
       return;
     }
+    const f = e.target.closest('[data-filter]');
+    if (f) {
+      state.filter = f.dataset.filter;
+      main.innerHTML = productsHTML() + '<div class="promo-bar" id="promoBar" hidden></div>';
+      updateBar();
+      return;
+    }
     const add = e.target.closest('[data-add]');
     if (add) {
       const id = add.dataset.add;
       state.list = state.list.includes(id) ? state.list.filter((x) => x !== id) : state.list.concat(id);
+      saveList();
       refreshList();
       if (state.list.includes(id)) { add.classList.remove('pop'); void add.offsetWidth; add.classList.add('pop'); }
       return;
     }
     const rm = e.target.closest('[data-remove]');
-    if (rm) { state.list = state.list.filter((x) => x !== rm.dataset.remove); refreshList(); }
+    if (rm) { state.list = state.list.filter((x) => x !== rm.dataset.remove); saveList(); refreshList(); }
   });
 
   function onSubmit(e) {
@@ -460,7 +525,7 @@
       t: String(Date.now() - openedAt),
     });
 
-    const ok = () => { state.sent = true; document.getElementById('promoFormCard').innerHTML = formHTML(); updateBar(); };
+    const ok = () => { state.sent = true; state.list = []; saveList(); document.getElementById('promoFormCard').innerHTML = formHTML(); updateBar(); };
     const fail = () => { delete btn.dataset.sending; btn.textContent = tx(T.send); err.textContent = tx(T.fail); err.hidden = false; };
     fetch(FORM_ENDPOINT, { method: 'POST', body: data })
       .then((r) => r.json())
