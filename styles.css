@@ -1895,9 +1895,31 @@ body.lang-bi .legal-kz::before { content: " "; }
 }
 
 /* desktop: service links centered in the bar; language toggle and "Book a call" on the right */
-@media (min-width: 900px) {
+@media (min-width: 1040px) {
   .nav-links { position: absolute; left: 50%; transform: translateX(-50%); margin-left: 0; }
   .nav-links > .cta-mini { display: none; }
   .lang-toggle { margin-left: auto; }
   .nav-link.nav-cta-mobile { display: inline-block; }
+}
+
+/* Agency / Custom switch beside the logo (shared by the service site and EORACCO Custom) */
+.site-switch { flex: none; display: inline-flex; padding: 2px; border-radius: 980px; background: rgba(118, 118, 128, 0.12); margin-left: -8px; }
+.site-switch a {
+  padding: 4px 11px; border-radius: 980px; font-size: 12px; font-weight: 500; letter-spacing: 0; color: var(--ink-2);
+  white-space: nowrap; transition: background 0.3s var(--ease), color 0.3s;
+}
+.site-switch a:hover { color: var(--ink); }
+.site-switch a.is-on { background: var(--ink); color: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18); }
+.site-switch a:not(.is-on):active { background: var(--amber); color: var(--ink); }
+.nav.on-dark:not(.flyout-open):not(.sheet-open) .site-switch { background: rgba(255, 255, 255, 0.12); }
+.nav.on-dark:not(.flyout-open):not(.sheet-open) .site-switch a { color: rgba(245, 245, 247, 0.7); }
+.nav.on-dark:not(.flyout-open):not(.sheet-open) .site-switch a.is-on { background: #f5f5f7; color: #1d1d1f; }
+@media (max-width: 899px) { .nav-links { display: none; } }
+@media (max-width: 734px) {
+  .site-switch { margin-left: -4px; }
+  .site-switch a { padding: 3px 8px; font-size: 11px; }
+}
+@media (max-width: 420px) {
+  .brand { font-size: 15px; gap: 7px; letter-spacing: 0.02em; }
+  .lang-toggle button { padding: 4px 6px; }
 }

@@ -231,3 +231,7 @@
 
 .gfoot-main { flex: 1 1 100%; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink); }
 .gfoot-main:hover { color: var(--amber-deep); }
+@media (min-width: 1040px) {
+  .gnav-inner { position: relative; }
+  .gnav-links { position: absolute; left: 50%; transform: translateX(-50%); }
+}

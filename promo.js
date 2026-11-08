@@ -22,6 +22,9 @@
 
   const T = {
     sub: L('Custom', '企业定制'),
+    agency: L('Agency', '营销服务'),
+    customTab: L('Custom', '企业定制'),
+    switchLabel: L('Switch between EORACCO Agency and EORACCO Custom', '切换 EORACCO 营销服务 / 企业定制'),
     navWho: L('Who it’s for', '适合谁'),
     navHow: L('How it works', '流程'),
     navPrice: L('Pricing', '费用'),
@@ -132,7 +135,11 @@
     const l = EO.lang;
     return `
     <div class="container gnav-inner">
-      <a class="brand gnav-brand" href="#top" aria-label="EORACCO Custom"><span class="brand-mark" aria-hidden="true"></span>EORACCO<span class="gnav-sub">${tx(T.sub)}</span></a>
+      <a class="brand" href="#top" aria-label="EORACCO Custom"><span class="brand-mark" aria-hidden="true"></span>EORACCO</a>
+      <div class="site-switch gnav-brand" role="group" aria-label="${tx(T.switchLabel)}">
+        <a href="../">${tx(T.agency)}</a>
+        <a class="is-on" href="#top" aria-current="true">${tx(T.customTab)}</a>
+      </div>
       <nav class="gnav-links" aria-label="Sections">
         <a href="#who">${tx(T.navWho)}</a>
         <a href="#how">${tx(T.navHow)}</a>
