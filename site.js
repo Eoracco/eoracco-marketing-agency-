@@ -30,6 +30,7 @@
     privacy: { en: 'Privacy Policy', zh: '隐私政策' },
     terms: { en: 'Terms of Service', zh: '服务条款' },
     cookies: { en: 'Cookies', zh: 'Cookie 说明' },
+    custom: { en: 'EORACCO Custom · Branded merch', zh: 'EORACCO Custom · 企业定制' },
   };
   const tx = (o) => EO.tx(o);
   const zhSub = (o) => (EO.isBi() && o ? `<span class="zh-inline">${o.zh}</span>` : '');
@@ -129,6 +130,7 @@
             <a href="${HREF.pricing}">${tx(T.pricing)}</a>
             <a href="${HREF.process}">${tx(T.howItWorks)}</a>
             <a href="${HREF.contact}">${tx(T.contact)}</a>
+            <a href="custom/">${tx(T.custom)}</a>
             <a href="mailto:eoraccoofficial@gmail.com">eoraccoofficial@gmail.com</a>
           </div>
         </div>

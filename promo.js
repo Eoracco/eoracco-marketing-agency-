@@ -120,6 +120,7 @@
     needAgree: L('agreement to the privacy policy', '勾选同意隐私政策'),
     privacy: L('Privacy', '隐私政策'),
     terms: L('Terms', '服务条款'),
+    mainLink: L('EORACCO also does marketing, design and websites', 'EORACCO 也提供营销、设计和网站服务'),
   };
 
   const state = { app: DATA.APPS[0].key, list: [], sent: false };
@@ -154,6 +155,7 @@
         <a href="../terms.html">${tx(T.terms)}</a>
       </span>
       <span class="gfoot-copy">© 2026 EORACCO · Los Angeles</span>
+      <a class="gfoot-main" href="../">${tx(T.mainLink)} <span aria-hidden="true">→</span></a>
     </div>`;
   }
 

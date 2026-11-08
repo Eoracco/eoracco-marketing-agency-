@@ -228,3 +228,6 @@
 .promo-form-card .field select { background-color: #fff; }
 
 @media (min-width: 700px) { .promo-chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 4px 0 18px; } }
+
+.gfoot-main { flex: 1 1 100%; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink); }
+.gfoot-main:hover { color: var(--amber-deep); }
