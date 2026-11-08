@@ -60,8 +60,8 @@
     msg: L('Anything else', '其他说明'),
     msgPh: L('Event, logo colors, where it will be used…', '活动用途、logo 颜色、使用场合等'),
     optional: L('optional', '选填'),
-    agree: L('I agree to the <a href="/privacy.html">Privacy Policy</a> and to EORACCO contacting me about this quote.',
-             '我同意<a href="/privacy.html">隐私政策</a>，并同意 EORACCO 就本次询价与我联系。'),
+    agree: L('I agree to the <a href="../privacy.html">Privacy Policy</a> and to EORACCO contacting me about this quote.',
+             '我同意<a href="../privacy.html">隐私政策</a>，并同意 EORACCO 就本次询价与我联系。'),
     send: L('Send quote request', '发送询价'),
     sending: L('Sending…', '正在发送…'),
     sentH: L('Quote request sent.', '询价已发送。'),
@@ -128,8 +128,8 @@
       <span class="brand"><span class="brand-mark" aria-hidden="true"></span>EORACCO<span class="gnav-sub">${tx(T.sub)}</span></span>
       <span class="gfoot-links">
         <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
-        <a href="/privacy.html">${tx(T.privacy)}</a>
-        <a href="/terms.html">${tx(T.terms)}</a>
+        <a href="../privacy.html">${tx(T.privacy)}</a>
+        <a href="../terms.html">${tx(T.terms)}</a>
       </span>
       <span class="gfoot-copy">© 2026 EORACCO · Los Angeles</span>
     </div>`;
