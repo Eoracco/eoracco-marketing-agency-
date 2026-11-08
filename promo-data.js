@@ -6,13 +6,32 @@
   const img = (file) => S3 + file[0] + '/' + file[1] + '/' + file;
   const L = (en, zh) => ({ en, zh });
 
-  const CATS = [
-    { key: 'all', name: L('All', '全部') },
-    { key: 'heritage', name: L('Lunar New Year & tea', '新年与茶') },
-    { key: 'green', name: L('Living desk', '绿植桌面') },
-    { key: 'home', name: L('Cork, candle & mug', '软木·香薰·杯') },
-    { key: 'wear', name: L('Wear & carry', '穿戴与随身') },
-    { key: 'desk', name: L('Paper & play', '本子与运动') },
+  // who buys, why, and which items fit them (an item can appear under several)
+  const APPS = [
+    { key: 'food', name: L('Restaurants & cafés', '餐饮与门店'),
+      who: L('Staff uniforms, take-out packaging and grand-opening giveaways that make a small shop look established.',
+             '员工围裙和帽子、外卖包装、开业赠品，让小店看起来更专业、更有品牌感。'),
+      items: ['EO-22', 'EO-23', 'EO-21', 'EO-20', 'EO-13', 'EO-06'] },
+    { key: 'realty', name: L('Real estate, insurance & loans', '房产·保险·贷款经纪'),
+      who: L('Closing gifts and client thank-yous that stay in the home for years, with your name on them.',
+             '成交礼和客户答谢礼，印上您的名字，放在客户家里好几年。'),
+      items: ['EO-14', 'EO-03', 'EO-12', 'EO-18', 'EO-07', 'EO-15'] },
+    { key: 'team', name: L('Companies & HR', '公司与团队'),
+      who: L('Onboarding kits, team wear and year-end gifts, without a week of comparing vendors.',
+             '新员工入职礼包、团队服装、年终礼品，不用自己花一周比价找供应商。'),
+      items: ['EO-24', 'EO-25', 'EO-13', 'EO-17', 'EO-20', 'EO-19'] },
+    { key: 'lny', name: L('Lunar New Year & holidays', '新年与节日'),
+      who: L('Red envelopes, tea sets and gifts chosen with the customs in mind — no clocks, no fours.',
+             '红包、茶具和年礼，挑选时就避开送钟、数字 4 这些忌讳。'),
+      items: ['EO-01', 'EO-03', 'EO-04', 'EO-05', 'EO-06', 'EO-02'] },
+    { key: 'events', name: L('Events, schools & clubs', '活动·学校·社团'),
+      who: L('Giveaways and team gear that arrive before the event date, at a per-piece price that fits the budget.',
+             '活动赠品和队服，保证活动日前送到，单价控制在预算内。'),
+      items: ['EO-26', 'EO-19', 'EO-21', 'EO-08', 'EO-09', 'EO-18'] },
+    { key: 'clinic', name: L('Clinics & wellness', '诊所与健康'),
+      who: L('Calm, useful pieces for patients and front desks: plants, candles, notebooks.',
+             '给病人和前台的安静实用小物：绿植、香薰、笔记本。'),
+      items: ['EO-10', 'EO-11', 'EO-07', 'EO-16', 'EO-15', 'EO-24'] },
   ];
 
   const ITEMS = [
@@ -105,5 +124,5 @@
       note: L('Two fiberglass paddles with your artwork edge to edge, balls and a bag.', '两支玻纤球拍满版印您的设计，附球和收纳袋。') },
   ];
 
-  window.EO_PROMO = { CATS, ITEMS };
+  window.EO_PROMO = { APPS, ITEMS };
 })();
