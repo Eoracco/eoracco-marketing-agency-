@@ -21,6 +21,13 @@
 
   const T = {
     kicker: L('Promotional products', '定制推广礼品'),
+    sub: L('Gifts', '礼品'),
+    navGifts: L('Gifts', '礼品'),
+    navHow: L('How it works', '下单流程'),
+    navQuote: L('Get a quote', '询价'),
+    privacy: L('Privacy', '隐私政策'),
+    terms: L('Terms', '服务条款'),
+    facts: [L('Low minimums, from 12 pcs', '起订量低，12 件起'), L('Proof before production', '先确认打样稿再生产'), L('Quotes in English & 中文', '中英文报价沟通')],
     h1: L('Gifts people actually keep.', '让人舍不得扔的定制礼品。'),
     lede: L('A short list of branded gifts we like: tea sets, red envelopes, cork, candles, corduroy. Pick a few, and we’ll come back with prices and a mockup with your logo.',
             '我们挑过的一小批定制礼品：茶具、红包、软木、香薰、灯芯绒。选几样告诉我们，我们会回复报价，并做好印上您 logo 的效果图。'),
@@ -53,8 +60,8 @@
     msg: L('Anything else', '其他说明'),
     msgPh: L('Event, logo colors, where it will be used…', '活动用途、logo 颜色、使用场合等'),
     optional: L('optional', '选填'),
-    agree: L('I agree to the <a href="privacy.html">Privacy Policy</a> and to EORACCO contacting me about this quote.',
-             '我同意<a href="privacy.html">隐私政策</a>，并同意 EORACCO 就本次询价与我联系。'),
+    agree: L('I agree to the <a href="/privacy.html">Privacy Policy</a> and to EORACCO contacting me about this quote.',
+             '我同意<a href="/privacy.html">隐私政策</a>，并同意 EORACCO 就本次询价与我联系。'),
     send: L('Send quote request', '发送询价'),
     sending: L('Sending…', '正在发送…'),
     sentH: L('Quote request sent.', '询价已发送。'),
@@ -72,19 +79,67 @@
   const state = { cat: 'all', list: [], sent: false };
 
   // ---------- markup ----------
+  // four photos for the hero still life (tall one first)
+  const HERO_IDS = ['EO-03', 'EO-02', 'EO-14', 'EO-20'];
+
   function heroHTML() {
+    const tiles = HERO_IDS.map((id, n) => `
+      <figure class="ghero-tile ghero-tile--${n + 1}">
+        <img src="${byId[id].img}" alt="${esc(byId[id].name.en)}" ${n ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async" />
+        <figcaption>${tx(byId[id].name)}</figcaption>
+      </figure>`).join('');
     return `
-    <section class="promo-hero">
-      <div class="container">
-        <p class="promo-kicker">${tx(T.kicker)}${zhLine(T.kicker, 'zh promo-kicker-zh')}</p>
-        <h1 class="promo-h1">${tx(T.h1)}${zhLine(T.h1, 'zh-line promo-h1-zh')}</h1>
-        <p class="promo-lede">${tx(T.lede)}${zhLine(T.lede)}</p>
-        <div class="promo-hero-cta">
-          <a class="btn btn-primary" href="#gifts">${tx(T.browse)}</a>
-          <a class="btn btn-ghost" href="#quote">${tx(T.ask)}</a>
+    <section class="ghero" id="top">
+      <div class="container ghero-inner">
+        <div class="ghero-copy">
+          <p class="promo-kicker">${tx(T.kicker)}${zhLine(T.kicker, 'zh promo-kicker-zh')}</p>
+          <h1 class="promo-h1">${tx(T.h1)}${zhLine(T.h1, 'zh-line promo-h1-zh')}</h1>
+          <p class="promo-lede">${tx(T.lede)}${zhLine(T.lede)}</p>
+          <div class="promo-hero-cta">
+            <a class="btn btn-primary" href="#gifts">${tx(T.browse)}</a>
+            <a class="btn btn-ghost" href="#quote">${tx(T.ask)}</a>
+          </div>
+          <ul class="ghero-facts">${T.facts.map((f) => `<li>${tx(f)}</li>`).join('')}</ul>
         </div>
+        <div class="ghero-art" aria-hidden="false">${tiles}</div>
       </div>
     </section>`;
+  }
+
+  function navHTML() {
+    const l = EO.lang;
+    return `
+    <div class="container gnav-inner">
+      <a class="brand gnav-brand" href="#top" aria-label="EORACCO Gifts"><span class="brand-mark" aria-hidden="true"></span>EORACCO<span class="gnav-sub">${tx(T.sub)}</span></a>
+      <nav class="gnav-links" aria-label="Gifts">
+        <a href="#gifts">${tx(T.navGifts)}</a>
+        <a href="#how">${tx(T.navHow)}</a>
+      </nav>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        ${['en', 'bi', 'zh'].map((k) => `<button type="button" data-lang="${k}" class="${l === k ? 'active' : ''}" aria-pressed="${l === k}">${{ en: 'EN', bi: '双语', zh: '中文' }[k]}</button>`).join('')}
+      </div>
+      <a class="btn btn-small btn-dark gnav-cta" href="#quote">${tx(T.navQuote)}</a>
+    </div>`;
+  }
+
+  function footHTML() {
+    return `
+    <div class="container gfoot-inner">
+      <span class="brand"><span class="brand-mark" aria-hidden="true"></span>EORACCO<span class="gnav-sub">${tx(T.sub)}</span></span>
+      <span class="gfoot-links">
+        <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
+        <a href="/privacy.html">${tx(T.privacy)}</a>
+        <a href="/terms.html">${tx(T.terms)}</a>
+      </span>
+      <span class="gfoot-copy">© 2026 EORACCO · Los Angeles</span>
+    </div>`;
+  }
+
+  function syncLang() {
+    const l = EO.lang;
+    document.body.classList.remove('lang-en', 'lang-zh', 'lang-bi');
+    document.body.classList.add('lang-' + l);
+    document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
   }
 
   function chipsHTML() {
@@ -113,7 +168,7 @@
 
   function stepsHTML() {
     return `
-    <section class="promo-steps">
+    <section class="promo-steps" id="how">
       <div class="container">
         <h2 class="promo-h2">${tx(T.stepsH)}${zhLine(T.stepsH)}</h2>
         <ol class="promo-steps-list">
@@ -169,6 +224,11 @@
     const old = document.getElementById('promoForm');
     const saved = old ? Object.fromEntries([...old.elements].filter((e) => e.name).map((e) => [e.name, e.type === 'checkbox' ? e.checked : e.value])) : null;
 
+    const nav = document.getElementById('giftNav');
+    const foot = document.getElementById('giftFooter');
+    if (nav) nav.innerHTML = navHTML();
+    if (foot) foot.innerHTML = footHTML();
+    syncLang();
     main.innerHTML = `
       ${heroHTML()}
       <section class="promo-gifts" id="gifts">
@@ -286,6 +346,15 @@
       .catch(fail);
   }
 
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('#giftNav [data-lang]');
+    if (b) EO.setLang(b.dataset.lang);
+  });
+  const navEl = document.getElementById('giftNav');
+  const onScroll = () => navEl && navEl.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true });
+
   render();
+  onScroll();
   EO.onLang(() => render());
 })();
