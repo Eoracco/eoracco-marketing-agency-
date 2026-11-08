@@ -30,6 +30,10 @@
     privacy: { en: 'Privacy Policy', zh: '隐私政策' },
     terms: { en: 'Terms of Service', zh: '服务条款' },
     cookies: { en: 'Cookies', zh: 'Cookie 说明' },
+    agency: { en: 'Agency', zh: '营销服务' },
+    customTab: { en: 'Custom', zh: '企业定制' },
+    switchLabel: { en: 'Switch between EORACCO Agency and EORACCO Custom', zh: '切换 EORACCO 营销服务 / 企业定制' },
+    custom: { en: 'EORACCO Custom · Branded merch', zh: 'EORACCO Custom · 企业定制' },
   };
   const tx = (o) => EO.tx(o);
   const zhSub = (o) => (EO.isBi() && o ? `<span class="zh-inline">${o.zh}</span>` : '');
@@ -48,6 +52,10 @@
     return `
     <div class="nav-inner">
       <a href="${HREF.top}" class="brand" aria-label="EORACCO home"><span class="brand-mark" aria-hidden="true"></span>EORACCO</a>
+      <div class="site-switch" role="group" aria-label="${tx(T.switchLabel)}">
+        <a class="is-on" href="${HREF.top}" aria-current="true">${tx(T.agency)}</a>
+        <a href="custom/">${tx(T.customTab)}</a>
+      </div>
       <nav class="nav-links" aria-label="Primary">
         ${cats}
         <a class="nav-link" href="${HREF.pricing}">${tx(T.pricing)}<span class="nav-count" ${count ? '' : 'hidden'}>${count}</span></a>
@@ -129,6 +137,7 @@
             <a href="${HREF.pricing}">${tx(T.pricing)}</a>
             <a href="${HREF.process}">${tx(T.howItWorks)}</a>
             <a href="${HREF.contact}">${tx(T.contact)}</a>
+            <a href="custom/">${tx(T.custom)}</a>
             <a href="mailto:eoraccoofficial@gmail.com">eoraccoofficial@gmail.com</a>
           </div>
         </div>
