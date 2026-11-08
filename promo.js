@@ -135,6 +135,21 @@
     needEmail: L('a valid email', '有效邮箱'),
     needAgree: L('agreement to the privacy policy', '勾选同意隐私政策'),
     allProducts: L('See all products', '查看全部产品'),
+    findBtn: L('Find a product for me', '帮我找产品'),
+    findKicker: L('Product search', '代找产品'),
+    findH: L('Can’t find it here? We’ll find it for you.', '这里没有？我们帮您找。'),
+    findP: L('Describe what you have in mind, or paste a link to something you saw. We search more than a million products from our suppliers and send back the closest matches with prices — within one business day, free.',
+             '描述一下您想要的东西，或者贴一个在别处看到的链接。我们会在供应商的一百多万个产品里帮您找，一个工作日内把最接近的几款和价格发给您，不收费。'),
+    findSteps: [L('Tell us what you’re looking for', '告诉我们您要找什么'), L('We search 1M+ supplier products', '我们在 100 多万个产品里搜'), L('You get 3–5 matches with prices', '您收到 3–5 个推荐和报价')],
+    what: L('What are you looking for?', '想找什么产品？'),
+    whatPh: L('e.g. a bamboo lunch box with our logo, under $10, for 200 employees', '例如：印 logo 的竹制饭盒，每个 $10 以内，200 位员工用'),
+    link: L('Link to a similar product', '类似产品的链接'),
+    linkPh: L('Amazon, Etsy, Instagram, anywhere', 'Amazon、Etsy、小红书、Instagram 都可以'),
+    photoTip: L('Have a photo? Reply to our email with it.', '有图片的话，收到我们的邮件后直接回复发给我们。'),
+    findSend: L('Find it for me', '帮我找'),
+    findSentH: L('We’re on it.', '收到，我们去找。'),
+    findSentP: L('Within one business day you’ll get the closest matches and prices by email.', '一个工作日内，我们会把最接近的产品和价格发到您的邮箱。'),
+    needWhat: L('what you are looking for', '想找的产品'),
     prodKicker: L('EORACCO Custom · Products', 'EORACCO Custom · 产品'),
     prodH: L('Products we recommend.', '我们推荐的产品。'),
     prodP: L('A short list we have checked for quality and minimums. Add what you like to your project, then send one brief for all of it.',
@@ -146,7 +161,7 @@
     mainLink: L('EORACCO also does marketing, design and websites', 'EORACCO 也提供营销、设计和网站服务'),
   };
 
-  const state = { app: DATA.APPS[0].key, filter: 'all', list: loadList(), sent: false };
+  const state = { app: DATA.APPS[0].key, filter: 'all', list: loadList(), sent: false, findSent: false };
 
   // ---------- markup ----------
   const HERO_IDS = ['EO-03', 'EO-22', 'EO-14', 'EO-20'];
@@ -254,7 +269,7 @@
         <div class="promo-other">
           <h3>${tx(T.otherH)}${zhLine(T.otherH)}</h3>
           <p>${tx(T.otherP)}</p>
-          <a class="btn btn-small" href="#start">${tx(T.start)}</a>
+          <a class="btn btn-small" href="products/#find">${tx(T.findBtn)}</a>
         </div>
       </div>
     </section>`;
@@ -380,6 +395,7 @@
         <p class="promo-kicker">${tx(T.prodKicker)}</p>
         <h1 class="promo-h2 prod-h1">${tx(T.prodH)}${zhLine(T.prodH)}</h1>
         <p class="prod-lede">${tx(T.prodP)}${zhLine(T.prodP)}</p>
+        <a class="btn btn-ghost prod-find-btn" href="#find">${tx(T.findBtn)} <span aria-hidden="true">→</span></a>
       </div>
     </section>
     <section class="promo-gifts prod-list">
@@ -393,11 +409,54 @@
         <p class="prod-count">${items.length} ${tx(T.showing)}</p>
         <div class="promo-grid" id="prodGrid">${items.map(cardHTML).join('')}</div>
         <p class="promo-photo-note">${tx(T.photoNote)}</p>
-        <div class="promo-other">
-          <h3>${tx(T.otherH)}${zhLine(T.otherH)}</h3>
-          <p>${tx(T.otherP)}</p>
-          <a class="btn btn-small" href="${ROOT}#start">${tx(T.start)}</a>
+      </div>
+    </section>
+    ${findHTML()}`;
+  }
+
+  function findFormHTML() {
+    if (state.findSent) {
+      return `<div class="contact-success"><div class="check">${EO.icon('check', 26)}</div>
+        <h3>${tx(T.findSentH)}</h3><p>${tx(T.findSentP)}${zhLine(T.findSentP)}</p></div>`;
+    }
+    return `
+      <form id="findForm" data-kind="find" novalidate>
+        <div class="field">
+          <label for="f-what">${tx(T.what)}</label>
+          <textarea id="f-what" name="what" rows="4" placeholder="${esc(tx(T.whatPh))}"></textarea>
         </div>
+        <div class="field">
+          <label for="f-link">${tx(T.link)} <span class="opt">(${tx(T.optional)})</span></label>
+          <input id="f-link" name="link" type="url" inputmode="url" placeholder="${esc(tx(T.linkPh))}" autocomplete="off" />
+        </div>
+        <div class="field-row field-row--3">
+          <div class="field"><label for="f-qty">${tx(T.qty)}</label><input id="f-qty" name="qty" type="text" placeholder="${esc(tx(T.qtyPh))}" autocomplete="off" /></div>
+          <div class="field"><label for="f-budget">${tx(T.budget)}</label><input id="f-budget" name="budget" type="text" placeholder="${esc(tx(T.budgetPh))}" autocomplete="off" /></div>
+          <div class="field"><label for="f-date">${tx(T.date)}</label><input id="f-date" name="date" type="date" autocomplete="off" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="f-name">${tx(T.name)}</label><input id="f-name" name="name" type="text" autocomplete="name" /></div>
+          <div class="field"><label for="f-email">${tx(T.email)}</label><input id="f-email" name="email" type="email" autocomplete="email" /></div>
+        </div>
+        <p class="promo-logo-note">${tx(T.photoTip)}</p>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" class="promo-hp" aria-hidden="true" />
+        <label class="checkbox-row"><input type="checkbox" name="agreed" /><span>${tx(T.agree).replace(/\{P\}/g, SITE + 'privacy.html')}</span></label>
+        <p class="promo-error" id="findError" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primary promo-send" id="findSend">${tx(T.findSend)}</button>
+      </form>`;
+  }
+
+  function findHTML() {
+    return `
+    <section class="find" id="find">
+      <div class="container find-inner">
+        <div class="find-copy">
+          <p class="promo-kicker">${tx(T.findKicker)}</p>
+          <h2 class="promo-h2">${tx(T.findH)}${zhLine(T.findH)}</h2>
+          <p class="find-p">${tx(T.findP)}${zhLine(T.findP)}</p>
+          <ol class="find-steps">${T.findSteps.map((x, n) => `<li><span>${n + 1}</span>${tx(x)}</li>`).join('')}</ol>
+        </div>
+        <div class="promo-form-card" id="findCard">${findFormHTML()}</div>
       </div>
     </section>`;
   }
@@ -411,8 +470,9 @@
 
   function render() {
     // keep anything the visitor already typed when the language changes
-    const old = document.getElementById('promoForm');
-    const saved = old ? Object.fromEntries([...old.elements].filter((e) => e.name).map((e) => [e.name, e.type === 'checkbox' ? e.checked : e.value])) : null;
+    const grab = (id) => { const f = document.getElementById(id); return f ? Object.fromEntries([...f.elements].filter((e) => e.name).map((e) => [e.name, e.type === 'checkbox' ? e.checked : e.value])) : null; };
+    const saved = grab('promoForm');
+    const savedFind = grab('findForm');
 
     const nav = document.getElementById('giftNav');
     const foot = document.getElementById('giftFooter');
@@ -423,9 +483,11 @@
       ? `${heroHTML()}${whoHTML()}${whyHTML()}${howHTML()}${priceHTML()}${startHTML()}`
       : productsHTML()) + '<div class="promo-bar" id="promoBar" hidden></div>';
 
+    const restore = (form, vals) => { if (form && vals) Object.entries(vals).forEach(([k, v]) => { const el = form.elements[k]; if (el) { if (el.type === 'checkbox') el.checked = v; else el.value = v; } }); };
     const form = document.getElementById('promoForm');
-    if (form && saved) Object.entries(saved).forEach(([k, v]) => { const el = form.elements[k]; if (el) { if (el.type === 'checkbox') el.checked = v; else el.value = v; } });
+    restore(form, saved);
     if (form) form.addEventListener('submit', onSubmit);
+    wireFind(savedFind);
     updateBar();
   }
 
@@ -462,8 +524,10 @@
     const f = e.target.closest('[data-filter]');
     if (f) {
       state.filter = f.dataset.filter;
-      main.innerHTML = productsHTML() + '<div class="promo-bar" id="promoBar" hidden></div>';
-      updateBar();
+      const items = state.filter === 'all' ? DATA.ITEMS : DATA.APPS.find((a) => a.key === state.filter).items.map((id) => byId[id]);
+      main.querySelectorAll('[data-filter]').forEach((c) => { const on = c === f; c.classList.toggle('is-on', on); c.setAttribute('aria-selected', on); });
+      document.getElementById('prodGrid').innerHTML = items.map(cardHTML).join('');
+      main.querySelector('.prod-count').textContent = `${items.length} ${tx(T.showing)}`;
       return;
     }
     const add = e.target.closest('[data-add]');
@@ -478,6 +542,56 @@
     const rm = e.target.closest('[data-remove]');
     if (rm) { state.list = state.list.filter((x) => x !== rm.dataset.remove); saveList(); refreshList(); }
   });
+
+  function wireFind(vals) {
+    const form = document.getElementById('findForm');
+    if (!form) return;
+    if (vals) Object.entries(vals).forEach(([k, v]) => { const el = form.elements[k]; if (el) { if (el.type === 'checkbox') el.checked = v; else el.value = v; } });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('findSend');
+      const err = document.getElementById('findError');
+      if (btn.dataset.sending) return;
+      const v = (k) => form.elements[k].value.trim();
+      const checks = [
+        [form.what, !!v('what'), T.needWhat],
+        [form.name, !!v('name'), T.need],
+        [form.email, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email')), T.needEmail],
+        [form.agreed, form.agreed.checked, T.needAgree],
+      ];
+      checks.forEach(([el, ok]) => { const box = el.closest('.field') || el.closest('.checkbox-row'); if (box) box.classList.toggle('is-invalid', !ok); });
+      const missing = checks.filter(([, ok]) => !ok);
+      if (missing.length) {
+        err.textContent = isZh() ? `请填写：${missing.map(([, , m]) => m.zh).join('、')}` : `Please add ${missing.map(([, , m]) => m.en).join(', ')}.`;
+        err.hidden = false;
+        missing[0][0].focus({ preventScroll: true });
+        return;
+      }
+      err.hidden = true;
+      btn.dataset.sending = '1';
+      btn.textContent = tx(T.sending);
+      const message = [
+        `Looking for 想找: ${v('what')}`,
+        v('link') && `Reference link 参考链接: ${v('link')}`,
+        v('qty') && `Quantity 数量: ${v('qty')}`,
+        v('budget') && `Budget per piece 每件预算: ${v('budget')}`,
+        v('date') && `In-hand date 送达日期: ${v('date')}`,
+      ].filter(Boolean).join('\n');
+      const data = new URLSearchParams({
+        name: v('name'), email: v('email'), business: '', phone: '',
+        need: 'EORACCO Custom 代找产品 · Product search',
+        message, plan: '', lang: EO.lang,
+        website: form.website.value,
+        t: String(Date.now() - openedAt),
+      });
+      const ok = () => { state.findSent = true; document.getElementById('findCard').innerHTML = findFormHTML(); };
+      const fail = () => { delete btn.dataset.sending; btn.textContent = tx(T.findSend); err.textContent = tx(T.fail); err.hidden = false; };
+      fetch(FORM_ENDPOINT, { method: 'POST', body: data })
+        .then((r) => r.json())
+        .then((j) => (j && j.ok ? ok() : fail()))
+        .catch(fail);
+    });
+  }
 
   function onSubmit(e) {
     e.preventDefault();

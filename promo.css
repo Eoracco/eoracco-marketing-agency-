@@ -260,3 +260,17 @@
   .gnav-links a { white-space: nowrap; }
 }
 @media (max-width: 699px) { html { scroll-padding-top: 104px; } }
+
+/* product search ("find it for me") */
+.prod-find-btn { margin-top: 22px; }
+.find { background: var(--gray); padding: clamp(64px, 9vw, 110px) 0; }
+.find-inner { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+@media (max-width: 859px) { .find-inner { grid-template-columns: 1fr; } }
+.find .promo-h2 { margin-top: 12px; }
+.find-p { margin-top: 16px; font-size: 17px; color: var(--ink-2); }
+.find-p .zh-line { font-size: 15px; }
+.find-steps { margin-top: 26px; display: grid; gap: 12px; }
+.find-steps li { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; }
+.find-steps span { flex: none; display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--amber); font-size: 13px; font-weight: 700; }
+.find .promo-form-card { background: #fff; }
+.find .promo-form-card .field input, .find .promo-form-card .field textarea { background: var(--gray); }
