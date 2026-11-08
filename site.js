@@ -30,6 +30,7 @@
     privacy: { en: 'Privacy Policy', zh: '隐私政策' },
     terms: { en: 'Terms of Service', zh: '服务条款' },
     cookies: { en: 'Cookies', zh: 'Cookie 说明' },
+    promo: { en: 'Promotional products', zh: '定制推广礼品' },
   };
   const tx = (o) => EO.tx(o);
   const zhSub = (o) => (EO.isBi() && o ? `<span class="zh-inline">${o.zh}</span>` : '');
@@ -103,6 +104,7 @@
           </ul>
         </div>`).join('')}
         <a class="sheet-link" href="${HREF.pricing}">${tx(T.pricing)}</a>
+        <a class="sheet-link" href="promo.html">${tx(T.promo)}</a>
         <a class="btn btn-primary sheet-cta" href="${HREF.contact}">${tx(T.book)}</a>
       </div>
     </div>
@@ -129,6 +131,7 @@
             <a href="${HREF.pricing}">${tx(T.pricing)}</a>
             <a href="${HREF.process}">${tx(T.howItWorks)}</a>
             <a href="${HREF.contact}">${tx(T.contact)}</a>
+            <a href="promo.html">${tx(T.promo)}</a>
             <a href="mailto:eoraccoofficial@gmail.com">eoraccoofficial@gmail.com</a>
           </div>
         </div>
