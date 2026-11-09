@@ -221,6 +221,8 @@
   const forParam = new URLSearchParams(location.search).get('for');
   const productLink = (i) => `${ROOT}products/${i.slug}/`;
   const money = (n) => '$' + Number(n).toFixed(2);
+  // some supplier photos are collages; `fit` zooms into the one product we want to show
+  const fitAttr = (i) => (i.fit ? ` style="transform:scale(${i.fit[0]});transform-origin:${i.fit[1]}% ${i.fit[2]}%"` : '');
   // the products page filters by product group, or by industry when it is opened from a product page (?for=)
   const forApp = DATA.APPS.find((a) => a.key === forParam);
   const groupItems = (key) => {
@@ -273,7 +275,7 @@
   function heroHTML() {
     const tiles = HERO_IDS.map((id, n) => `
       <figure class="ghero-tile ghero-tile--${n + 1}">
-        <img src="${byId[id].img}" alt="${esc(byId[id].name.en)}" ${n ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async" />
+        <img src="${byId[id].img}" alt="${esc(byId[id].name.en)}" ${n ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async"${fitAttr(byId[id])} />
         <figcaption>${tx(byId[id].name)}</figcaption>
       </figure>`).join('');
     return `
@@ -298,7 +300,7 @@
     const on = state.list.includes(i.id);
     return `
       <article class="promo-card">
-        <a class="promo-img" href="${productLink(i)}"><img src="${i.img}" alt="${esc(i.name.en)}" loading="lazy" decoding="async" width="750" height="750" /></a>
+        <a class="promo-img" href="${productLink(i)}"><img src="${i.img}" alt="${esc(i.name.en)}" loading="lazy" decoding="async" width="750" height="750"${fitAttr(i)} /></a>
         <div class="promo-body">
           <h3 class="promo-name"><a href="${productLink(i)}">${tx(i.name)}${zhLine(i.name)}</a></h3>
           <p class="promo-note">${tx(i.note)}</p>
@@ -317,7 +319,7 @@
     const low = lowest(i);
     return `
       <article class="sig-card">
-        <a class="sig-img" href="${productLink(i)}"><img src="${i.img}" alt="${esc(i.name.en)}" loading="lazy" decoding="async" /></a>
+        <a class="sig-img" href="${productLink(i)}"><img src="${i.img}" alt="${esc(i.name.en)}" loading="lazy" decoding="async"${fitAttr(i)} /></a>
         <div class="sig-body">
           <h3 class="sig-name"><a href="${productLink(i)}">${tx(i.name)}${zhLine(i.name)}</a></h3>
           <p class="sig-about">${tx(i.about)}</p>
@@ -365,11 +367,16 @@
           </div>
           <div class="gbox-art">
             <a class="gbox-tile gbox-tile--1" href="${productLink(box)}"><img src="${box.img}" alt="${esc(box.name.en)}" loading="lazy" decoding="async" /></a>
-            <a class="gbox-tile gbox-tile--2" href="${productLink(env)}"><img src="${env.img}" alt="${esc(env.name.en)}" loading="lazy" decoding="async" /></a>
+            <a class="gbox-tile gbox-tile--2" href="${productLink(env)}"><img src="${env.img}" alt="${esc(env.name.en)}" loading="lazy" decoding="async"${fitAttr(env)} /></a>
           </div>
         </div>
         <h3 class="gbox-inside-h">${tx(T.insideH)}${zhLine(T.insideH)}</h3>
-        <div class="promo-grid">${inside.map(cardHTML).join('')}</div>
+        <div class="mini-grid">${inside.map((i) => `
+          <a class="mini" href="${productLink(i)}">
+            <span class="mini-img"><img src="${i.img}" alt="${esc(i.name.en)}" loading="lazy" decoding="async"${fitAttr(i)} /></span>
+            <span class="mini-name">${tx(i.name)}</span>
+            <span class="mini-min">${tx(T.min)} ${i.min} ${tx(T.pcs)}</span>
+          </a>`).join('')}</div>
       </div>
     </section>`;
   }
@@ -384,7 +391,7 @@
           <h2 class="promo-h2">${tx(T.dailyH)}${zhLine(T.dailyH)}</h2></div>
           <p>${tx(T.dailyP)}</p>
         </div>
-        <div class="promo-grid">${items.map(cardHTML).join('')}</div>
+        <div class="promo-grid promo-grid--4">${items.map(cardHTML).join('')}</div>
         <p class="promo-photo-note">${tx(T.photoNote)}</p>
       </div>
     </section>`;
@@ -548,7 +555,7 @@
           </button>`).join('')}
         </div>
         <p class="prod-count">${items.length} ${tx(T.showing)}</p>
-        <div class="promo-grid" id="prodGrid">${items.map(cardHTML).join('')}</div>
+        <div class="promo-grid promo-grid--4" id="prodGrid">${items.map(cardHTML).join('')}</div>
         <p class="promo-photo-note">${tx(T.photoNote)}</p>
       </div>
     </section>
@@ -657,7 +664,7 @@
     <section class="pd" id="top">
       <div class="container pd-inner">
         <div class="pd-gallery">
-          <div class="pd-main"><img id="pdMain" src="${g}" alt="${esc(i.name.en)}" fetchpriority="high" decoding="async" /></div>
+          <div class="pd-main"><img id="pdMain" src="${g}" alt="${esc(i.name.en)}" fetchpriority="high" decoding="async"${state.gi ? '' : fitAttr(i)} /></div>
           ${i.gallery.length > 1 ? `<div class="pd-thumbs" role="list">${i.gallery.map((u, n) => `
             <button type="button" role="listitem" class="pd-thumb ${n === state.gi ? 'is-on' : ''}" data-gi="${n}" aria-label="Photo ${n + 1}"><img src="${u}" alt="" loading="lazy" decoding="async" /></button>`).join('')}</div>` : ''}
         </div>
@@ -760,7 +767,11 @@
     const th = e.target.closest('[data-gi]');
     if (th) {
       state.gi = +th.dataset.gi;
-      document.getElementById('pdMain').src = byId[document.body.dataset.id].gallery[state.gi];
+      const pi = byId[document.body.dataset.id];
+      const pm = document.getElementById('pdMain');
+      pm.src = pi.gallery[state.gi];
+      pm.style.transform = state.gi === 0 && pi.fit ? `scale(${pi.fit[0]})` : '';
+      pm.style.transformOrigin = state.gi === 0 && pi.fit ? `${pi.fit[1]}% ${pi.fit[2]}%` : '';
       main.querySelectorAll('[data-gi]').forEach((b) => b.classList.toggle('is-on', b === th));
       return;
     }
