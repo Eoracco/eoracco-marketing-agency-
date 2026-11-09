@@ -40,16 +40,35 @@
     switchLabel: L('Switch between EORACCO Agency and EORACCO Custom', '切换 EORACCO 营销服务 / 企业定制'),
     navProducts: L('Products', '产品'),
     navWho: L('Who it’s for', '适合谁'),
+    navSig: L('Signature', '招牌定制'),
+    navBox: L('Gift boxes', '设计礼盒'),
     navHow: L('How it works', '流程'),
     navPrice: L('Pricing', '费用'),
     navStart: L('Start a project', '开始定制'),
-    kicker: L('Branded merchandise for LA businesses', '洛杉矶企业定制周边'),
-    h1: L('Your logo on things people keep.', '把您的品牌，做成客户舍不得扔的东西。'),
-    lede: L('Tell us what it’s for, how many and by when. We pick the products, design the mockups, handle the suppliers and get it to you on time — in English or 中文.',
-            '告诉我们用途、数量和日期。挑产品、做效果图、对接供应商、按时送到，都由我们负责，中英文都可以沟通。'),
+    kicker: L('Custom gifts & merch for LA businesses', '洛杉矶企业定制礼物与周边'),
+    h1: L('Gifts designed for your brand. The kind people keep.', '为你的品牌设计的礼物，让人舍不得扔。'),
+    lede: L('Bobbleheads of your team, brick figures, gift boxes and merch with artwork drawn for you. We design it, handle the makers and deliver on time, in English or 中文.',
+            '把团队做成摇头公仔、积木小人，为你设计礼盒和原创图案的周边。设计、对接工厂、按时送到都由我们负责，中英文都可以沟通。'),
     start: L('Start a project', '开始定制'),
     see: L('See what we make', '看看能做什么'),
-    facts: [L('Minimums from 12 pcs', '最低 12 件起'), L('Free mockups with your logo', '免费出 logo 效果图'), L('One all-in quote', '一个总价，不另加费')],
+    facts: [L('Designed for you, not picked from a catalog', '为你设计，不是从目录里挑'), L('Many pieces from 1', '很多产品 1 件起'), L('One all-in quote', '一个总价，不另加费')],
+
+    sigKicker: L('Signature custom', '招牌定制'),
+    sigH: L('Made from your people, your shop, your story.', '用你的人、你的店、你的故事做成的礼物。'),
+    sigP: L('Pieces we make from scratch for each client. Order one to see it before you commit to more.', '每一件都为客户从头做。可以先订一个看效果，再决定要不要多做。'),
+    details: L('See details', '查看详情'),
+    boxKicker: L('Designed gift boxes', '设计礼盒'),
+    boxH: L('A gift box that looks like your brand made it.', '一份看起来像你品牌自己出品的礼盒。'),
+    boxP: L('We design the box, the card and the red envelopes, then fill it with a few good things.', '盒子、卡片、红包都由我们设计，再放进几样好东西。'),
+    boxSteps: [
+      [L('The box', '盒子'), L('A rigid magnetic box printed with packaging we design. From 25 boxes.', '磁吸硬盒，印上我们设计的包装，25 个起。')],
+      [L('The paper', '卡片和红包'), L('A printed card and, for Lunar New Year, red envelopes with original artwork.', '印刷贺卡；新年礼盒再配原创图案的红包。')],
+      [L('What goes inside', '里面放什么'), L('Pick two or three from the list below, or tell us the budget and we’ll choose.', '从下面挑两三样，或者告诉我们预算，我们来配。')],
+    ],
+    insideH: L('What can go inside', '可以放进礼盒的东西'),
+    dailyKicker: L('Everyday custom', '日常定制'),
+    dailyH: L('Wear and drinkware with artwork drawn for you.', '印着为你画的图案的服装和杯具。'),
+    dailyP: L('The things people use most, done with original art and quiet branding instead of a big logo.', '大家最常用的东西，用原创图案和低调的品牌标识来做，而不是印一个大 logo。'),
 
     whoH: L('Made for how you do business.', '按您的生意来挑。'),
     whoP: L('Pick your line of work to see what fits. Every item can carry your logo, name or artwork.', '选您的行业，看看哪些合适。每一件都可以印 logo、名字或图案。'),
@@ -63,38 +82,38 @@
 
     whyH: L('What usually goes wrong — and how we handle it.', '定制常见的坑，我们怎么帮您避开。'),
     why: [
-      [L('Cheap stuff that gets thrown away', '便宜货，转手就被扔'), L('We only suggest things people actually use, matched to who receives them.', '只推荐真的会被用的东西，按收礼的人来挑。')],
+      [L('Gifts that get thrown away', '礼物转手就被扔'), L('We make something about them: their face, their shop, their brand. That is what people keep.', '我们做的是跟对方有关的东西：他的样子、他的店、他的品牌，这样才会被留下。')],
       [L('Surprise fees on the invoice', '账单上冒出额外费用'), L('Setup, imprint and shipping are in one quote before you say yes.', '制版、印刷、运费都包含在一个报价里，您确认之前就写清楚。')],
       [L('“Send us a vector file”', '“请提供矢量文件”'), L('Send whatever logo you have. We redraw it and show you a mockup for free.', '手上有什么 logo 就发什么，我们免费帮您重绘并出效果图。')],
       [L('Missing the event date', '赶不上活动日期'), L('We start from your in-hand date and only offer items that can make it.', '从您需要的日期倒推，只推荐来得及做的产品。')],
-      [L('500-piece minimums', '动不动就 500 件起'), L('Many of our picks start at 12–50 pieces, made for small teams and shops.', '很多产品 12–50 件就能做，适合小店和小团队。')],
+      [L('500-piece minimums', '动不动就 500 件起'), L('Bobbleheads, brick desk displays, tees and hoodies start at one piece.', '公仔、积木桌面摆件、T 恤、卫衣都是 1 件起。')],
       [L('Lost in translation', '语言沟通不顺'), L('Talk to us in English or 中文. We know the Lunar New Year dos and don’ts.', '中英文都能沟通，也懂新年送礼的讲究。')],
     ],
 
     howH: L('How a project works.', '定制流程。'),
     steps: [
       [L('Brief', '提需求'), L('Tell us the occasion, who it’s for, quantity, date and budget.', '告诉我们用途、送给谁、数量、日期和预算。')],
-      [L('Picks & mockups', '选品和效果图'), L('Within one business day: a short list with your logo mocked up and an all-in price.', '一个工作日内发给您精选方案、logo 效果图和总价。')],
-      [L('Approve', '确认'), L('Choose your favorites. A deposit confirms the order.', '选定喜欢的款式，付订金后正式下单。')],
-      [L('Proof', '打样确认'), L('You sign off a final proof before anything is made. Physical samples on request.', '生产前您先确认打样稿，也可以要实物样品。')],
-      [L('Production', '生产'), L('Most items take 2–3 weeks after proof approval; some have rush options.', '确认打样后大部分产品 2–3 周完成，部分产品可加急。')],
+      [L('Design', '设计'), L('We draw the artwork or packaging and send mockups with an itemized, all-in quote.', '我们画图案或设计包装，发效果图和分项列明的总价。')],
+      [L('Approve', '确认'), L('Choose what you like. A deposit confirms the order.', '选定喜欢的方案，付订金后正式下单。')],
+      [L('Sample', '打样'), L('You sign off a proof first. For bobbleheads and brick pieces you approve the likeness or a sample.', '生产前先确认打样稿；公仔和积木会先给你确认样子或样品。')],
+      [L('Production', '生产'), L('Usually 2–4 weeks after approval, depending on the item.', '确认后一般 2–4 周，视产品而定。')],
       [L('Delivered', '送达'), L('Shipped to your door or event by the date we agreed. We track it so you don’t have to.', '按约定日期送到您手上或活动现场，物流由我们跟进。')],
     ],
 
     priceH: L('What it costs.', '费用说明。'),
-    priceP: L('Every quote is per piece and all-in. Here is what goes into it.', '每个报价都是按件计价的总价，包含以下内容。'),
+    priceP: L('Every quote has two parts, design and production, and both are written down before you pay anything.', '每个报价分两部分：设计和生产，付款前都写清楚。'),
     price: [
-      [L('Minimum order', '起订量'), L('From 12 pcs', '12 件起'), L('Depends on the item; shown on each product.', '因产品而异，每个产品上都有标注。')],
-      [L('Design & mockups', '设计与效果图'), L('Free', '免费'), L('Logo clean-up and mockups are on us.', 'logo 整理和效果图由我们负责。')],
-      [L('Setup & imprint', '制版与印刷'), L('Included', '已包含'), L('Built into the per-piece price, never added later.', '已算进单价，不会事后再加。')],
-      [L('Turnaround', '交期'), L('2–3 weeks', '2–3 周'), L('After proof approval. Rush available on many items.', '从确认打样起算，很多产品可加急。')],
+      [L('Design', '设计'), L('Quoted per project', '按项目报价'), L('Logo mockups are free. Original illustration, packaging and likeness work are priced up front.', 'logo 效果图免费；原创插画、包装设计、公仔造型会先报价。')],
+      [L('Minimum order', '起订量'), L('From 1 piece', '1 件起'), L('Bobbleheads, brick desk displays and tees from one; gift boxes from 25. Shown on each product.', '公仔、积木桌面摆件、T 恤 1 件起；礼盒 25 个起。每个产品上都有标注。')],
+      [L('Production', '生产'), L('Per piece, all-in', '按件计价，全包'), L('Setup, imprint and shipping are built into one per-piece price.', '制版、印刷、运费都算进单价，不会事后再加。')],
+      [L('Turnaround', '交期'), L('2–4 weeks', '2–4 周'), L('Wear and drinkware usually 2–3 weeks; allow 3–4 for bobbleheads and gift boxes.', '服装、杯具大多 2–3 周；公仔和礼盒请预留 3–4 周。')],
     ],
 
     packH: L('Packaging that makes it feel finished.', '包装，让成品更完整。'),
     pack: [
       [L('Standard', '标准包装'), L('Individually bagged or boxed by the maker. Included.', '工厂标准独立袋装或盒装，已包含在价格内。')],
       [L('Branded box', '品牌纸盒'), L('Kraft or white mailer boxes with your logo printed. Extra cost.', '牛皮纸或白色纸盒，印上您的 logo，需另加费用。')],
-      [L('Gift set', '礼盒套装'), L('Rigid gift box, tissue and a printed thank-you card, packed and ready to hand out.', '硬礼盒、包装纸和印刷感谢卡，包好就能直接送。')],
+      [L('Designed gift box', '设计礼盒'), L('A rigid box with packaging we design, a printed card, packed and ready to hand out.', '我们设计包装的硬礼盒，配印刷贺卡，包好就能直接送。')],
     ],
 
     formH: L('Start a project', '开始定制'),
@@ -153,8 +172,8 @@
     needWhat: L('what you are looking for', '想找的产品'),
     prodKicker: L('EORACCO Custom · Products', 'EORACCO Custom · 产品'),
     prodH: L('Products we recommend.', '我们推荐的产品。'),
-    prodP: L('A short list we have checked for quality and minimums. Add what you like to your project, then send one brief for all of it.',
-             '我们按品质和起订量筛过的一批产品。把喜欢的加入定制，最后一起提交一份需求就行。'),
+    prodP: L('Signature custom pieces, gift boxes, and everyday wear and drinkware. Add what you like to your project, then send one brief for all of it.',
+             '招牌定制、设计礼盒，以及日常的服装和杯具。把喜欢的加进定制清单，最后发一份需求就好。'),
     all: L('All', '全部'),
     showing: L('items', '件'),
     crumbs: L('Products', '产品'),
@@ -202,10 +221,17 @@
   const forParam = new URLSearchParams(location.search).get('for');
   const productLink = (i) => `${ROOT}products/${i.slug}/`;
   const money = (n) => '$' + Number(n).toFixed(2);
-  const state = { app: DATA.APPS[0].key, filter: DATA.APPS.some((a) => a.key === forParam) ? forParam : 'all', gi: 0, list: loadList(), sent: false, findSent: false };
+  // the products page filters by product group, or by industry when it is opened from a product page (?for=)
+  const forApp = DATA.APPS.find((a) => a.key === forParam);
+  const groupItems = (key) => {
+    if (key === 'all') return DATA.ITEMS;
+    const app = DATA.APPS.find((a) => a.key === key);
+    return app ? app.items.map((id) => byId[id]) : DATA.ITEMS.filter((i) => i.cat === key);
+  };
+  const state = { app: DATA.APPS[0].key, filter: forApp ? forApp.key : 'all', gi: 0, list: loadList(), sent: false, findSent: false };
 
   // ---------- markup ----------
-  const HERO_IDS = ['EO-03', 'EO-22', 'EO-14', 'EO-20'];
+  const HERO_IDS = ['EO-30', 'EO-28', 'EO-31', 'EO-34'];
 
   function navHTML() {
     const l = EO.lang;
@@ -218,7 +244,8 @@
       </div>
       <nav class="gnav-links" aria-label="Sections">
         <a href="${ROOT}products/" class="${onHome ? '' : 'is-current'}" ${VIEW === 'products' ? 'aria-current="page"' : ''}>${tx(T.navProducts)}</a>
-        <a href="${homeAnchor('who')}">${tx(T.navWho)}</a>
+        <a href="${homeAnchor('signature')}">${tx(T.navSig)}</a>
+        <a href="${homeAnchor('giftbox')}">${tx(T.navBox)}</a>
         <a href="${homeAnchor('how')}">${tx(T.navHow)}</a>
         <a href="${homeAnchor('pricing')}">${tx(T.navPrice)}</a>
       </nav>
@@ -258,7 +285,7 @@
           <p class="promo-lede">${tx(T.lede)}${zhLine(T.lede)}</p>
           <div class="promo-hero-cta">
             <a class="btn btn-primary" href="#start">${tx(T.start)}</a>
-            <a class="btn btn-ghost" href="#who">${tx(T.see)}</a>
+            <a class="btn btn-ghost" href="#signature">${tx(T.see)}</a>
           </div>
           <ul class="ghero-facts">${T.facts.map((f) => `<li>${tx(f)}</li>`).join('')}</ul>
         </div>
@@ -281,6 +308,86 @@
           </div>
         </div>
       </article>`;
+  }
+
+  const lowest = (i) => (i.tiers.length ? Math.min(...i.tiers.map((t) => t[1])) : 0);
+
+  function sigCardHTML(i) {
+    const on = state.list.includes(i.id);
+    const low = lowest(i);
+    return `
+      <article class="sig-card">
+        <a class="sig-img" href="${productLink(i)}"><img src="${i.img}" alt="${esc(i.name.en)}" loading="lazy" decoding="async" /></a>
+        <div class="sig-body">
+          <h3 class="sig-name"><a href="${productLink(i)}">${tx(i.name)}${zhLine(i.name)}</a></h3>
+          <p class="sig-about">${tx(i.about)}</p>
+          <p class="sig-meta"><span>${tx(T.min)} ${i.min} ${tx(T.pcs)}</span>${low ? `<span>${tx(T.from)} ${money(low)}</span>` : ''}</p>
+          <div class="sig-cta">
+            <a class="btn btn-ghost btn-small" href="${productLink(i)}">${tx(T.details)}</a>
+            <button type="button" class="btn promo-add ${on ? 'is-added' : ''}" data-add="${i.id}" aria-pressed="${on}">${tx(on ? T.added : T.add)}</button>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function sigHTML() {
+    const items = DATA.ITEMS.filter((i) => i.cat === 'signature');
+    return `
+    <section class="sig" id="signature">
+      <div class="container">
+        <div class="sec-head">
+          <div><p class="promo-kicker">${tx(T.sigKicker)}</p>
+          <h2 class="promo-h2">${tx(T.sigH)}${zhLine(T.sigH)}</h2></div>
+          <p>${tx(T.sigP)}</p>
+        </div>
+        <div class="sig-grid">${items.map(sigCardHTML).join('')}</div>
+      </div>
+    </section>`;
+  }
+
+  function boxHTML() {
+    const box = byId['EO-31'];
+    const env = byId['EO-32'];
+    const inside = DATA.ITEMS.filter((i) => i.cat === 'inside');
+    return `
+    <section class="gbox" id="giftbox">
+      <div class="container">
+        <div class="gbox-top">
+          <div class="gbox-copy">
+            <p class="promo-kicker">${tx(T.boxKicker)}</p>
+            <h2 class="promo-h2">${tx(T.boxH)}${zhLine(T.boxH)}</h2>
+            <p class="gbox-p">${tx(T.boxP)}</p>
+            <ol class="gbox-steps">${T.boxSteps.map(([h, p], n) => `<li><span>${n + 1}</span><div><h3>${tx(h)}${zhLine(h)}</h3><p>${tx(p)}</p></div></li>`).join('')}</ol>
+            <div class="gbox-cta">
+              <a class="btn btn-primary" href="${productLink(box)}">${tx(box.name)}</a>
+              <a class="btn btn-ghost" href="${productLink(env)}">${tx(env.name)}</a>
+            </div>
+          </div>
+          <div class="gbox-art">
+            <a class="gbox-tile gbox-tile--1" href="${productLink(box)}"><img src="${box.img}" alt="${esc(box.name.en)}" loading="lazy" decoding="async" /></a>
+            <a class="gbox-tile gbox-tile--2" href="${productLink(env)}"><img src="${env.img}" alt="${esc(env.name.en)}" loading="lazy" decoding="async" /></a>
+          </div>
+        </div>
+        <h3 class="gbox-inside-h">${tx(T.insideH)}${zhLine(T.insideH)}</h3>
+        <div class="promo-grid">${inside.map(cardHTML).join('')}</div>
+      </div>
+    </section>`;
+  }
+
+  function dailyHTML() {
+    const items = DATA.ITEMS.filter((i) => i.cat === 'wear' || i.cat === 'drink');
+    return `
+    <section class="promo-gifts daily" id="daily">
+      <div class="container">
+        <div class="sec-head">
+          <div><p class="promo-kicker">${tx(T.dailyKicker)}</p>
+          <h2 class="promo-h2">${tx(T.dailyH)}${zhLine(T.dailyH)}</h2></div>
+          <p>${tx(T.dailyP)}</p>
+        </div>
+        <div class="promo-grid">${items.map(cardHTML).join('')}</div>
+        <p class="promo-photo-note">${tx(T.photoNote)}</p>
+      </div>
+    </section>`;
   }
 
   function appPanelHTML() {
@@ -357,11 +464,6 @@
           ${T.price.map(([k, v, d]) => `
           <div class="price-cell"><dt>${tx(k)}</dt><dd class="price-v">${tx(v)}</dd><dd class="price-d">${tx(d)}</dd></div>`).join('')}
         </dl>
-        <h3 class="pack-h">${tx(T.packH)}${zhLine(T.packH)}</h3>
-        <div class="pack-grid">
-          ${T.pack.map(([h, p], n) => `
-          <div class="pack-card pack-card--${n + 1}"><span class="pack-art" aria-hidden="true"></span><h4>${tx(h)}</h4><p>${tx(p)}</p></div>`).join('')}
-        </div>
       </div>
     </section>`;
   }
@@ -426,10 +528,8 @@
   }
 
   function productsHTML() {
-    const items = state.filter === 'all'
-      ? DATA.ITEMS
-      : DATA.APPS.find((a) => a.key === state.filter).items.map((id) => byId[id]);
-    const chips = [{ key: 'all', name: T.all }].concat(DATA.APPS);
+    const items = groupItems(state.filter);
+    const chips = [{ key: 'all', name: T.all }].concat(DATA.CATS, forApp ? [forApp] : []);
     return `
     <section class="prod-head" id="top">
       <div class="container">
@@ -616,7 +716,7 @@
     if (nav) nav.innerHTML = navHTML();
     if (foot) foot.innerHTML = footHTML();
     syncLang();
-    const body = { home: () => `${heroHTML()}${whoHTML()}${whyHTML()}${howHTML()}${priceHTML()}${startHTML()}`, products: productsHTML, product: productHTML }[VIEW];
+    const body = { home: () => `${heroHTML()}${sigHTML()}${boxHTML()}${dailyHTML()}${whoHTML()}${whyHTML()}${howHTML()}${priceHTML()}${startHTML()}`, products: productsHTML, product: productHTML }[VIEW];
     main.innerHTML = body() + '<div class="promo-bar" id="promoBar" hidden></div>';
 
     const restore = (form, vals) => { if (form && vals) Object.entries(vals).forEach(([k, v]) => { const el = form.elements[k]; if (el) { if (el.type === 'checkbox') el.checked = v; else el.value = v; } }); };
@@ -669,7 +769,7 @@
     const f = e.target.closest('[data-filter]');
     if (f) {
       state.filter = f.dataset.filter;
-      const items = state.filter === 'all' ? DATA.ITEMS : DATA.APPS.find((a) => a.key === state.filter).items.map((id) => byId[id]);
+      const items = groupItems(state.filter);
       main.querySelectorAll('[data-filter]').forEach((c) => { const on = c === f; c.classList.toggle('is-on', on); c.setAttribute('aria-selected', on); });
       document.getElementById('prodGrid').innerHTML = items.map(cardHTML).join('');
       main.querySelector('.prod-count').textContent = `${items.length} ${tx(T.showing)}`;
