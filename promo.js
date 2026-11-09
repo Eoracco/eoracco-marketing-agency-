@@ -233,7 +233,7 @@
   const state = { app: DATA.APPS[0].key, filter: forApp ? forApp.key : 'all', gi: 0, list: loadList(), sent: false, findSent: false };
 
   // ---------- markup ----------
-  const HERO_IDS = ['EO-30', 'EO-28', 'EO-31', 'EO-34'];
+  const HERO_IDS = ['EO-30', 'EO-28', 'EO-31', 'EO-20'];
 
   function navHTML() {
     const l = EO.lang;
