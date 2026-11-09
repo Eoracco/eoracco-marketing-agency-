@@ -20,9 +20,10 @@
   const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const byId = Object.fromEntries(DATA.ITEMS.map((i) => [i.id, i]));
 
-  // this script renders two views: the Custom home (custom/) and the product catalogue (custom/products/)
-  const VIEW = document.body.dataset.view === 'products' ? 'products' : 'home';
-  const ROOT = VIEW === 'products' ? '../' : '';        // EORACCO Custom home
+  // this script renders three views: the Custom home (custom/), the catalogue (custom/products/)
+  // and one page per product (custom/products/<slug>/)
+  const VIEW = ['products', 'product'].includes(document.body.dataset.view) ? document.body.dataset.view : 'home';
+  const ROOT = { home: '', products: '../', product: '../../' }[VIEW]; // EORACCO Custom home
   const SITE = ROOT + '../';                            // main eoracco.com site
   const onHome = VIEW === 'home';
   const homeAnchor = (id) => (onHome ? `#${id}` : `${ROOT}#${id}`);
@@ -156,12 +157,31 @@
              '我们按品质和起订量筛过的一批产品。把喜欢的加入定制，最后一起提交一份需求就行。'),
     all: L('All', '全部'),
     showing: L('items', '件'),
+    crumbs: L('Products', '产品'),
+    priceH: L('Price per piece', '单价'),
+    qtyCol: L('Quantity', '数量'),
+    priceCol: L('Per piece', '每件'),
+    from: L('As low as', '低至'),
+    priceNote: L('Estimated price with a standard imprint. Your all-in quote adds setup and shipping, so there are no surprises later.', '以上为标准印刷的参考单价。正式报价会把制版费和运费一起算进去，之后不会再加钱。'),
+    priceAsk: L('Price depends on size and imprint. Ask for a quote — it’s free.', '价格取决于尺寸和印刷方式，欢迎免费询价。'),
+    specMin: L('Minimum', '起订量'),
+    specProd: L('Production', '生产时间'),
+    specProdV: L('about {n} business days after proof', '确认打样后约 {n} 个工作日'),
+    specSize: L('Size', '尺寸'),
+    specCode: L('Item', '编号'),
+    goodFor: L('Good for', '适合'),
+    askThis: L('Ask about this product', '询问这个产品'),
+    related: L('You may also like', '您可能也喜欢'),
+    backAll: L('All products', '全部产品'),
     privacy: L('Privacy', '隐私政策'),
     terms: L('Terms', '服务条款'),
     mainLink: L('EORACCO also does marketing, design and websites', 'EORACCO 也提供营销、设计和网站服务'),
   };
 
-  const state = { app: DATA.APPS[0].key, filter: 'all', list: loadList(), sent: false, findSent: false };
+  const forParam = new URLSearchParams(location.search).get('for');
+  const productLink = (i) => `${ROOT}products/${i.slug}/`;
+  const money = (n) => '$' + Number(n).toFixed(2);
+  const state = { app: DATA.APPS[0].key, filter: DATA.APPS.some((a) => a.key === forParam) ? forParam : 'all', gi: 0, list: loadList(), sent: false, findSent: false };
 
   // ---------- markup ----------
   const HERO_IDS = ['EO-03', 'EO-22', 'EO-14', 'EO-20'];
@@ -176,7 +196,7 @@
         <a class="is-on" href="${onHome ? '#top' : ROOT}" aria-current="true">${tx(T.customTab)}</a>
       </div>
       <nav class="gnav-links" aria-label="Sections">
-        <a href="${ROOT}products/" class="${onHome ? '' : 'is-current'}">${tx(T.navProducts)}</a>
+        <a href="${ROOT}products/" class="${onHome ? '' : 'is-current'}" ${VIEW === 'products' ? 'aria-current="page"' : ''}>${tx(T.navProducts)}</a>
         <a href="${homeAnchor('who')}">${tx(T.navWho)}</a>
         <a href="${homeAnchor('how')}">${tx(T.navHow)}</a>
         <a href="${homeAnchor('pricing')}">${tx(T.navPrice)}</a>
@@ -230,9 +250,9 @@
     const on = state.list.includes(i.id);
     return `
       <article class="promo-card">
-        <div class="promo-img"><img src="${i.img}" alt="${esc(i.name.en)}" loading="lazy" decoding="async" width="750" height="750" /></div>
+        <a class="promo-img" href="${productLink(i)}"><img src="${i.img}" alt="${esc(i.name.en)}" loading="lazy" decoding="async" width="750" height="750" /></a>
         <div class="promo-body">
-          <h3 class="promo-name">${tx(i.name)}${zhLine(i.name)}</h3>
+          <h3 class="promo-name"><a href="${productLink(i)}">${tx(i.name)}${zhLine(i.name)}</a></h3>
           <p class="promo-note">${tx(i.note)}</p>
           <div class="promo-foot">
             <span class="promo-min">${tx(T.min)} ${i.min} ${tx(T.pcs)}</span>
@@ -461,6 +481,62 @@
     </section>`;
   }
 
+  function productHTML() {
+    const i = byId[document.body.dataset.id];
+    if (!i) return productsHTML();
+    const apps = DATA.APPS.filter((a) => a.items.includes(i.id));
+    const relIds = [...new Set(apps.flatMap((a) => a.items))].filter((x) => x !== i.id).slice(0, 4);
+    const on = state.list.includes(i.id);
+    const low = i.tiers.length ? Math.min(...i.tiers.map((t) => t[1])) : 0;
+    const g = i.gallery[state.gi] || i.img;
+    return `
+    <nav class="pd-crumbs container" aria-label="Breadcrumb">
+      <a href="${ROOT}">EORACCO Custom</a><span aria-hidden="true">/</span><a href="${ROOT}products/">${tx(T.crumbs)}</a><span aria-hidden="true">/</span><span>${tx(i.name)}</span>
+    </nav>
+    <section class="pd" id="top">
+      <div class="container pd-inner">
+        <div class="pd-gallery">
+          <div class="pd-main"><img id="pdMain" src="${g}" alt="${esc(i.name.en)}" fetchpriority="high" decoding="async" /></div>
+          ${i.gallery.length > 1 ? `<div class="pd-thumbs" role="list">${i.gallery.map((u, n) => `
+            <button type="button" role="listitem" class="pd-thumb ${n === state.gi ? 'is-on' : ''}" data-gi="${n}" aria-label="Photo ${n + 1}"><img src="${u}" alt="" loading="lazy" decoding="async" /></button>`).join('')}</div>` : ''}
+        </div>
+        <div class="pd-info">
+          <p class="promo-kicker">${apps.map((a) => tx(a.name)).join(' · ')}</p>
+          <h1 class="pd-h1">${tx(i.name)}${zhLine(i.name, 'zh-line pd-h1-zh')}</h1>
+          <p class="pd-about">${tx(i.about)}${zhLine(i.about)}</p>
+          <div class="pd-price">
+            ${i.tiers.length ? `
+            <p class="pd-from">${tx(T.from)} <b>${money(low)}</b> <span>/ ${tx(T.pcs)}</span></p>
+            <table class="pd-tiers">
+              <thead><tr><th>${tx(T.qtyCol)}</th><th>${tx(T.priceCol)}</th></tr></thead>
+              <tbody>${i.tiers.map(([q, p]) => `<tr><td>${q.toLocaleString('en-US')}+</td><td>${money(p)}</td></tr>`).join('')}</tbody>
+            </table>
+            <p class="pd-note">${tx(T.priceNote)}</p>` : `<p class="pd-note pd-note--ask">${tx(T.priceAsk)}</p>`}
+          </div>
+          <dl class="pd-specs">
+            <div><dt>${tx(T.specMin)}</dt><dd>${i.min} ${tx(T.pcs)}</dd></div>
+            ${i.days ? `<div><dt>${tx(T.specProd)}</dt><dd>${tx(T.specProdV).replace('{n}', i.days)}</dd></div>` : ''}
+            ${i.size ? `<div><dt>${tx(T.specSize)}</dt><dd>${esc(i.size)}</dd></div>` : ''}
+            <div><dt>${tx(T.specCode)}</dt><dd>${i.id}</dd></div>
+          </dl>
+          <div class="pd-cta">
+            <button type="button" class="btn btn-primary promo-add ${on ? 'is-added' : ''}" data-add="${i.id}" aria-pressed="${on}">${tx(on ? T.added : T.add)}</button>
+            <a class="btn btn-ghost" href="${ROOT}#start" data-ask="${i.id}">${tx(T.askThis)}</a>
+          </div>
+          ${apps.length ? `<p class="pd-good">${tx(T.goodFor)}: ${apps.map((a) => `<a href="${ROOT}products/?for=${a.key}">${tx(a.name)}</a>`).join(' · ')}</p>` : ''}
+          <p class="promo-photo-note pd-photo-note">${tx(T.photoNote)}</p>
+        </div>
+      </div>
+    </section>
+    ${relIds.length ? `
+    <section class="promo-gifts pd-related">
+      <div class="container">
+        <div class="sec-head"><h2 class="promo-h2">${tx(T.related)}${zhLine(T.related)}</h2><a class="btn btn-ghost" href="${ROOT}products/">${tx(T.backAll)} <span aria-hidden="true">→</span></a></div>
+        <div class="promo-grid promo-grid--4">${relIds.map((id) => cardHTML(byId[id])).join('')}</div>
+      </div>
+    </section>` : ''}`;
+  }
+
   function syncLang() {
     const l = EO.lang;
     document.body.classList.remove('lang-en', 'lang-zh', 'lang-bi');
@@ -479,9 +555,8 @@
     if (nav) nav.innerHTML = navHTML();
     if (foot) foot.innerHTML = footHTML();
     syncLang();
-    main.innerHTML = (onHome
-      ? `${heroHTML()}${whoHTML()}${whyHTML()}${howHTML()}${priceHTML()}${startHTML()}`
-      : productsHTML()) + '<div class="promo-bar" id="promoBar" hidden></div>';
+    const body = { home: () => `${heroHTML()}${whoHTML()}${whyHTML()}${howHTML()}${priceHTML()}${startHTML()}`, products: productsHTML, product: productHTML }[VIEW];
+    main.innerHTML = body() + '<div class="promo-bar" id="promoBar" hidden></div>';
 
     const restore = (form, vals) => { if (form && vals) Object.entries(vals).forEach(([k, v]) => { const el = form.elements[k]; if (el) { if (el.type === 'checkbox') el.checked = v; else el.value = v; } }); };
     const form = document.getElementById('promoForm');
@@ -521,6 +596,15 @@
       document.getElementById('appPanel').innerHTML = appPanelHTML();
       return;
     }
+    const th = e.target.closest('[data-gi]');
+    if (th) {
+      state.gi = +th.dataset.gi;
+      document.getElementById('pdMain').src = byId[document.body.dataset.id].gallery[state.gi];
+      main.querySelectorAll('[data-gi]').forEach((b) => b.classList.toggle('is-on', b === th));
+      return;
+    }
+    const ask = e.target.closest('[data-ask]');
+    if (ask && !state.list.includes(ask.dataset.ask)) { state.list = state.list.concat(ask.dataset.ask); saveList(); }
     const f = e.target.closest('[data-filter]');
     if (f) {
       state.filter = f.dataset.filter;
