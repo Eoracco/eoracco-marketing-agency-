@@ -65,6 +65,8 @@ for (const i of ITEMS) {
       <img src="${i.gallery[0]}" alt="${esc(i.name.en)}" width="600" height="600" />
       <p>${esc(i.about.en)}</p>
       <p>${esc(i.about.zh)}</p>
+      ${i.hl.length ? `<ul>${i.hl.map((h) => `<li>${esc(h.en)} · ${esc(h.zh)}</li>`).join('')}</ul>` : ''}
+      ${Object.keys(i.spec).length ? `<dl>${Object.values(i.spec).map((v) => `<dd>${esc(v.en)} · ${esc(v.zh)}</dd>`).join('')}</dl>` : ''}
       <p>Minimum ${i.min} pcs.${low ? ` From $${low.toFixed(2)} per piece.` : ''} <a href="../../">Start a project</a></p>
     </div>
   </main>

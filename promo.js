@@ -176,6 +176,27 @@
     privacy: L('Privacy', '隐私政策'),
     terms: L('Terms', '服务条款'),
     mainLink: L('EORACCO also does marketing, design and websites', 'EORACCO 也提供营销、设计和网站服务'),
+    detailsH: L('Product details', '产品信息'),
+    ideasH: L('Good ideas for it', '适合用在'),
+    faqH: L('Common questions', '常见问题'),
+    spec: {
+      material: L('Material', '材质'), colors: L('Colors', '颜色'), size: L('Size', '尺寸'), size2: L('Size', '尺寸'),
+      includes: L('What’s included', '包含'), imprint: L('Imprint', '印刷'), scent: L('Scents', '香味'),
+      packaging: L('Packaging', '包装'), weight: L('Weight', '重量'), care: L('Care', '保养'), rush: L('Rush', '加急'),
+      origin: L('Made in', '产地'), note: L('Good to know', '注意'),
+    },
+    faq: [
+      [L('Can I see it before you make it?', '做之前可以先看效果吗？'),
+        L('Yes. We send a digital proof with your logo on the product, and nothing goes into production until you approve it. Many items can also be sampled first — ask and we’ll check this one for you.', '可以。我们会先发电子打样，让您看到 logo 印在产品上的效果，您确认后才开始生产。很多产品也能先寄实物样品，告诉我们，我们帮您确认这一款。')],
+      [L('How fast can I get it?', '多久能拿到？'),
+        L('Production time starts after you approve the proof; shipping usually adds a few business days. Tell us your event date and we’ll confirm whether it works before you pay anything.', '生产时间从确认打样后开始算，运输通常再加几个工作日。告诉我们您的活动日期，付款前我们会先确认能不能赶上。')],
+      [L('What does the quote include?', '报价包含哪些？'),
+        L('The prices above are per piece with a standard imprint. Your written quote adds setup, any extra imprint colors and shipping into one total, so there are no surprises later.', '上面的价格是标准印刷的每件单价。正式书面报价会把制版费、额外印色和运费都算进一个总价，之后不会再加钱。')],
+      [L('Can I change the color or the logo placement?', '可以换颜色或 logo 位置吗？'),
+        L('Often, yes. Options depend on the item — tell us what you have in mind and we’ll list what’s possible in your quote.', '大多可以，具体看产品。告诉我们您的想法，我们会在报价里列出可选方案。')],
+      [L('Can I order this together with other products?', '可以和其他产品一起订吗？'),
+        L('Yes. Add everything you like to your project list and send one brief; we quote it all together.', '可以。把喜欢的产品都加进项目清单，发一份需求就好，我们一起报价。')],
+    ],
   };
 
   const forParam = new URLSearchParams(location.search).get('for');
@@ -481,6 +502,46 @@
     </section>`;
   }
 
+  // product information template: one spec table, use ideas and a short FAQ, filled from DETAILS
+  const SPEC_ORDER = ['material', 'colors', 'size', 'includes', 'imprint', 'scent', 'packaging', 'weight', 'care', 'rush', 'origin', 'note'];
+  function detailsHTML(i) {
+    const sp = i.spec || {};
+    const rows = [];
+    const row = (label, val) => rows.push(`<div class="pd-row"><dt>${tx(label)}</dt><dd>${val}</dd></div>`);
+    SPEC_ORDER.forEach((k) => {
+      if (k === 'size') {
+        if (sp.size2) row(T.spec.size, `${tx(sp.size2)}${zhLine(sp.size2)}`);
+        else if (i.size) row(T.spec.size, esc(i.size));
+        return;
+      }
+      if (sp[k]) row(T.spec[k], `${tx(sp[k])}${zhLine(sp[k])}`);
+    });
+    row(T.specMin, `${i.min} ${tx(T.pcs)}`);
+    if (i.days) row(T.specProd, tx(T.specProdV).replace('{n}', i.days));
+    row(T.specCode, i.id);
+    return `
+    <section class="pd-more" id="details">
+      <div class="container pd-more-inner">
+        <div class="pd-block pd-block--table">
+          <h2 class="pd-h2">${tx(T.detailsH)}${zhLine(T.detailsH)}</h2>
+          <dl class="pd-table">${rows.join('')}</dl>
+        </div>
+        <div class="pd-side">
+          ${i.ideas.length ? `
+          <div class="pd-block">
+            <h2 class="pd-h2">${tx(T.ideasH)}${zhLine(T.ideasH)}</h2>
+            <ol class="pd-ideas">${i.ideas.map((x) => `<li>${tx(x)}${zhLine(x)}</li>`).join('')}</ol>
+          </div>` : ''}
+          <div class="pd-block">
+            <h2 class="pd-h2">${tx(T.faqH)}${zhLine(T.faqH)}</h2>
+            <div class="pd-faq">${T.faq.map(([q, a], n) => `
+              <details${n === 0 ? ' open' : ''}><summary>${tx(q)}${zhLine(q)}</summary><p>${tx(a)}${zhLine(a)}</p></details>`).join('')}</div>
+          </div>
+        </div>
+      </div>
+    </section>`;
+  }
+
   function productHTML() {
     const i = byId[document.body.dataset.id];
     if (!i) return productsHTML();
@@ -504,6 +565,7 @@
           <p class="promo-kicker">${apps.map((a) => tx(a.name)).join(' · ')}</p>
           <h1 class="pd-h1">${tx(i.name)}${zhLine(i.name, 'zh-line pd-h1-zh')}</h1>
           <p class="pd-about">${tx(i.about)}${zhLine(i.about)}</p>
+          ${i.hl.length ? `<ul class="pd-hl">${i.hl.map((h) => `<li>${tx(h)}${zhLine(h)}</li>`).join('')}</ul>` : ''}
           <div class="pd-price">
             ${i.tiers.length ? `
             <p class="pd-from">${tx(T.from)} <b>${money(low)}</b> <span>/ ${tx(T.pcs)}</span></p>
@@ -516,8 +578,6 @@
           <dl class="pd-specs">
             <div><dt>${tx(T.specMin)}</dt><dd>${i.min} ${tx(T.pcs)}</dd></div>
             ${i.days ? `<div><dt>${tx(T.specProd)}</dt><dd>${tx(T.specProdV).replace('{n}', i.days)}</dd></div>` : ''}
-            ${i.size ? `<div><dt>${tx(T.specSize)}</dt><dd>${esc(i.size)}</dd></div>` : ''}
-            <div><dt>${tx(T.specCode)}</dt><dd>${i.id}</dd></div>
           </dl>
           <div class="pd-cta">
             <button type="button" class="btn btn-primary promo-add ${on ? 'is-added' : ''}" data-add="${i.id}" aria-pressed="${on}">${tx(on ? T.added : T.add)}</button>
@@ -528,6 +588,7 @@
         </div>
       </div>
     </section>
+    ${detailsHTML(i)}
     ${relIds.length ? `
     <section class="promo-gifts pd-related">
       <div class="container">
