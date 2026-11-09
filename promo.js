@@ -382,7 +382,7 @@
   }
 
   function dailyHTML() {
-    const items = DATA.ITEMS.filter((i) => i.cat === 'wear' || i.cat === 'drink');
+    const items = DATA.ITEMS.filter((i) => (i.cat === 'wear' || i.cat === 'drink') && i.id !== 'EO-23'); // one apron on the home page; both are on the products page
     return `
     <section class="promo-gifts daily" id="daily">
       <div class="container">
@@ -391,7 +391,7 @@
           <h2 class="promo-h2">${tx(T.dailyH)}${zhLine(T.dailyH)}</h2></div>
           <p>${tx(T.dailyP)}</p>
         </div>
-        <div class="promo-grid promo-grid--4">${items.map(cardHTML).join('')}</div>
+        <div class="promo-grid">${items.map(cardHTML).join('')}</div>
         <p class="promo-photo-note">${tx(T.photoNote)}</p>
       </div>
     </section>`;

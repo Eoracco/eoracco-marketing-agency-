@@ -416,7 +416,7 @@
 .promo-grid--4 .promo-foot { flex-wrap: wrap; }
 
 /* compact list of gift-box contents */
-.mini-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.mini-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 899px) { .mini-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .mini { display: flex; flex-direction: column; gap: 6px; }
 .mini-img { display: grid; place-items: center; aspect-ratio: 1; border-radius: 18px; padding: 14%; background: #fff; transition: transform 0.4s var(--ease); }
